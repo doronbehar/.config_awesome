@@ -88,7 +88,7 @@ require("debian.menu")
 	tags = {}
 	for s = 1, screen.count() do
 		-- Each screen has its own tag table.
-		tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6 }, s, layouts[1])
+		tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6 }, s, layouts[2])
 	end
 -- }}}
 
@@ -121,12 +121,12 @@ require("debian.menu")
 -- {{{ awesompd:
 	local awesompd = require("mpd/awesompd")
 	musicwidget = awesompd:create() -- Create awesompd widget
-	musicwidget.font = "Liberation Mono" -- Set widget font
-	musicwidget.scrolling = true -- If true, the text in the widget will be scrolled
-	musicwidget.output_size = 30 -- Set the size of widget in symbols
-	musicwidget.update_interval = 10 -- Set the update interval in seconds
+	musicwidget.font = "DejaVu Sans Book 10" -- Set widget font
+	musicwidget.scrolling = false -- If true, the text in the widget will be scrolled
+	musicwidget.output_size = 40 -- Set the size of widget in symbols
+	musicwidget.update_interval = 5 -- Set the update interval in seconds
 	-- Set the folder where icons are located (change username to your login name)
-	musicwidget.path_to_icons = "~/.config/awesome/mpd/icons" 
+	musicwidget.path_to_icons = "~/.config/awesome/mpd/icons"
 	-- Set the default music format for Jamendo streams. You can change
 	-- this option on the fly in awesompd itself.
 	-- possible formats: awesompd.FORMAT_MP3, awesompd.FORMAT_OGG
@@ -136,7 +136,7 @@ require("debian.menu")
 	musicwidget.show_album_cover = true
 	-- Specify how big in pixels should an album cover be. Maximum value
 	-- is 100.
-	musicwidget.album_cover_size = 50
+	musicwidget.album_cover_size = 70
 	-- This option is necessary if you want the album covers to be shown
 	-- for your local tracks.
 	musicwidget.mpd_config = "/etc/mpd.conf"
@@ -166,6 +166,10 @@ require("debian.menu")
 		{ "Control", "Pause",						musicwidget:command_playpause()		}
 	})
 	musicwidget:run() -- After all configuration is done, run the widget
+-- }}}
+
+-- {{{ Sound
+	require("volume/widget")
 -- }}}
 
 -- {{{ Wibox
@@ -256,6 +260,7 @@ require("debian.menu")
 		-- Widgets that are aligned to the right
 		local right_layout = wibox.layout.fixed.horizontal()
 		if s == 1 then
+			right_layout:add(volume_widget)
 			-- Awesompd:
 			right_layout:add(musicwidget.widget)
 			right_layout:add(wibox.widget.systray())
@@ -284,8 +289,8 @@ require("debian.menu")
 -- {{{ Key bindings
 	globalkeys = awful.util.table.join(
 
-		awful.key({modkey,"Mod1"		}, "j",			awful.tag.viewnext),
-		awful.key({modkey,"Mod1"		}, "k",			awful.tag.viewprev),
+		awful.key({modkey,				}, "l",			awful.tag.viewnext),
+		awful.key({modkey,				}, "h",			awful.tag.viewprev),
 		awful.key({modkey,				}, "j",
 			function ()
 				awful.client.focus.byidx( 1)
@@ -302,16 +307,6 @@ require("debian.menu")
 		awful.key({modkey,				}, "Up",		function () awful.client.swap.byidx(  1)    end),
 		awful.key({modkey,				}, "Down",		function () awful.client.swap.byidx( -1)    end),
 		awful.key({modkey,				}, "Tab",		function () awful.screen.focus_relative( 1) end),
-
-	-- Standard program
-		awful.key({modkey,				}, "Return",	function () awful.util.spawn(terminal) end),
-		awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn("xterm -e \"tmux attach-session -t project || tmux\"") end),
-		awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome") end),
-		awful.key({"Control","Mod1"		}, "n",			function () awful.util.spawn("nautilus") end),
-		awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn("xterm -e ncmpcpp") end),
-		awful.key({"Control","Mod1"		}, "e",			function () awful.util.spawn("xterm -e \"cd repos/dotfiles/.config/awesome; vim rc.lua\"") end),
-		awful.key({modkey,"Mod1"		}, "r",			awesome.restart),
-		awful.key({modkey,"Mod1"		}, "q",			awesome.quit),
 		awful.key({modkey,				}, "Right",		function () awful.tag.incmwfact( 0.02) end),
 		awful.key({modkey,				}, "Left",		function () awful.tag.incmwfact(-0.02) end),
 		awful.key({modkey,"Shift"		}, "Right",		function () awful.tag.incnmaster( 1)  end),
@@ -320,12 +315,29 @@ require("debian.menu")
 		awful.key({modkey,"Control"		}, "Left",		function () awful.tag.incncol(-1)   end),
 		awful.key({modkey,				}, "space",		function () awful.layout.inc(layouts, 1) end),
 		awful.key({modkey,"Shift"		}, "space",		function () awful.layout.inc(layouts,-1) end),
+
+	-- Standard program
+		awful.key({modkey,				}, "Return",	function () awful.util.spawn(terminal) end),
+		awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn("xterm -e \"tmux attach-session -t project || tmux\"") end),
+		awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome") end),
+		awful.key({"Control","Mod1"		}, "n",			function () awful.util.spawn("nautilus") end),
+		awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn("xterm -e ncmpcpp") end),
+		awful.key({"Control","Mod1"		}, "e",			function () awful.util.spawn("xterm -e \"cd repos/dotfiles/.config/awesome; nvim rc.lua\"") end),
+		awful.key({"Control","Mod1"		}, "q",			function () awful.util.spawn("quartus") end),
+		awful.key({modkey,"Mod1"		}, "r",			awesome.restart),
+		awful.key({modkey,"Mod1"		}, "q",			awesome.quit),
 	-- Music Player:
 		awful.key({						}, "Pause",		function () awful.util.spawn("mpc toggle") end),
 		awful.key({						}, "F9",		function () awful.util.spawn("mpc next") end),
 		awful.key({						}, "F8",		function () awful.util.spawn("mpc prev") end),
 		awful.key({"Control"			}, "F12",		function () awful.util.spawn("mpc seek +5") end),
 		awful.key({"Control"			}, "F11",		function () awful.util.spawn("mpc seek -5") end),
+		awful.key({"Control"			}, "F10",		function () awful.util.spawn("mpc volume +5") end),
+		awful.key({"Control"			}, "F7",		function () awful.util.spawn("mpc volume -5") end),
+	-- General Machine Volume managment:
+		awful.key({"Shift" 				}, "F10",		function () awful.util.spawn("amixer -D pulse set Master 4%+", false) end),
+		awful.key({"Shift"				}, "F7",		function () awful.util.spawn("amixer -D pulse set Master 4%-", false) end),
+		awful.key({"Shift"				}, "Scroll_Lock", function () awful.util.spawn("amixer -D pulse set Master toggle", false) end),
 
 	-- Prompt
 		awful.key({modkey				}, "r",			function () mypromptbox[mouse.screen]:run()end),
