@@ -1,6 +1,6 @@
 [submodule "mpd"]
 	path = mpd
 	url = https://github.com/alexander-yakushev/awesompd
-[submodule "volume"]
+[submodule "volume-widget"]
 	path = volume
-	url = https://github.com/esn89/volumetextwidget
+	url = https://github.com/Doron-Behar/volumetextwidget
