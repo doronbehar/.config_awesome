@@ -1,0 +1,3 @@
+[submodule "mpd"]
+	path = mpd
+	url = https://github.com/alexander-yakushev/awesompd
