@@ -1,7 +1,8 @@
+-- default rc.lua for shifty
+--
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
-awful.rules = require("awful.rules")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
@@ -10,7 +11,12 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
-
+-- shifty - dynamic tagging library
+local shifty = require("shifty")
+-- Awesompd:
+local awesompd = require("mpd/awesompd")
+-- sound widget:
+require("volume/widget")
 -- Load Debian menu entries
 require("debian.menu")
 
@@ -22,7 +28,6 @@ require("debian.menu")
 		title = "Oops, there were errors during startup!",
 		text = awesome.startup_errors })
 	end
-
 	-- Handle runtime errors after startup
 	do
 		local in_error = false
@@ -30,7 +35,6 @@ require("debian.menu")
 			-- Make sure we don't go into an endless error loop
 			if in_error then return end
 			in_error = true
-
 			naughty.notify({
 				preset = naughty.config.presets.critical,
 				title = "Oops, an error happened!",
@@ -44,19 +48,16 @@ require("debian.menu")
 -- {{{ Variable definitions
 	-- Themes define colours, icons, font and wallpapers.
 	beautiful.init("~/.config/awesome/theme.lua")
-
 	-- This is used later as the default terminal and editor to run.
 	terminal = "xterm"
 	editor = os.getenv("EDITOR") or "editor"
 	editor_cmd = terminal .. " -e " .. editor
-
 	-- Default modkey.
 	-- Usually, Mod4 is the key with a logo between Control and Alt.
 	-- If you do not like this or do not have such a key,
 	-- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 	-- However, you can use another modifier like Mod1, but it may interact with others.
 	modkey = "Mod4"
-
 	-- Table of layouts to cover with awful.layout.inc, order matters.
 	local layouts =
 	{
@@ -83,13 +84,143 @@ require("debian.menu")
 	end
 -- }}}
 
--- {{{ Tags
-	-- Define a tag table which hold all screen tags.
-	tags = {}
-	for s = 1, screen.count() do
-		-- Each screen has its own tag table.
-		tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6 }, s, layouts[2])
-	end
+-- {{{ Shifty:
+	-- Available OPtions for each tag:
+		-- init			:boolean	-- Create this tag at startup and be persistant.
+		-- position		:integer	-- the position of the window.
+		-- screen		:integer	-- the index of the screen: _Tip:_ use `screen = math.max(screen.count(), 2)` for the second monitor
+		-- persistant	:boolean	-- Tell shifty to delete that tag if no client is present on it.
+		-- mwfact		:float		-- Tell shifty what is the ratio of the windows to tile
+		-- spawn		:string		-- A name of a program to open in that particular window when created.
+		-- leave_kills	:boolean	-- Destroy/don't destroy after last client is closed _until switching to another tag_.
+		-- icon_only	:boolean	-- Show icone only.
+		-- icon			:string		-- Path to the icon in the tag list.
+		-- rel_index	:integer	-- the index to open this tag compared to the current - Not at the end.
+		-- nopopup		:boolean	-- if true, the tag will not be focused when created.
+	-- configured tags.
+	shifty.config.tags = {
+		["web"] = {
+			position	= 1,
+			init		= true,
+			screen		= 1,
+		},
+		["1:project"] = {
+			position	= 1,
+			init		= true,
+			screen		= math.max(screen.count(), 2),
+		},
+		["2:Media"] = {
+			init		= true,
+			position	= 2,
+			screen		= math.max(screen.count(), 2),
+		},
+		["3:config"] = {
+			init		= true,
+			screen		= math.max(screen.count(), 2),
+			position	= 3,
+		}
+	}
+	-- SHIFTY: application matching rules
+	-- order here matters, early rules will be applied first
+	shifty.config.apps = {
+		{
+			match = {
+				"Navigator",
+				"Vimperator",
+				"Gran Paradiso",
+				"Google Chrome",
+				"google-chrome",
+			},
+			tag = "web",
+		},
+		{
+			match = {
+				"Mplayer.*",
+				"Mirage",
+				"gimp",
+				"gtkpod",
+				"Ufraw",
+				"easytag",
+				"MPD",
+				"ncmpc",
+				"ncmpcpp",
+			},
+			tag = "2:Media",
+			nopopup = false,
+		},
+		{
+			match = {
+				"MPlayer",
+				"Gnuplot",
+				"galculator",
+			},
+			float = true,
+		},
+		{
+			match = {
+				terminal,
+			},
+			honorsizehints = false,
+			slave = true,
+		},
+			match = {
+				"project",
+				"quartus",
+			},
+			honorsizehints = false,
+			slave = true,
+			tag = "1:project",
+		{
+			match = {""},
+			buttons = awful.util.table.join(
+				awful.button({}, 1, function (c) client.focus = c; c:raise() end),
+				awful.button({modkey}, 1, function(c)
+					client.focus = c
+					c:raise()
+					awful.mouse.client.move(c)
+					end),
+				awful.button({modkey}, 3, awful.mouse.client.resize)
+				)
+		},
+	}
+	-- SHIFTY: default tag creation rules
+	-- parameter description
+	--	* floatBars : if floating clients should always have a titlebar
+	--	* guess_name : should shifty try and guess tag names when creating
+	--				 new (unconfigured) tags?
+	--	* guess_position: as above, but for position parameter
+	--	* run : function to exec when shifty creates a new tag
+	--	* all other parameters (e.g. layout, mwfact) follow awesome's tag API
+	--	layout        :func   -- a layout from awful.layout.suit (e.g. awful.layout.suit.tile)
+	--	mwfact        :float  -- how big the master window is
+	--	nmaster       :int    -- how many columns for master windows
+	--	ncol          :int    -- how many columns for non-master windows
+	--	exclusive     :bool   -- if true, only clients from rules (config.apps) allowed in this tag
+	--	persist       :bool   -- persist after no apps are in it
+	--	nopopup       :bool   -- do not focus on creation
+	--	leave_kills   :bool   -- if true, tag won't be deleted until unselected
+	--	position      :int    -- determines position in taglist (then what does index do?)
+	--	icon          :string -- image file for icon
+	--	icon_only     :bool   -- if true, no text (just icon)
+	--	init          :bool   -- if true, create on startup (implies persist)
+	--	sweep_delay   :int    -- ???
+	--	keys          :{}     -- a table of keys, which are associated with the tag
+	--	overload_keys :{}     -- ???
+	--	index         :int    -- ???
+	--	rel_index     :int    -- ???
+	--	run           :func   -- a lua function which is execute on tag creation
+	--	spawn         :string -- shell command which is execute on tag creation (ex. a programm)
+	--	screen        :int    -- which screen to spawn on (see above)
+	--	max_clients   :int    -- if more than this many clients are started, then a new tag is made
+	shifty.config.defaults = {
+		layout = awful.layout.suit.tile.bottom,
+		ncol = 1,
+		mwfact = 0.5,
+		floatBars = false,
+		guess_name = true,
+		guess_position = true,
+		persist = true,
+	}
 -- }}}
 
 -- {{{ Menu
@@ -100,7 +231,6 @@ require("debian.menu")
 		{ "restart", awesome.restart },
 		{ "quit", awesome.quit }
 	}
-
 	mymainmenu = awful.menu({
 		items = {
 			{ "awesome", myawesomemenu, beautiful.awesome_icon },
@@ -108,18 +238,15 @@ require("debian.menu")
 			{ "open terminal", terminal }
 		}
 	})
-
 	mylauncher = awful.widget.launcher({
 		image = beautiful.awesome_icon,
 		menu = mymainmenu
 	})
-
 	-- Menubar configuration
 	menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
 -- {{{ awesompd:
-	local awesompd = require("mpd/awesompd")
 	musicwidget = awesompd:create() -- Create awesompd widget
 	musicwidget.font = "DejaVu Sans Book 10" -- Set widget font
 	musicwidget.scrolling = false -- If true, the text in the widget will be scrolled
@@ -168,14 +295,9 @@ require("debian.menu")
 	musicwidget:run() -- After all configuration is done, run the widget
 -- }}}
 
--- {{{ Sound
-	require("volume/widget")
--- }}}
-
 -- {{{ Wibox
 	-- Create a textclock widget
 	mytextclock = awful.widget.textclock()
-
 	-- Create a wibox for each screen and add it
 	mywibox = {}
 	mypromptbox = {}
@@ -229,7 +351,6 @@ require("debian.menu")
 				awful.client.focus.byidx(-1)
 				if client.focus then client.focus:raise() end
 			end))
-
 	for s = 1, screen.count() do
 		-- Create a promptbox for each screen
 		mypromptbox[s] = awful.widget.prompt()
@@ -244,28 +365,25 @@ require("debian.menu")
 			awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
 		-- Create a taglist widget
 		mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
-
 		-- Create a tasklist widget
 		mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
-
 		-- Create the wibox
 		mywibox[s] = awful.wibox({ position = "top", height ="20", screen = s })
-
 		-- Widgets that are aligned to the left
 		local left_layout = wibox.layout.fixed.horizontal()
 		left_layout:add(mylauncher)
 		left_layout:add(mytaglist[s])
 		left_layout:add(mypromptbox[s])
-
 		-- Widgets that are aligned to the right
 		local right_layout = wibox.layout.fixed.horizontal()
-		if s == 1 then
+		if s == math.max(screen.count(), 2) then
 			right_layout:add(volume_widget)
+		end
+		if s == 1 then
 			-- Awesompd:
 			right_layout:add(musicwidget.widget)
 			right_layout:add(wibox.widget.systray())
 		end
-
 		right_layout:add(mytextclock)
 		right_layout:add(mylayoutbox[s])
 		-- Now bring it all together (with the tasklist in the middle)
@@ -273,22 +391,21 @@ require("debian.menu")
 		layout:set_left(left_layout)
 		layout:set_middle(mytasklist[s])
 		layout:set_right(right_layout)
-
 		mywibox[s]:set_widget(layout)
 	end
 -- }}}
 
--- {{{ Mouse bindings
-	root.buttons(awful.util.table.join(
-		awful.button({ }, 3, function () mymainmenu:toggle() end),
-		awful.button({ }, 4, awful.tag.viewnext),
-		awful.button({ }, 5, awful.tag.viewprev)
-	))
+-- {{{ Tags
+	-- SHIFTY: initialize shifty
+	-- the assignment of shifty.taglist must always be after its actually
+	-- initialized with awful.widget.taglist.new()
+	shifty.taglist = mytaglist
+	shifty.init()
 -- }}}
 
 -- {{{ Key bindings
 	globalkeys = awful.util.table.join(
-
+	-- Tags and window manipulation and movement with shifty:
 		awful.key({modkey,				}, "l",			awful.tag.viewnext),
 		awful.key({modkey,				}, "h",			awful.tag.viewprev),
 		awful.key({modkey,				}, "j",
@@ -301,8 +418,11 @@ require("debian.menu")
 				awful.client.focus.byidx(-1)
 				if client.focus then client.focus:raise() end
 			end),
-		awful.key({modkey,				}, "s",			function () mymainmenu:show() end),
-
+		awful.key({modkey,				}, "w",			shifty.del), -- delete a tag
+		awful.key({modkey,"Shift"		}, "l",			shifty.send_next), -- client to next tag
+		awful.key({modkey,"Shift"		}, "h",			shifty.send_prev), -- client to prev tag
+		awful.key({modkey,"Shift"		}, "r",			shifty.rename), -- rename a tag
+		awful.key({modkey,				}, "n",			shifty.add), -- creat a new tag
 	-- Layout manipulation
 		awful.key({modkey,				}, "Up",		function () awful.client.swap.byidx(  1)    end),
 		awful.key({modkey,				}, "Down",		function () awful.client.swap.byidx( -1)    end),
@@ -315,13 +435,12 @@ require("debian.menu")
 		awful.key({modkey,"Control"		}, "Left",		function () awful.tag.incncol(-1)   end),
 		awful.key({modkey,				}, "space",		function () awful.layout.inc(layouts, 1) end),
 		awful.key({modkey,"Shift"		}, "space",		function () awful.layout.inc(layouts,-1) end),
-
 	-- Standard program
 		awful.key({modkey,				}, "Return",	function () awful.util.spawn(terminal) end),
-		awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn("xterm -e \"tmux attach-session -t project || tmux\"") end),
+		awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn("xterm -T project -e \"tmux attach-session -t project || tmux\"") end),
 		awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome") end),
-		awful.key({"Control","Mod1"		}, "n",			function () awful.util.spawn("nautilus") end),
-		awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn("xterm -e ncmpcpp") end),
+		awful.key({"Control","Mod1"		}, "r",			function () awful.util.spawn("xterm -e ranger") end),
+		awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn("xterm -T ncmpcpp -e ncmpcpp") end),
 		awful.key({"Control","Mod1"		}, "e",			function () awful.util.spawn("xterm -e \"cd repos/dotfiles/.config/awesome; nvim rc.lua\"") end),
 		awful.key({"Control","Mod1"		}, "q",			function () awful.util.spawn("quartus") end),
 		awful.key({modkey,"Mod1"		}, "r",			awesome.restart),
@@ -338,7 +457,7 @@ require("debian.menu")
 		awful.key({"Shift" 				}, "F10",		function () awful.util.spawn("amixer -D pulse set Master 4%+", false) end),
 		awful.key({"Shift"				}, "F7",		function () awful.util.spawn("amixer -D pulse set Master 4%-", false) end),
 		awful.key({"Shift"				}, "Scroll_Lock", function () awful.util.spawn("amixer -D pulse set Master toggle", false) end),
-
+		awful.key({"Shift"				}, "F1",		function () awful.util.spawn("~/.bin/toggle-sinks", false) end),
 	-- Prompt
 		awful.key({modkey				}, "r",			function () mypromptbox[mouse.screen]:run()end),
 		awful.key({modkey				}, "x",
@@ -349,10 +468,12 @@ require("debian.menu")
 				awful.util.getdir("cache") .. "/history_eval")
 			end),
 	-- Menubar
-		awful.key({modkey,"Mod1"		}, "m",			function () menubar.show() end)
+		awful.key({modkey,"Mod1"		}, "m",			function () menubar.show() end),
+		awful.key({modkey,				}, "s",			function () mymainmenu:show() end)
 	)
 	clientkeys = awful.util.table.join(
 		awful.key({modkey,				}, "f",			function (c) c.fullscreen = not c.fullscreen  end),
+		awful.key({modkey,				}, "t",			function (c) shifty.create_titlebar(c) awful.titlebar(c) c.border_width = 1 end),
 		awful.key({modkey,				}, "q",			function (c) c:kill()                         end),
 		awful.key({modkey,"Shift"		}, "q",			awful.client.restore),
 		awful.key({modkey,"Shift"		}, "space",		awful.client.floating.toggle                     ),
@@ -366,48 +487,35 @@ require("debian.menu")
 				c.maximized_vertical   = not c.maximized_vertical
 			end)
 	)
-
+	-- SHIFTY: assign client keys to shifty for use in
+	-- match() function(manage hook)
+	shifty.config.clientkeys = clientkeys
+	shifty.config.modkey = modkey
 	-- Bind all key numbers to tags.
 	-- Be careful: we use keycodes to make it works on any keyboard layout.
 	-- This should map on the top row of your keyboard, usually 1 to 9.
-	for i = 1, 9 do
+	for i = 1, (shifty.config.maxtags or 9) do
 		globalkeys = awful.util.table.join(globalkeys,
-			-- View tag only.
 			awful.key({ modkey }, "#" .. i + 9,
 				function ()
-					local screen = mouse.screen
-					local tag = awful.tag.gettags(screen)[i]
-					if tag then
-						awful.tag.viewonly(tag)
-					end
+					awful.tag.viewonly(shifty.getpos(i))
 				end),
-			-- Toggle tag.
 			awful.key({ modkey, "Control" }, "#" .. i + 9,
 				function ()
-					local screen = mouse.screen
-					local tag = awful.tag.gettags(screen)[i]
-					if tag then
-						awful.tag.viewtoggle(tag)
-					end
+					awful.tag.viewtoggle(shifty.getpos(i))
 				end),
-			-- Move client to tag.
 			awful.key({ modkey, "Shift" }, "#" .. i + 9,
 				function ()
-				if client.focus then
-					local tag = awful.tag.gettags(client.focus.screen)[i]
-					if tag then
-						awful.client.movetotag(tag)
+					if client.focus then
+						local t = shifty.getpos(i)
+						awful.client.movetotag(t)
+						awful.tag.viewonly(t)
 					end
-				end
 				end),
-			-- Toggle tag.
 			awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
 				function ()
 					if client.focus then
-						local tag = awful.tag.gettags(client.focus.screen)[i]
-						if tag then
-							awful.client.toggletag(tag)
-						end
+						awful.client.toggletag(shifty.getpos(i))
 					end
 				end))
 	end
@@ -416,110 +524,11 @@ require("debian.menu")
 		awful.button({ modkey }, 1, awful.mouse.client.move),
 		awful.button({ modkey }, 3, awful.mouse.client.resize)
 	)
-
 	-- Set keys
 	root.keys(globalkeys)
 -- }}}
 
--- {{{ Rules
-	-- Rules to apply to new clients (through the "manage" signal).
-	awful.rules.rules = {{
-		-- All clients will match this rule.
-		rule = { },
-		properties = {
-			border_width = beautiful.border_width,
-			border_color = beautiful.border_normal,
-			focus = awful.client.focus.filter,
-			raise = true,
-			keys = clientkeys,
-			buttons = clientbuttons
-		}},
-		{ rule = { class = "MPlayer" },
-			properties = { floating = true } },
-		{ rule = { class = "pinentry" },
-			properties = { floating = true } },
-		{ rule = { class = "gimp" },
-			properties = { floating = true } },
-		-- Set Firefox to always map on tags number 2 of screen 1.
-		--{ rule = { class = "Firefox" },
-		--	properties = { tag = tags[1][2] } },
-	}
+client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
+client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+
 -- }}}
-
--- {{{ Signals
-	-- Signal function to execute when a new client appears.
-	client.connect_signal("manage", function (c, startup)
-		-- Enable sloppy focus
-		c:connect_signal("mouse::enter", function(c)
-			if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-				and awful.client.focus.filter(c) then
-				client.focus = c
-			end
-		end)
-
-		if not startup then
-			-- Set the windows at the slave,
-			-- i.e. put it at the end of others instead of setting it master.
-			-- awful.client.setslave(c)
-
-			-- Put windows in a smart way, only if they does not set an initial position.
-			if not c.size_hints.user_position and not c.size_hints.program_position then
-				awful.placement.no_overlap(c)
-				awful.placement.no_offscreen(c)
-			end
-		elseif not c.size_hints.user_position and not c.size_hints.program_position then
-			-- Prevent clients from being unreachable after screen count change
-			awful.placement.no_offscreen(c)
-		end
-
-		local titlebars_enabled = false
-		if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
-			-- buttons for the titlebar
-			local buttons = awful.util.table.join(
-				awful.button({ }, 1, function()
-					client.focus = c
-					c:raise()
-					awful.mouse.client.move(c)
-				end),
-				awful.button({ }, 3, function()
-					client.focus = c
-					c:raise()
-					awful.mouse.client.resize(c)
-				end)
-				)
-
-			-- Widgets that are aligned to the left
-			local left_layout = wibox.layout.fixed.horizontal()
-			left_layout:add(awful.titlebar.widget.iconwidget(c))
-			left_layout:buttons(buttons)
-
-			-- Widgets that are aligned to the right
-			local right_layout = wibox.layout.fixed.horizontal()
-			right_layout:add(awful.titlebar.widget.floatingbutton(c))
-			right_layout:add(awful.titlebar.widget.maximizedbutton(c))
-			right_layout:add(awful.titlebar.widget.stickybutton(c))
-			right_layout:add(awful.titlebar.widget.ontopbutton(c))
-			right_layout:add(awful.titlebar.widget.closebutton(c))
-
-			-- The title goes in the middle
-			local middle_layout = wibox.layout.flex.horizontal()
-			local title = awful.titlebar.widget.titlewidget(c)
-			title:set_align("center")
-			middle_layout:add(title)
-			middle_layout:buttons(buttons)
-
-			-- Now bring it all together
-			local layout = wibox.layout.align.horizontal()
-			layout:set_left(left_layout)
-			layout:set_right(right_layout)
-			layout:set_middle(middle_layout)
-
-			awful.titlebar(c):set_widget(layout)
-		end
-	end)
-
-	client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-	client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
--- }}}
-
--- vim:ft=lua

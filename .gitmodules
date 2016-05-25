@@ -4,3 +4,6 @@
 [submodule "volume-widget"]
 	path = volume
 	url = https://github.com/Doron-Behar/volumetextwidget
+[submodule "shifty"]
+	path = shifty
+	url = https://github.com/cdump/awesome-shifty
