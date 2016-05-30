@@ -98,6 +98,7 @@ require("debian.menu")
 		-- rel_index	:integer	-- the index to open this tag compared to the current - Not at the end.
 		-- nopopup		:boolean	-- if true, the tag will not be focused when created.
 	-- configured tags.
+	-- {{ Tag configuration for when the screens are switched.
 	shifty.config.tags = {
 		["web"] = {
 			position	= 1,
@@ -120,56 +121,63 @@ require("debian.menu")
 			position	= 3,
 		}
 	}
+	--shifty.config.tags = {
+	--	["web"] = {
+	--		position	= 1,
+	--		init		= true,
+	--		screen		= 1,
+	--	},
+	--	["1:project"] = {
+	--		position	= 1,
+	--		init		= true,
+	--		screen		= 1,
+	--	},
+	--	["2:Media"] = {
+	--		init		= true,
+	--		position	= 2,
+	--		screen		= 1,
+	--	},
+	--	["3:config"] = {
+	--		init		= true,
+	--		screen		= 1,
+	--		position	= 3,
+	--	}
+	--}
+	-- }}
+	-- {{ Tag configuration for when the screens are not switched.
+	--shifty.config.tags = {
+	--	["web"] = {
+	--		position	= 1,
+	--		init		= true,
+	--		screen		= math.max(screen.count(), 2),
+	--	},
+	--	["1:project"] = {
+	--		position	= 1,
+	--		init		= true,
+	--		screen		= 1,
+	--	},
+	--	["2:Media"] = {
+	--		init		= true,
+	--		screen		= 1,
+	--		position	= 2,
+	--	},
+	--	["3:config"] = {
+	--		init		= true,
+	--		screen		= 1,
+	--		position	= 3,
+	--	}
+	--}
+	-- }}
 	-- SHIFTY: application matching rules
 	-- order here matters, early rules will be applied first
 	shifty.config.apps = {
 		{
 			match = {
-				"Navigator",
-				"Vimperator",
-				"Gran Paradiso",
-				"Google Chrome",
-				"google-chrome",
-			},
-			tag = "web",
-		},
-		{
-			match = {
-				"Mplayer.*",
-				"Mirage",
-				"gimp",
-				"gtkpod",
-				"Ufraw",
-				"easytag",
-				"MPD",
-				"ncmpc",
 				"ncmpcpp",
 			},
 			tag = "2:Media",
 			nopopup = false,
 		},
-		{
-			match = {
-				"MPlayer",
-				"Gnuplot",
-				"galculator",
-			},
-			float = true,
-		},
-		{
-			match = {
-				terminal,
-			},
-			honorsizehints = false,
-			slave = true,
-		},
-			match = {
-				"project",
-				"quartus",
-			},
-			honorsizehints = false,
-			slave = true,
-			tag = "1:project",
 		{
 			match = {""},
 			buttons = awful.util.table.join(
@@ -218,7 +226,6 @@ require("debian.menu")
 		mwfact = 0.5,
 		floatBars = false,
 		guess_name = true,
-		guess_position = true,
 		persist = true,
 	}
 -- }}}
@@ -457,7 +464,7 @@ require("debian.menu")
 		awful.key({"Shift" 				}, "F10",		function () awful.util.spawn("amixer -D pulse set Master 4%+", false) end),
 		awful.key({"Shift"				}, "F7",		function () awful.util.spawn("amixer -D pulse set Master 4%-", false) end),
 		awful.key({"Shift"				}, "Scroll_Lock", function () awful.util.spawn("amixer -D pulse set Master toggle", false) end),
-		awful.key({"Shift"				}, "F1",		function () awful.util.spawn("~/.bin/toggle-sinks", false) end),
+		awful.key({"Shift"				}, "F1",		function () awful.util.spawn("toggle-sinks", false) end),
 	-- Prompt
 		awful.key({modkey				}, "r",			function () mypromptbox[mouse.screen]:run()end),
 		awful.key({modkey				}, "x",
