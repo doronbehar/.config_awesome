@@ -7,3 +7,6 @@
 [submodule "shifty"]
 	path = shifty
 	url = https://github.com/cdump/awesome-shifty
+[submodule "tyrannical"]
+	path = tyrannical
+	url = https://github.com/Elv13/tyrannical

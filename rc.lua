@@ -15,6 +15,7 @@ local menubar = require("menubar")
 local shifty = require("shifty")
 -- Awesompd:
 local awesompd = require("mpd/awesompd")
+local tyrannical = require("tyrannical")
 -- sound widget:
 require("volume/widget")
 -- Load Debian menu entries
@@ -230,6 +231,30 @@ require("debian.menu")
 	}
 -- }}}
 
+-- {{{ Tyrannical:
+	-- First, set some settings
+	tyrannical.settings.default_layout =  awful.layout.suit.tile
+	tyrannical.settings.mwfact = 0.5
+	-- Setup some tags
+	tyrannical.tags = {
+	}
+	-- Ignore the tag "exclusive" property for the following clients (matched by classes)
+	tyrannical.properties.intrusive = {
+	}
+	-- Ignore the tiled layout for the matching clients
+	tyrannical.properties.floating = {
+	}
+	-- Make the matching clients (by classes) on top of the default layout
+	tyrannical.properties.ontop = {
+	}
+	-- Force the matching clients (by classes) to be centered on the screen on init
+	tyrannical.properties.centered = {
+	}
+	-- Do not honor size hints request for those classes
+	tyrannical.properties.size_hints_honor = {
+	}
+-- }}}
+
 -- {{{ Menu
 	-- Create a laucher widget and a main menu
 	myawesomemenu = {
@@ -428,8 +453,41 @@ require("debian.menu")
 		awful.key({modkey,				}, "w",			shifty.del), -- delete a tag
 		awful.key({modkey,"Shift"		}, "l",			shifty.send_next), -- client to next tag
 		awful.key({modkey,"Shift"		}, "h",			shifty.send_prev), -- client to prev tag
-		awful.key({modkey,"Shift"		}, "r",			shifty.rename), -- rename a tag
-		awful.key({modkey,				}, "n",			shifty.add), -- creat a new tag
+		-- rename a tag:
+		awful.key({modkey,"Shift"		}, "r",
+			function ()
+				awful.prompt.run({ prompt = "New tag name: " },
+				mypromptbox[mouse.screen].widget,
+				function(new_name)
+					if not new_name or #new_name == 0 then
+						return
+					else
+						local screen = mouse.screen
+						local tag = awful.tag.selected(screen)
+						if tag then
+							tag.name = new_name
+						end
+					end
+				end)
+			end),
+		-- creat a new tag:
+		awful.key({modkey,				}, "n",
+			function ()
+				awful.prompt.run({ prompt = "New tag name: " },
+				mypromptbox[mouse.screen].widget,
+				function(new_name)
+					if not new_name or #new_name == 0 then
+						return
+					else
+						props = {selected = true}
+						if tyrannical.tags_by_name[new_name] then
+							props = tyrannical.tags_by_name[new_name]
+						end
+						t = awful.tag.add(new_name, props)
+						awful.tag.viewonly(t)
+					end
+				end)
+			end),
 	-- Layout manipulation
 		awful.key({modkey,				}, "Up",		function () awful.client.swap.byidx(  1)    end),
 		awful.key({modkey,				}, "Down",		function () awful.client.swap.byidx( -1)    end),
