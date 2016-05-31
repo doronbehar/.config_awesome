@@ -98,74 +98,76 @@ require("debian.menu")
 		-- nopopup		:boolean	-- if true, the tag will not be focused when created.
 	-- configured tags.
 	-- {{ Tag configuration for when the screens are switched.
-	shifty.config.tags = {
-		["web"] = {
-			position	= 1,
-			init		= true,
-			screen		= 1,
-		},
-		["1:project"] = {
-			position	= 1,
-			init		= true,
-			screen		= math.max(screen.count(), 2),
-		},
-		["2:Media"] = {
-			init		= true,
-			position	= 2,
-			screen		= math.max(screen.count(), 2),
-		},
-		["3:config"] = {
-			init		= true,
-			screen		= math.max(screen.count(), 2),
-			position	= 3,
-		}
-	}
-	--shifty.config.tags = {
-	--	["web"] = {
-	--		position	= 1,
-	--		init		= true,
-	--		screen		= 1,
-	--	},
-	--	["1:project"] = {
-	--		position	= 1,
-	--		init		= true,
-	--		screen		= 1,
-	--	},
-	--	["2:Media"] = {
-	--		init		= true,
-	--		position	= 2,
-	--		screen		= 1,
-	--	},
-	--	["3:config"] = {
-	--		init		= true,
-	--		screen		= 1,
-	--		position	= 3,
-	--	}
-	--}
+		--shifty.config.tags = {
+		--	["web"] = {
+		--		position	= 1,
+		--		init		= true,
+		--		screen		= 1,
+		--	},
+		--	["1:project"] = {
+		--		position	= 1,
+		--		init		= true,
+		--		screen		= math.max(screen.count(), 2),
+		--	},
+		--	["2:Media"] = {
+		--		init		= true,
+		--		position	= 2,
+		--		screen		= math.max(screen.count(), 2),
+		--	},
+		--	["3:config"] = {
+		--		init		= true,
+		--		screen		= math.max(screen.count(), 2),
+		--		position	= 3,
+		--	}
+		--}
+	-- }}
+	-- {{ Tag configuration for a single monitor enviorment.
+		--shifty.config.tags = {
+		--	["web"] = {
+		--		position	= 1,
+		--		init		= true,
+		--		screen		= 1,
+		--	},
+		--	["1:project"] = {
+		--		position	= 1,
+		--		init		= true,
+		--		screen		= 1,
+		--	},
+		--	["2:Media"] = {
+		--		init		= true,
+		--		position	= 2,
+		--		screen		= 1,
+		--	},
+		--	["3:config"] = {
+		--		init		= true,
+		--		screen		= 1,
+		--		position	= 3,
+		--	}
+		--}
 	-- }}
 	-- {{ Tag configuration for when the screens are not switched.
-	--shifty.config.tags = {
-	--	["web"] = {
-	--		position	= 1,
-	--		init		= true,
-	--		screen		= math.max(screen.count(), 2),
-	--	},
-	--	["1:project"] = {
-	--		position	= 1,
-	--		init		= true,
-	--		screen		= 1,
-	--	},
-	--	["2:Media"] = {
-	--		init		= true,
-	--		screen		= 1,
-	--		position	= 2,
-	--	},
-	--	["3:config"] = {
-	--		init		= true,
-	--		screen		= 1,
-	--		position	= 3,
-	--	}
-	--}
+		shifty.config.tags = {
+			["web"] = {
+				position	= 1,
+				init		= true,
+				screen		= math.max(screen.count(), 2),
+			},
+			["1:project"] = {
+				position	= 1,
+				init		= true,
+				screen		= 1,
+			},
+			["2:Media"] = {
+				init		= true,
+				screen		= 1,
+				position	= 2,
+			},
+			["3:config"] = {
+				init		= true,
+				screen		= 1,
+				position	= 3,
+			}
+		}
 	-- }}
 	-- SHIFTY: application matching rules
 	-- order here matters, early rules will be applied first
@@ -406,14 +408,26 @@ require("debian.menu")
 		left_layout:add(mypromptbox[s])
 		-- Widgets that are aligned to the right
 		local right_layout = wibox.layout.fixed.horizontal()
-		if s == math.max(screen.count(), 2) then
-			right_layout:add(volume_widget)
-		end
-		if s == 1 then
-			-- Awesompd:
-			right_layout:add(musicwidget.widget)
-			right_layout:add(wibox.widget.systray())
-		end
+		-- {{ layout for when the monitors are switched
+			if s == math.max(screen.count(), 2) then
+				-- Awesompd:
+				right_layout:add(musicwidget.widget)
+				right_layout:add(wibox.widget.systray())
+			end
+			if s == 1 then
+				right_layout:add(volume_widget)
+			end
+		-- }}
+		-- {{ layout for when the monitors are not switched
+			--if s == math.max(screen.count(), 2) then
+			--	right_layout:add(volume_widget)
+			--end
+			--if s == 1 then
+			--	-- Awesompd:
+			--	right_layout:add(musicwidget.widget)
+			--	right_layout:add(wibox.widget.systray())
+			--end
+		-- }}
 		right_layout:add(mytextclock)
 		right_layout:add(mylayoutbox[s])
 		-- Now bring it all together (with the tasklist in the middle)
@@ -469,23 +483,7 @@ require("debian.menu")
 				end)
 			end),
 		-- creat a new tag:
-		awful.key({modkey,				}, "n",
-			function ()
-				awful.prompt.run({ prompt = "New tag name: " },
-				mypromptbox[mouse.screen].widget,
-				function(new_name)
-					if not new_name or #new_name == 0 then
-						return
-					else
-						props = {selected = true}
-						if tyrannical.tags_by_name[new_name] then
-							props = tyrannical.tags_by_name[new_name]
-						end
-						t = awful.tag.add(new_name, props)
-						awful.tag.viewonly(t)
-					end
-				end)
-			end),
+		awful.key({modkey,				}, "n",			shifty.add),
 	-- Layout manipulation
 		awful.key({modkey,				}, "Up",		function () awful.client.swap.byidx(  1)    end),
 		awful.key({modkey,				}, "Down",		function () awful.client.swap.byidx( -1)    end),
@@ -500,13 +498,22 @@ require("debian.menu")
 		awful.key({modkey,"Shift"		}, "space",		function () awful.layout.inc(layouts,-1) end),
 	-- Standard program
 		awful.key({modkey,				}, "Return",	function () awful.util.spawn(terminal) end),
-		awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn("xterm -T project -e \"tmux attach-session -t project || tmux\"") end),
+		awful.key({"Control","Mod1"		}, "t",
+			function ()
+				awful.util.spawn(
+					"xterm -T project -e \"tmux attach-session -t project || tmux\""
+				)
+			end),
 		awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome") end),
 		awful.key({"Control","Mod1"		}, "r",			function () awful.util.spawn("xterm -e ranger") end),
 		awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn("xterm -T ncmpcpp -e ncmpcpp") end),
 		awful.key({"Control","Mod1"		}, "e",			function () awful.util.spawn("xterm -e \"cd repos/dotfiles/.config/awesome; nvim rc.lua\"") end),
 		awful.key({"Control","Mod1"		}, "q",			function () awful.util.spawn("quartus") end),
 		awful.key({modkey,"Mod1"		}, "r",			awesome.restart),
+		-- bind PrintScrn to capture a screen
+		awful.key({						}, "Print",		function () awful.util.spawn("capscr all",false) end),
+		awful.key({"Control"			}, "Print",		function () awful.util.spawn("capscr frame",false) end),
+		awful.key({modkey				}, "Print",		function () awful.util.spawn("capscr window",false) end),
 		awful.key({modkey,"Mod1"		}, "q",			awesome.quit),
 	-- Music Player:
 		awful.key({						}, "Pause",		function () awful.util.spawn("mpc toggle") end),
@@ -516,6 +523,7 @@ require("debian.menu")
 		awful.key({"Control"			}, "F11",		function () awful.util.spawn("mpc seek -5") end),
 		awful.key({"Control"			}, "F10",		function () awful.util.spawn("mpc volume +5") end),
 		awful.key({"Control"			}, "F7",		function () awful.util.spawn("mpc volume -5") end),
+		awful.key({"Control"			}, "Scroll_Lock", function () awful.util.spawn("mpc-toggle-mute") end),
 	-- General Machine Volume managment:
 		awful.key({"Shift" 				}, "F10",		function () awful.util.spawn("amixer -D pulse set Master 4%+", false) end),
 		awful.key({"Shift"				}, "F7",		function () awful.util.spawn("amixer -D pulse set Master 4%-", false) end),
@@ -536,7 +544,6 @@ require("debian.menu")
 	)
 	clientkeys = awful.util.table.join(
 		awful.key({modkey,				}, "f",			function (c) c.fullscreen = not c.fullscreen  end),
-		awful.key({modkey,				}, "t",			function (c) shifty.create_titlebar(c) awful.titlebar(c) c.border_width = 1 end),
 		awful.key({modkey,				}, "q",			function (c) c:kill()                         end),
 		awful.key({modkey,"Shift"		}, "q",			awful.client.restore),
 		awful.key({modkey,"Shift"		}, "space",		awful.client.floating.toggle                     ),
