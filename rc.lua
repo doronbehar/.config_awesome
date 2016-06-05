@@ -328,8 +328,6 @@ require("debian.menu")
 -- }}}
 
 -- {{{ Wibox
-	-- Create a textclock widget
-	mytextclock = awful.widget.textclock()
 	-- Create a wibox for each screen and add it
 	mywibox = {}
 	mypromptbox = {}
@@ -416,11 +414,13 @@ require("debian.menu")
 			end
 			if s == 1 then
 				right_layout:add(volume_widget)
+				right_layout:add(awful.widget.textclock(" | %d/%m/%y - %H:%M:%S ",1))
 			end
 		-- }}
 		-- {{ layout for when the monitors are not switched
 			--if s == math.max(screen.count(), 2) then
 			--	right_layout:add(volume_widget)
+			--	right_layout:add(awful.widget.textclock(" | %d/%m/%y - %H:%M:%S ",1))
 			--end
 			--if s == 1 then
 			--	-- Awesompd:
@@ -428,7 +428,6 @@ require("debian.menu")
 			--	right_layout:add(wibox.widget.systray())
 			--end
 		-- }}
-		right_layout:add(mytextclock)
 		right_layout:add(mylayoutbox[s])
 		-- Now bring it all together (with the tasklist in the middle)
 		local layout = wibox.layout.align.horizontal()
