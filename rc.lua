@@ -260,7 +260,7 @@ require("debian.menu")
 	myawesomemenu = {
 		{ "manual", terminal .. " -e man awesome" },
 		{ "edit config", editor_cmd .. " " .. awesome.conffile },
-		{ "restart", awesome.restart },
+		{ "restart", awful.util.restart },
 		{ "quit", awesome.quit }
 	}
 	mymainmenu = awful.menu({
@@ -509,7 +509,7 @@ require("debian.menu")
 		awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn("xterm -T ncmpcpp -e ncmpcpp") end),
 		awful.key({"Control","Mod1"		}, "e",			function () awful.util.spawn("xterm -e \"cd repos/dotfiles/.config/awesome; nvim rc.lua\"") end),
 		awful.key({"Control","Mod1"		}, "q",			function () awful.util.spawn("quartus") end),
-		awful.key({modkey,"Mod1"		}, "r",			awesome.restart),
+		awful.key({modkey,"Mod1"		}, "r",			awful.util.restart),
 		-- bind PrintScrn to capture a screen
 		awful.key({						}, "Print",		function () awful.util.spawn("capscr all",false) end),
 		awful.key({"Control"			}, "Print",		function () awful.util.spawn("capscr frame",false) end),
