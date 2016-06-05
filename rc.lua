@@ -104,17 +104,17 @@ require("debian.menu")
 		--		init		= true,
 		--		screen		= 1,
 		--	},
-		--	["1:project"] = {
+		--	["project"] = {
 		--		position	= 1,
 		--		init		= true,
 		--		screen		= math.max(screen.count(), 2),
 		--	},
-		--	["2:Media"] = {
+		--	["Media"] = {
 		--		init		= true,
 		--		position	= 2,
 		--		screen		= math.max(screen.count(), 2),
 		--	},
-		--	["3:config"] = {
+		--	["config"] = {
 		--		init		= true,
 		--		screen		= math.max(screen.count(), 2),
 		--		position	= 3,
@@ -128,17 +128,17 @@ require("debian.menu")
 		--		init		= true,
 		--		screen		= 1,
 		--	},
-		--	["1:project"] = {
+		--	["project"] = {
 		--		position	= 1,
 		--		init		= true,
 		--		screen		= 1,
 		--	},
-		--	["2:Media"] = {
+		--	["Media"] = {
 		--		init		= true,
 		--		position	= 2,
 		--		screen		= 1,
 		--	},
-		--	["3:config"] = {
+		--	["config"] = {
 		--		init		= true,
 		--		screen		= 1,
 		--		position	= 3,
@@ -152,17 +152,17 @@ require("debian.menu")
 				init		= true,
 				screen		= math.max(screen.count(), 2),
 			},
-			["1:project"] = {
+			["project"] = {
 				position	= 1,
 				init		= true,
 				screen		= 1,
 			},
-			["2:Media"] = {
+			["Media"] = {
 				init		= true,
 				screen		= 1,
 				position	= 2,
 			},
-			["3:config"] = {
+			["config"] = {
 				init		= true,
 				screen		= 1,
 				position	= 3,
@@ -176,7 +176,7 @@ require("debian.menu")
 			match = {
 				"ncmpcpp",
 			},
-			tag = "2:Media",
+			tag = "Media",
 			nopopup = false,
 		},
 		{
@@ -447,8 +447,30 @@ require("debian.menu")
 -- }}}
 
 -- {{{ Key bindings
+	-- taken from https://github.com/geektophe/awesome-config/blob/de8cd6a3cd0d2d58effacfdc1d3698c34b17d172/utils/tag.lua#L10
+	function incindex(incr)
+		local tag = awful.tag.selected()
+		local tag_index = awful.tag.getidx(tag)
+		local s = awful.tag.getscreen(tag)
+		local tag_count = table.getn(awful.tag.gettags(s))
+		tag_index = awful.util.cycle(tag_count, tag_index + incr)
+		awful.tag.move(tag_index, tag)
+	end
+	-- inspired from http://stackoverflow.com/questions/31272329/awesome-wm-how-to-change-tag-of-screen
+	function move_tag_to_screen(incr)
+		local tag = awful.tag.selected()
+		local screen_index = awful.tag.getscreen(tag)
+		local tag_count = table.getn(awful.tag.gettags(screen_index))
+		if tag_count > 1 then -- protection against having a screen with no tags
+			screen_index = awful.util.cycle(screen.count(), screen_index + incr)
+			awful.tag.setscreen(tag, screen_index)
+			awful.screen.focus(screen_index)
+			awful.tag.viewonly(tag)
+		end
+	end
 	globalkeys = awful.util.table.join(
-	-- Tags and window manipulation and movement with shifty:
+	-- Tags and window manipulation and movement
+		awful.key({modkey,				}, "Tab",		function () awful.screen.focus_relative( 1) end),
 		awful.key({modkey,				}, "l",			awful.tag.viewnext),
 		awful.key({modkey,				}, "h",			awful.tag.viewprev),
 		awful.key({modkey,				}, "j",
@@ -464,6 +486,25 @@ require("debian.menu")
 		awful.key({modkey,				}, "w",			shifty.del), -- delete a tag
 		awful.key({modkey,"Shift"		}, "l",			shifty.send_next), -- client to next tag
 		awful.key({modkey,"Shift"		}, "h",			shifty.send_prev), -- client to prev tag
+		-- Move a tag right in one index
+		awful.key({modkey,"Control"		}, "l",
+			function()
+				incindex(1)
+			end),
+		-- Move a tag left in one index
+		awful.key({modkey,"Control"		}, "h",
+			function()
+				incindex(-1)
+			end),
+		-- Move a tag to a different screen
+		awful.key({modkey,"Control"		}, "i",
+			function()
+				move_tag_to_screen(1)
+			end),
+		awful.key({modkey,"Control"		}, "u",
+			function()
+				move_tag_to_screen(-1)
+			end),
 		-- rename a tag:
 		awful.key({modkey,"Shift"		}, "r",
 			function ()
@@ -486,7 +527,6 @@ require("debian.menu")
 	-- Layout manipulation
 		awful.key({modkey,				}, "Up",		function () awful.client.swap.byidx(  1)    end),
 		awful.key({modkey,				}, "Down",		function () awful.client.swap.byidx( -1)    end),
-		awful.key({modkey,				}, "Tab",		function () awful.screen.focus_relative( 1) end),
 		awful.key({modkey,				}, "Right",		function () awful.tag.incmwfact( 0.02) end),
 		awful.key({modkey,				}, "Left",		function () awful.tag.incmwfact(-0.02) end),
 		awful.key({modkey,"Shift"		}, "Right",		function () awful.tag.incnmaster( 1)  end),
