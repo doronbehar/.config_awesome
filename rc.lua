@@ -104,27 +104,8 @@ require("debian.menu")
 		--		init		= true,
 		--		screen		= 1,
 		--	},
-		--	["project"] = {
-		--		position	= 1,
-		--		init		= true,
-		--		screen		= math.max(screen.count(), 2),
-		--	},
-		--	["Media"] = {
-		--		init		= true,
+		--	["man"] = {
 		--		position	= 2,
-		--		screen		= math.max(screen.count(), 2),
-		--	},
-		--	["config"] = {
-		--		init		= true,
-		--		screen		= math.max(screen.count(), 2),
-		--		position	= 3,
-		--	}
-		--}
-	-- }}
-	-- {{ Tag configuration for a single monitor enviorment.
-		--shifty.config.tags = {
-		--	["web"] = {
-		--		position	= 1,
 		--		init		= true,
 		--		screen		= 1,
 		--	},
@@ -149,6 +130,11 @@ require("debian.menu")
 		shifty.config.tags = {
 			["web"] = {
 				position	= 1,
+				init		= true,
+				screen		= math.max(screen.count(), 2),
+			},
+			["man"] = {
+				position	= 2,
 				init		= true,
 				screen		= math.max(screen.count(), 2),
 			},
