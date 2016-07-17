@@ -84,7 +84,7 @@ require("debian.menu")
 -- }}}
 
 -- {{{ Shifty:
-	-- Available OPtions for each tag:
+	-- Available options for each tag:
 		-- init			:boolean	-- Create this tag at startup and be persistant.
 		-- position		:integer	-- the position of the window.
 		-- screen		:integer	-- the index of the screen: _Tip:_ use `screen = math.max(screen.count(), 2)` for the second monitor
@@ -97,7 +97,7 @@ require("debian.menu")
 		-- rel_index	:integer	-- the index to open this tag compared to the current - Not at the end.
 		-- nopopup		:boolean	-- if true, the tag will not be focused when created.
 	-- configured tags.
-	-- {{ Tag configuration for when the screens are switched.
+	-- {{ Tag configuration for a single monitor enviorment.
 		--shifty.config.tags = {
 		--	["web"] = {
 		--		position	= 1,
@@ -257,17 +257,15 @@ require("debian.menu")
 
 -- {{{ Menu
 	-- Create a laucher widget and a main menu
-	myawesomemenu = {
-		{ "manual", terminal .. " -e man awesome" },
-		{ "edit config", editor_cmd .. " " .. awesome.conffile },
-		{ "restart", awful.util.restart },
-		{ "quit", awesome.quit }
-	}
 	mymainmenu = awful.menu({
 		items = {
-			{ "awesome", myawesomemenu, beautiful.awesome_icon },
-			{ "Debian", debian.menu.Debian_menu.Debian },
-			{ "open terminal", terminal }
+			{ "Manual", terminal .. " -e man awesome" },
+			{ "Edit Config", editor_cmd .. " " .. awesome.conffile },
+			{ "Terminal", terminal },
+			{ "Restart Session", awful.util.restart },
+			{ "Applications", debian.menu.Debian_menu.Debian_Applications },
+			{ "Help", debian.menu.Debian_menu.Debian_Help },
+			{ "Quit Session", awesome.quit }
 		}
 	})
 	mylauncher = awful.widget.launcher({
@@ -448,7 +446,7 @@ require("debian.menu")
 
 -- {{{ Key bindings
 	-- taken from https://github.com/geektophe/awesome-config/blob/de8cd6a3cd0d2d58effacfdc1d3698c34b17d172/utils/tag.lua#L10
-	function incindex(incr)
+	function incr_tag_index(incr)
 		local tag = awful.tag.selected()
 		local tag_index = awful.tag.getidx(tag)
 		local s = awful.tag.getscreen(tag)
@@ -457,7 +455,7 @@ require("debian.menu")
 		awful.tag.move(tag_index, tag)
 	end
 	-- inspired from http://stackoverflow.com/questions/31272329/awesome-wm-how-to-change-tag-of-screen
-	function move_tag_to_screen(incr)
+	function incr_screen_index(incr)
 		local tag = awful.tag.selected()
 		local screen_index = awful.tag.getscreen(tag)
 		local tag_count = table.getn(awful.tag.gettags(screen_index))
@@ -489,21 +487,21 @@ require("debian.menu")
 		-- Move a tag right in one index
 		awful.key({modkey,"Control"		}, "l",
 			function()
-				incindex(1)
+				incr_tag_index(1)
 			end),
 		-- Move a tag left in one index
 		awful.key({modkey,"Control"		}, "h",
 			function()
-				incindex(-1)
+				incr_tag_index(-1)
 			end),
 		-- Move a tag to a different screen
 		awful.key({modkey,"Control"		}, "i",
 			function()
-				move_tag_to_screen(1)
+				incr_screen_index(1)
 			end),
 		awful.key({modkey,"Control"		}, "u",
 			function()
-				move_tag_to_screen(-1)
+				incr_screen_index(-1)
 			end),
 		-- rename a tag:
 		awful.key({modkey,"Shift"		}, "r",
@@ -546,7 +544,12 @@ require("debian.menu")
 		awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome") end),
 		awful.key({"Control","Mod1"		}, "r",			function () awful.util.spawn("xterm -e ranger") end),
 		awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn("xterm -T ncmpcpp -e ncmpcpp") end),
-		awful.key({"Control","Mod1"		}, "e",			function () awful.util.spawn("xterm -e \"cd repos/dotfiles/.config/awesome; nvim rc.lua\"") end),
+		awful.key({"Control","Mod1"		}, "e",
+			function ()
+				awful.util.spawn(
+					"xterm -e \"cd repos/dotfiles/.config/awesome; nvim rc.lua\""
+				)
+			end),
 		awful.key({"Control","Mod1"		}, "q",			function () awful.util.spawn("quartus") end),
 		awful.key({modkey,"Mod1"		}, "r",			awful.util.restart),
 		-- bind PrintScrn to capture a screen
