@@ -390,8 +390,7 @@ require("debian.menu")
 		left_layout:add(mypromptbox[s])
 		-- Widgets that are aligned to the right
 		local right_layout = wibox.layout.fixed.horizontal()
-		-- {{ layout for when the monitors are switched
-			if s == math.max(screen.count(), 2) then
+			if s == math.min(screen.count(), 2) then
 				-- Awesompd:
 				right_layout:add(musicwidget.widget)
 				right_layout:add(wibox.widget.systray())
@@ -400,18 +399,6 @@ require("debian.menu")
 				right_layout:add(volume_widget)
 				right_layout:add(awful.widget.textclock(" | %d/%m/%y - %H:%M:%S ",1))
 			end
-		-- }}
-		-- {{ layout for when the monitors are not switched
-			--if s == math.max(screen.count(), 2) then
-			--	right_layout:add(volume_widget)
-			--	right_layout:add(awful.widget.textclock(" | %d/%m/%y - %H:%M:%S ",1))
-			--end
-			--if s == 1 then
-			--	-- Awesompd:
-			--	right_layout:add(musicwidget.widget)
-			--	right_layout:add(wibox.widget.systray())
-			--end
-		-- }}
 		right_layout:add(mylayoutbox[s])
 		-- Now bring it all together (with the tasklist in the middle)
 		local layout = wibox.layout.align.horizontal()
