@@ -48,7 +48,7 @@ require("debian.menu")
 	-- Themes define colours, icons, font and wallpapers.
 	beautiful.init("~/.config/awesome/theme.lua")
 	-- This is used later as the default terminal and editor to run.
-	terminal = "xterm"
+	terminal = "urxvt"
 	editor = os.getenv("EDITOR") or "editor"
 	editor_cmd = terminal .. " -e " .. editor
 	-- Default modkey.
@@ -511,16 +511,16 @@ require("debian.menu")
 		awful.key({"Control","Mod1"		}, "t",
 			function ()
 				awful.util.spawn(
-					"xterm -T project -e \"tmux attach-session -t project || tmux\""
+					"urxvt -T project -e sh -c \"tmux attach-session -t project || tmux new -s project\""
 				)
 			end),
 		awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome") end),
-		awful.key({"Control","Mod1"		}, "r",			function () awful.util.spawn("xterm -e ranger") end),
-		awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn("xterm -T ncmpcpp -e ncmpcpp") end),
+		awful.key({"Control","Mod1"		}, "r",			function () awful.util.spawn("urxvt -e ranger") end),
+		awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn("urxvt -e ncmpcpp") end),
 		awful.key({"Control","Mod1"		}, "e",
 			function ()
 				awful.util.spawn(
-					"xterm -e \"cd repos/dotfiles/.config/awesome; nvim rc.lua\""
+					"urxvt -e \"cd repos/dotfiles/.config/awesome; nvim rc.lua\""
 				)
 			end),
 		awful.key({"Control","Mod1"		}, "q",			function () awful.util.spawn("quartus") end),
