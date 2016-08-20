@@ -1,4 +1,6 @@
 -- Standard awesome library
+-- package.path = package.path .. ";/usr/share/awesome/lib/?.lua"
+-- package.path = package.path .. ";/usr/share/awesome/lib/?/init.lua"
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
@@ -9,6 +11,14 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
+
+-- Load Debian menu entries
+-- package.path = package.path .. ";/etc/xdg/awesome/?.lua"
+-- package.path = package.path .. ";/etc/xdg/awesome/?/init.lua"
+require("debian.menu")
+
+-- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?.lua"
+-- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?/init.lua"
 -- shifty - dynamic tagging library
 local shifty = require("shifty")
 -- Awesompd:
@@ -16,8 +26,6 @@ local awesompd = require("mpd/awesompd")
 local tyrannical = require("tyrannical")
 -- sound widget:
 require("volume/widget")
--- Load Debian menu entries
-require("debian.menu")
 
 -- {{{ Error handling
 	-- Check if awesome encountered an error during startup and fell back to
@@ -421,11 +429,10 @@ require("debian.menu")
 	-- taken from https://github.com/geektophe/awesome-config/blob/de8cd6a3cd0d2d58effacfdc1d3698c34b17d172/utils/tag.lua#L10
 	function incr_tag_index(incr)
 		local tag = awful.tag.selected()
-		local tag_index = awful.tag.getidx(tag)
-		local s = awful.tag.getscreen(tag)
-		local tag_count = table.getn(awful.tag.gettags(s))
-		tag_index = awful.util.cycle(tag_count, tag_index + incr)
-		awful.tag.move(tag_index, tag)
+		local old_tag_index = awful.tag.getidx(tag)
+		local tag_count = table.getn(awful.tag.gettags(awful.tag.getscreen(tag)))
+		local new_tag_index = awful.util.cycle(tag_count, old_tag_index + incr)
+		awful.tag.move(new_tag_index, tag)
 	end
 	-- inspired from http://stackoverflow.com/questions/31272329/awesome-wm-how-to-change-tag-of-screen
 	function incr_screen_index(incr)
@@ -438,6 +445,39 @@ require("debian.menu")
 			awful.screen.focus(screen_index)
 			awful.tag.viewonly(tag)
 		end
+	end
+	function incr_tag_clients_index(incr)
+		local tag = awful.tag.selected()
+		local old_tag_index = awful.tag.getidx(tag)
+		local all_tags = awful.tag.gettags(awful.tag.getscreen(tag))
+		local tag_count = table.getn(all_tags)
+		local new_tag_index = awful.util.cycle(tag_count, old_tag_index + incr)
+		local old_tag_name = tag.name
+		local new_tag_name = all_tags[new_tag_index].name
+		--naughty.notify({
+		--	text = string.format(
+		--		"tag %s is going to be named %s",
+		--		awful.tag.selected().name,
+		--		new_tag_name
+		--	),
+		--	timeout = 10
+		--})
+		awful.tag.selected().name = new_tag_name
+		--naughty.notify({
+		--	text = string.format(
+		--		"tag %s is going to be named %s",
+		--		awful.tag.gettags(awful.tag.getscreen(tag))[new_tag_index].name,
+		--		old_tag_name
+		--	),
+		--	timeout = 10
+		--})
+		awful.tag.gettags(awful.tag.getscreen(tag))[new_tag_index].name = old_tag_name
+		--naughty.notify({
+		--	text = string.format("switching tag %s (indexed %d) with current tag %s (indexed %d)",
+		--	all_tags[new_tag_index].name, new_tag_index, tag.name, old_tag_index),
+		--	timeout = 10
+		--})
+		awful.tag.move(new_tag_index, tag)
 	end
 	globalkeys = awful.util.table.join(
 	-- Tags and window manipulation and movement
@@ -457,6 +497,16 @@ require("debian.menu")
 		awful.key({modkey,				}, "w",			shifty.del), -- delete a tag
 		awful.key({modkey,"Shift"		}, "l",			shifty.send_next), -- client to next tag
 		awful.key({modkey,"Shift"		}, "h",			shifty.send_prev), -- client to prev tag
+		-- Move all tag's clients to next tag
+		awful.key({modkey,"Mod1"		}, "l",
+			function()
+				incr_tag_clients_index(1)
+			end),
+		-- Move all tag's clients to previous tag
+		awful.key({modkey,"Mod1"		}, "h",
+			function()
+				incr_tag_clients_index(-1)
+			end),
 		-- Move a tag right in one index
 		awful.key({modkey,"Control"		}, "l",
 			function()
