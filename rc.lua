@@ -579,6 +579,7 @@ require("volume/widget")
 		awful.key({						}, "Print",		function () awful.util.spawn("capscr all",false) end),
 		awful.key({"Control"			}, "Print",		function () awful.util.spawn("capscr frame",false) end),
 		awful.key({modkey				}, "Print",		function () awful.util.spawn("capscr window",false) end),
+		awful.key({"Mod1"				}, "Print",		function () awful.util.spawn("screencast",false) end),
 		awful.key({modkey,"Mod1"		}, "q",			awesome.quit),
 	-- Music Player:
 		awful.key({						}, "Pause",		function () awful.util.spawn("mpc toggle") end),
