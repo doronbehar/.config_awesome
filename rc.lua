@@ -3,6 +3,7 @@
 -- package.path = package.path .. ";/usr/share/awesome/lib/?/init.lua"
 local gears = require("gears")
 local awful = require("awful")
+awful.rules = require("awful.rules")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
@@ -11,11 +12,8 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
-
--- Load Debian menu entries
--- package.path = package.path .. ";/etc/xdg/awesome/?.lua"
--- package.path = package.path .. ";/etc/xdg/awesome/?/init.lua"
-require("debian.menu")
+-- Arch linux library for xdg-menu
+xdg_menu = require("archmenu")
 
 -- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?.lua"
 -- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?/init.lua"
@@ -137,29 +135,29 @@ require("volume/widget")
 	-- {{ Tag configuration for when the screens are not switched.
 		shifty.config.tags = {
 			["web"] = {
-				position	= 1,
 				init		= true,
-				screen		= math.max(screen.count(), 2),
+				position	= 1,
+				screen		= 1,
 			},
 			["man"] = {
-				position	= 2,
 				init		= true,
-				screen		= math.max(screen.count(), 2),
+				position	= 2,
+				screen		= 1
 			},
 			["project"] = {
-				position	= 1,
 				init		= true,
-				screen		= 1,
+				position	= 1,
+				screen		= math.max(screen.count(), 2)
 			},
 			["Media"] = {
 				init		= true,
-				screen		= 1,
 				position	= 2,
+				screen		= math.max(screen.count(), 2)
 			},
 			["config"] = {
 				init		= true,
-				screen		= 1,
 				position	= 3,
+				screen		= math.max(screen.count(), 2)
 			}
 		}
 	-- }}
@@ -253,13 +251,12 @@ require("volume/widget")
 	-- Create a laucher widget and a main menu
 	mymainmenu = awful.menu({
 		items = {
+			{ "Apps", xdgmenu },
 			{ "Manual", terminal .. " -e man awesome" },
-			{ "Edit Config", editor_cmd .. " " .. awesome.conffile },
+			{ "Config", editor_cmd .. " " .. awesome.conffile },
 			{ "Terminal", terminal },
-			{ "Restart Session", awful.util.restart },
-			{ "Applications", debian.menu.Debian_menu.Debian_Applications },
-			{ "Help", debian.menu.Debian_menu.Debian_Help },
-			{ "Quit Session", awesome.quit }
+			{ "Restart", awful.util.restart },
+			{ "Quit", awesome.quit }
 		}
 	})
 	mylauncher = awful.widget.launcher({
@@ -399,13 +396,13 @@ require("volume/widget")
 		-- Widgets that are aligned to the right
 		local right_layout = wibox.layout.fixed.horizontal()
 			if s == math.min(screen.count(), 2) then
+				right_layout:add(volume_widget)
+				right_layout:add(awful.widget.textclock(" | %d/%m/%y - %H:%M:%S ",1))
+			end
+			if s == 1 then
 				-- Awesompd:
 				right_layout:add(musicwidget.widget)
 				right_layout:add(wibox.widget.systray())
-			end
-			if s == 1 then
-				right_layout:add(volume_widget)
-				right_layout:add(awful.widget.textclock(" | %d/%m/%y - %H:%M:%S ",1))
 			end
 		right_layout:add(mylayoutbox[s])
 		-- Now bring it all together (with the tasklist in the middle)
@@ -430,7 +427,7 @@ require("volume/widget")
 	function incr_tag_index(incr)
 		local tag = awful.tag.selected()
 		local old_tag_index = awful.tag.getidx(tag)
-		local tag_count = table.getn(awful.tag.gettags(awful.tag.getscreen(tag)))
+		local tag_count = #awful.tag.gettags(awful.tag.getscreen(tag))
 		local new_tag_index = awful.util.cycle(tag_count, old_tag_index + incr)
 		awful.tag.move(new_tag_index, tag)
 	end
@@ -438,7 +435,7 @@ require("volume/widget")
 	function incr_screen_index(incr)
 		local tag = awful.tag.selected()
 		local screen_index = awful.tag.getscreen(tag)
-		local tag_count = table.getn(awful.tag.gettags(screen_index))
+		local tag_count = #awful.tag.gettags(screen_index)
 		if tag_count > 1 then -- protection against having a screen with no tags
 			screen_index = awful.util.cycle(screen.count(), screen_index + incr)
 			awful.tag.setscreen(tag, screen_index)
@@ -564,7 +561,7 @@ require("volume/widget")
 					"urxvt -T project -e sh -c \"tmux attach-session -t project || tmux new -s project\""
 				)
 			end),
-		awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome") end),
+		awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome-stable") end),
 		awful.key({"Control","Mod1"		}, "r",			function () awful.util.spawn("urxvt -e ranger") end),
 		awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn("urxvt -e ncmpcpp") end),
 		awful.key({"Control","Mod1"		}, "e",
