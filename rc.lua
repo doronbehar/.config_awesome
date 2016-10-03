@@ -31,7 +31,9 @@ require("volume/widget")
 	if awesome.startup_errors then
 		naughty.notify({ preset = naughty.config.presets.critical,
 		title = "Oops, there were errors during startup!",
-		text = awesome.startup_errors })
+		timeout = 10,
+		text = awesome.startup_errors
+	})
 	end
 	-- Handle runtime errors after startup
 	do
@@ -43,6 +45,7 @@ require("volume/widget")
 			naughty.notify({
 				preset = naughty.config.presets.critical,
 				title = "Oops, an error happened!",
+				timeout = 10,
 				text = err
 			})
 			in_error = false
