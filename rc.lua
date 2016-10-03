@@ -105,65 +105,33 @@ require("volume/widget")
 		-- icon			:string		-- Path to the icon in the tag list.
 		-- rel_index	:integer	-- the index to open this tag compared to the current - Not at the end.
 		-- nopopup		:boolean	-- if true, the tag will not be focused when created.
-	-- configured tags.
-	-- {{ Tag configuration for a single monitor enviorment.
-		--shifty.config.tags = {
-		--	["web"] = {
-		--		position	= 1,
-		--		init		= true,
-		--		screen		= 1,
-		--	},
-		--	["man"] = {
-		--		position	= 2,
-		--		init		= true,
-		--		screen		= 1,
-		--	},
-		--	["project"] = {
-		--		position	= 1,
-		--		init		= true,
-		--		screen		= 1,
-		--	},
-		--	["Media"] = {
-		--		init		= true,
-		--		position	= 2,
-		--		screen		= 1,
-		--	},
-		--	["config"] = {
-		--		init		= true,
-		--		screen		= 1,
-		--		position	= 3,
-		--	}
-		--}
-	-- }}
-	-- {{ Tag configuration for when the screens are not switched.
-		shifty.config.tags = {
-			["web"] = {
-				init		= true,
-				position	= 1,
-				screen		= 1,
-			},
-			["man"] = {
-				init		= true,
-				position	= 2,
-				screen		= 1
-			},
-			["project"] = {
-				init		= true,
-				position	= 1,
-				screen		= math.max(screen.count(), 2)
-			},
-			["Media"] = {
-				init		= true,
-				position	= 2,
-				screen		= math.max(screen.count(), 2)
-			},
-			["config"] = {
-				init		= true,
-				position	= 3,
-				screen		= math.max(screen.count(), 2)
-			}
+	shifty.config.tags = {
+		["web"] = {
+			init		= true,
+			position	= 1,
+			screen		= 1,
+		},
+		["man"] = {
+			init		= true,
+			position	= 2,
+			screen		= 1
+		},
+		["project"] = {
+			init		= true,
+			position	= 1,
+			screen		= math.min(screen.count(), 2)
+		},
+		["Media"] = {
+			init		= true,
+			position	= 2,
+			screen		= math.min(screen.count(), 2)
+		},
+		["config"] = {
+			init		= true,
+			position	= 3,
+			screen		= math.min(screen.count(), 2)
 		}
-	-- }}
+	}
 	-- SHIFTY: application matching rules
 	-- order here matters, early rules will be applied first
 	shifty.config.apps = {
