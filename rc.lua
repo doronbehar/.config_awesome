@@ -403,7 +403,7 @@ require("volume/widget")
 		awful.tag.move(new_tag_index, tag)
 	end
 	-- inspired from http://stackoverflow.com/questions/31272329/awesome-wm-how-to-change-tag-of-screen
-	function incr_screen_index(incr)
+	function incr_tag_screen_index(incr)
 		local tag = awful.tag.selected()
 		local screen_index = awful.tag.getscreen(tag)
 		local tag_count = #awful.tag.gettags(screen_index)
@@ -414,42 +414,34 @@ require("volume/widget")
 			awful.tag.viewonly(tag)
 		end
 	end
-	function incr_tag_clients_index(incr)
+	function incr_tag_clients_tag_index(incr)
 		local tag = awful.tag.selected()
-		local old_tag_index = awful.tag.getidx(tag)
 		local all_tags = awful.tag.gettags(awful.tag.getscreen(tag))
-		local tag_count = table.getn(all_tags)
-		local new_tag_index = awful.util.cycle(tag_count, old_tag_index + incr)
-		local old_tag_name = tag.name
-		local new_tag_name = all_tags[new_tag_index].name
-		--naughty.notify({
-		--	text = string.format(
-		--		"tag %s is going to be named %s",
-		--		awful.tag.selected().name,
-		--		new_tag_name
-		--	),
-		--	timeout = 10
-		--})
-		awful.tag.selected().name = new_tag_name
-		--naughty.notify({
-		--	text = string.format(
-		--		"tag %s is going to be named %s",
-		--		awful.tag.gettags(awful.tag.getscreen(tag))[new_tag_index].name,
-		--		old_tag_name
-		--	),
-		--	timeout = 10
-		--})
-		awful.tag.gettags(awful.tag.getscreen(tag))[new_tag_index].name = old_tag_name
-		--naughty.notify({
-		--	text = string.format("switching tag %s (indexed %d) with current tag %s (indexed %d)",
-		--	all_tags[new_tag_index].name, new_tag_index, tag.name, old_tag_index),
-		--	timeout = 10
-		--})
-		awful.tag.move(new_tag_index, tag)
+		local new_tag_index = awful.util.cycle(#all_tags, awful.tag.getidx(tag) + incr)
+		local new_tag = all_tags[new_tag_index]
+		local dumb = function()
+			return true
+		end
+		for c in awful.util.table.iterate(tag:clients(),dumb,1) do
+			awful.client.movetotag(new_tag,c)
+		end
+		awful.tag.viewonly(new_tag)
+	end
+	function incr_tag_clients_screen_index(incr)
+		local tag = awful.tag.selected()
+		local dumb = function()
+			return true
+		end
+		for c in awful.util.table.iterate(tag:clients(),dumb,1) do
+			awful.client.movetoscreen(c,incr)
+		end
+		awful.tag.viewonly(new_tag)
 	end
 	globalkeys = awful.util.table.join(
 	-- Tags and window manipulation and movement
 		awful.key({modkey,				}, "Tab",		function () awful.screen.focus_relative( 1) end),
+		awful.key({modkey,				}, "i",			function () awful.screen.focus_relative( 1) end),
+		awful.key({modkey,				}, "u",			function () awful.screen.focus_relative(-1) end),
 		awful.key({modkey,				}, "l",			awful.tag.viewnext),
 		awful.key({modkey,				}, "h",			awful.tag.viewprev),
 		awful.key({modkey,				}, "j",
@@ -468,12 +460,22 @@ require("volume/widget")
 		-- Move all tag's clients to next tag
 		awful.key({modkey,"Mod1"		}, "l",
 			function()
-				incr_tag_clients_index(1)
+				incr_tag_clients_tag_index(1)
 			end),
 		-- Move all tag's clients to previous tag
 		awful.key({modkey,"Mod1"		}, "h",
 			function()
-				incr_tag_clients_index(-1)
+				incr_tag_clients_tag_index(-1)
+			end),
+		-- Move all tag's clients to next screen
+		awful.key({modkey,"Mod1"		}, "i",
+			function()
+				incr_tag_clients_screen_index(1)
+			end),
+		-- Move all tag's clients to previous screen
+		awful.key({modkey,"Mod1"		}, "u",
+			function()
+				incr_tag_clients_screen_index(-1)
 			end),
 		-- Move a tag right in one index
 		awful.key({modkey,"Control"		}, "l",
@@ -488,11 +490,11 @@ require("volume/widget")
 		-- Move a tag to a different screen
 		awful.key({modkey,"Control"		}, "i",
 			function()
-				incr_screen_index(1)
+				incr_tag_screen_index(1)
 			end),
 		awful.key({modkey,"Control"		}, "u",
 			function()
-				incr_screen_index(-1)
+				incr_tag_screen_index(-1)
 			end),
 		-- rename a tag:
 		awful.key({modkey,"Shift"		}, "r",
@@ -549,20 +551,21 @@ require("volume/widget")
 		awful.key({modkey				}, "Print",		function () awful.util.spawn("capscr window",false) end),
 		awful.key({"Mod1"				}, "Print",		function () awful.util.spawn("screencast",false) end),
 		awful.key({modkey,"Mod1"		}, "q",			awesome.quit),
+		awful.key({modkey,"Mod1"		}, "x",			function () awful.util.spawn("systemctl poweroff",false) end),
 	-- Music Player:
-		awful.key({						}, "Pause",		function () awful.util.spawn("mpc toggle") end),
-		awful.key({						}, "F9",		function () awful.util.spawn("mpc next") end),
-		awful.key({						}, "F8",		function () awful.util.spawn("mpc prev") end),
-		awful.key({"Control"			}, "F12",		function () awful.util.spawn("mpc seek +5") end),
-		awful.key({"Control"			}, "F11",		function () awful.util.spawn("mpc seek -5") end),
-		awful.key({"Control"			}, "F10",		function () awful.util.spawn("mpc volume +5") end),
-		awful.key({"Control"			}, "F7",		function () awful.util.spawn("mpc volume -5") end),
-		awful.key({"Control"			}, "Scroll_Lock", function () awful.util.spawn("mpc-toggle-mute") end),
+		awful.key({modkey,"Control"		}, "Pause",		function () awful.util.spawn("mpc toggle") end),
+		awful.key({modkey,"Control"		}, "F9",		function () awful.util.spawn("mpc next") end),
+		awful.key({modkey,"Control"		}, "F8",		function () awful.util.spawn("mpc prev") end),
+		awful.key({modkey,"Control"		}, "F12",		function () awful.util.spawn("mpc seek +5") end),
+		awful.key({modkey,"Control"		}, "F11",		function () awful.util.spawn("mpc seek -5") end),
+		awful.key({modkey,"Control"		}, "F10",		function () awful.util.spawn("mpc volume +5") end),
+		awful.key({modkey,"Control"		}, "F7",		function () awful.util.spawn("mpc volume -5") end),
+		awful.key({modkey,"Control"		}, "Scroll_Lock", function () awful.util.spawn("mpc-toggle-mute") end),
 	-- General Machine Volume managment:
-		awful.key({"Shift" 				}, "F10",		function () awful.util.spawn("amixer -D pulse set Master 4%+", false) end),
-		awful.key({"Shift"				}, "F7",		function () awful.util.spawn("amixer -D pulse set Master 4%-", false) end),
-		awful.key({"Shift"				}, "Scroll_Lock", function () awful.util.spawn("amixer -D pulse set Master toggle", false) end),
-		awful.key({"Shift"				}, "F1",		function () awful.util.spawn("toggle-sinks", false) end),
+		awful.key({modkey 				}, "F10",		function () awful.util.spawn("amixer -D pulse set Master 4%+", false) end),
+		awful.key({modkey				}, "F7",		function () awful.util.spawn("amixer -D pulse set Master 4%-", false) end),
+		awful.key({modkey				}, "Scroll_Lock", function () awful.util.spawn("amixer -D pulse set Master toggle", false) end),
+		awful.key({modkey				}, "F1",		function () awful.util.spawn("toggle-sinks", false) end),
 	-- Prompt
 		awful.key({modkey				}, "r",			function () mypromptbox[mouse.screen]:run()end),
 		awful.key({modkey				}, "x",
@@ -582,8 +585,8 @@ require("volume/widget")
 		awful.key({modkey,"Shift"		}, "q",			awful.client.restore),
 		awful.key({modkey,"Shift"		}, "space",		awful.client.floating.toggle                     ),
 		awful.key({modkey,"Control"		}, "Return",	function (c) c:swap(awful.client.getmaster()) end),
-		awful.key({modkey,				}, "u",			function (c) awful.client.movetoscreen(c,c.screen-1) end ),
-		awful.key({modkey,				}, "i",			function (c) awful.client.movetoscreen(c,c.screen+1) end ),
+		awful.key({modkey,"Shift"		}, "u",			function (c) awful.client.movetoscreen(c,c.screen-1) end ),
+		awful.key({modkey,"Shift"		}, "i",			function (c) awful.client.movetoscreen(c,c.screen+1) end ),
 		awful.key({modkey,				}, "t",			function (c) c.ontop = not c.ontop            end),
 		awful.key({modkey,				}, "m",
 			function (c)
