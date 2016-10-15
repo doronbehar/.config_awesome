@@ -1,30 +1,34 @@
 --{{{ Libraries
+
 -- Standard awesome library
 -- package.path = package.path .. ";/usr/share/awesome/lib/?.lua"
 -- package.path = package.path .. ";/usr/share/awesome/lib/?/init.lua"
+--
 local gears = require("gears")
 local awful = require("awful")
-awful.rules = require("awful.rules")
 require("awful.autofocus")
--- Widget and layout library
+-- * Widget and layout library
 local wibox = require("wibox")
--- Theme handling library
+-- * Theme handling library
 local beautiful = require("beautiful")
--- Notification library
+-- * Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
--- Arch linux library for xdg-menu
-xdg_menu = require("archmenu")
 
+-- Added libraries
 -- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?.lua"
 -- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?/init.lua"
--- shifty - dynamic tagging library
+--
+-- * Arch linux library for xdg-menu
+local xdg_menu = require("archmenu")
+-- * shifty - dynamic tagging library
 local shifty = require("shifty")
 local tyrannical = require("tyrannical")
--- sound widget:
+-- * A library of mine to manipulate tags and clients.
+local util = require("util")
+-- * sound widget:
 require("volume/widget")
-
--- Obvious widgets library
+-- * Obvious widgets library
 require("obvious")
 
 --}}}
@@ -97,7 +101,7 @@ end
 -- }}}
 
 -- {{{ Shifty:
--- {{{Available options for each tag:
+-- {{{ Available options for each tag:
 	-- init			:boolean	-- Create this tag at startup and be persistant.
 	-- position		:integer	-- the position of the window.
 	-- screen		:integer	-- the index of the screen: _Tip:_ use `screen = math.max(screen.count(), 2)` for the second monitor
@@ -137,7 +141,7 @@ shifty.config.tags = {
 	}
 }
 --}}}
--- {{{SHIFTY: application matching rules
+-- {{{ SHIFTY: application matching rules
 -- order here matters, early rules will be applied first
 shifty.config.apps = {
 	{
@@ -161,7 +165,7 @@ shifty.config.apps = {
 	},
 }
 --}}}
--- {{{SHIFTY: default tag creation rules
+-- {{{ SHIFTY: default tag creation rules
 -- parameter description
 --	* floatBars : if floating clients should always have a titlebar
 --	* guess_name : should shifty try and guess tag names when creating
@@ -360,59 +364,6 @@ shifty.init()
 -- {{{ Key bindings
 
 -- {{{ globalkeys
--- {{{ functions
--- {{{ move tag with all of it's clients to a different position.
--- taken from https://github.com/geektophe/awesome-config/blob/de8cd6a3cd0d2d58effacfdc1d3698c34b17d172/utils/tag.lua#L10
-function incr_tag_index(incr)
-	local tag = awful.tag.selected()
-	local old_tag_index = awful.tag.getidx(tag)
-	local tag_count = #awful.tag.gettags(awful.tag.getscreen(tag))
-	local new_tag_index = awful.util.cycle(tag_count, old_tag_index + incr)
-	awful.tag.move(new_tag_index, tag)
-end
--- }}}
--- {{{ move tag with all of it's clients to a different screen.
--- inspired from http://stackoverflow.com/questions/31272329/awesome-wm-how-to-change-tag-of-screen
-function incr_tag_screen_index(incr)
-	local tag = awful.tag.selected()
-	local screen_index = awful.tag.getscreen(tag)
-	local tag_count = #awful.tag.gettags(screen_index)
-	if tag_count > 1 then -- protection against having a screen with no tags
-		screen_index = awful.util.cycle(screen.count(), screen_index + incr)
-		awful.tag.setscreen(tag, screen_index)
-		awful.screen.focus(screen_index)
-		awful.tag.viewonly(tag)
-	end
-end
--- }}}
--- {{{ move all of the client of a tag to a different tag on the current screen.
-function incr_tag_clients_tag_index(incr)
-	local tag = awful.tag.selected()
-	local all_tags = awful.tag.gettags(awful.tag.getscreen(tag))
-	local new_tag_index = awful.util.cycle(#all_tags, awful.tag.getidx(tag) + incr)
-	local new_tag = all_tags[new_tag_index]
-	local dumb = function()
-		return true
-	end
-	for c in awful.util.table.iterate(tag:clients(),dumb,1) do
-		awful.client.movetotag(new_tag,c)
-	end
-	awful.tag.viewonly(new_tag)
-end
--- }}}
--- {{{ move all of the clients of a tag to a different tag in a different screen.
-function incr_tag_clients_screen_index(incr)
-	local tag = awful.tag.selected()
-	local dumb = function()
-		return true
-	end
-	for c in awful.util.table.iterate(tag:clients(),dumb,1) do
-		awful.client.movetoscreen(c,incr)
-	end
-	awful.tag.viewonly(new_tag)
-end
--- }}}
--- }}}
 globalkeys = awful.util.table.join(
 	--{{{ Tags and window manipulation and movement
 	awful.key({modkey,				}, "Tab",		function() awful.screen.focus_relative( 1) end),
@@ -434,38 +385,23 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,"Shift"		}, "l",			shifty.send_next), -- client to next tag
 	awful.key({modkey,"Shift"		}, "h",			shifty.send_prev), -- client to prev tag
 	-- Move all tag's clients to next tag
-	awful.key({modkey,"Mod1"		}, "l",			function() incr_tag_clients_tag_index(1) end),
+	awful.key({modkey,"Mod1"		}, "l",			function() util.clients.move2tag(1) end),
 	-- Move all tag's clients to previous tag
-	awful.key({modkey,"Mod1"		}, "h",			function() incr_tag_clients_tag_index(-1) end),
+	awful.key({modkey,"Mod1"		}, "h",			function() util.clients.move2tag(-1) end),
 	-- Move all tag's clients to next screen
-	awful.key({modkey,"Mod1"		}, "i",			function() incr_tag_clients_screen_index(1) end),
+	awful.key({modkey,"Mod1"		}, "i",			function() util.clients.move2screen(1) end),
 	-- Move all tag's clients to previous screen
-	awful.key({modkey,"Mod1"		}, "u",			function() incr_tag_clients_screen_index(-1) end),
+	awful.key({modkey,"Mod1"		}, "u",			function() util.clients.move2screen(-1) end),
 	-- Move a tag right in one index
-	awful.key({modkey,"Control"		}, "l",			function() incr_tag_index(1) end),
+	awful.key({modkey,"Control"		}, "l",			function() util.tag.move2position(1) end),
 	-- Move a tag left in one index
-	awful.key({modkey,"Control"		}, "h",			function() incr_tag_index(-1) end),
-	-- Move a tag to a different screen
-	awful.key({modkey,"Control"		}, "i",			function() incr_tag_screen_index(1) end),
-	awful.key({modkey,"Control"		}, "u",			function() incr_tag_screen_index(-1) end),
-	awful.key({modkey,"Shift"		}, "r",
-		-- {{{ rename a tag
-		function ()
-			awful.prompt.run({ prompt = "New tag name: " },
-			mypromptbox[mouse.screen].widget,
-			function(new_name)
-				if not new_name or #new_name == 0 then
-					return
-				else
-					local screen = mouse.screen
-					local tag = awful.tag.selected(screen)
-					if tag then
-						tag.name = new_name
-					end
-				end
-			end)
-		end),
-		--}}}
+	awful.key({modkey,"Control"		}, "h",			function() util.tag.move2position(-1) end),
+	-- Move a tag one screen to the right
+	awful.key({modkey,"Control"		}, "i",			function() util.tag.move2screen(1) end),
+	-- Move a tag one screen to the left
+	awful.key({modkey,"Control"		}, "u",			function() util.tag.move2screen(-1) end),
+	-- rename a tag
+	awful.key({modkey,"Shift"		}, "r",			util.tag.rename),
 	-- creat a new tag:
 	awful.key({modkey,				}, "n",			shifty.add),
 	--}}}

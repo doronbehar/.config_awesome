@@ -9,4 +9,4 @@
 	url = https://github.com/Elv13/tyrannical
 [submodule "obvious"]
 	path = obvious
-	url = /home/doron/repos/dotfiles/.config/awesome/obvious
+	url = https://github.com/Doron-Behar/obvious
