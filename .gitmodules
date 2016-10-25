@@ -10,3 +10,6 @@
 [submodule "obvious"]
 	path = obvious
 	url = https://github.com/Doron-Behar/obvious
+[submodule "copycats"]
+	path = copycats
+	url = https://github.com/copycat-killer/awesome-copycats
