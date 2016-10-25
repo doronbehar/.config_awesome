@@ -27,9 +27,11 @@ local tyrannical = require("tyrannical")
 -- * A library of mine to manipulate tags and clients.
 local util = require("util")
 -- * sound widget:
-require("volume/widget")
+--local volumewidget = require("volumewidget")
 -- * Obvious widgets library
-require("obvious")
+local mpd = require("obvious.basic_mpd")
+-- * Awesome Copycats 'lain' widgets
+local lain = require("lain")
 
 --}}}
 
@@ -251,6 +253,17 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 
 -- {{{ Wibox
 -- Create a wibox for each screen and add it
+mpdwidget = lain.widgets.mpd()
+volumewidget = lain.widgets.pulseaudio({
+	timeout = 0.2,
+	settings = function()
+		vlevel = volume_now.right .. "% | " .. volume_now.sink
+		if volume_now.muted == "yes" then
+			vlevel = vlevel .. " M"
+		end
+		widget:set_markup(lain.util.markup("#7493d2", vlevel))
+	end
+})
 mywibox = {}
 mypromptbox = {}
 mylayoutbox = {}
@@ -333,13 +346,14 @@ for s = 1, screen.count() do
 	-- Widgets that are aligned to the right
 	local right_layout = wibox.layout.fixed.horizontal()
 		if s == math.min(screen.count(), 2) then
-			right_layout:add(volume_widget)
+			right_layout:add(volumewidget)
 			right_layout:add(awful.widget.textclock(" | %d/%m/%y - %H:%M:%S ",1))
 		end
 		if s == 1 then
-			obvious.basic_mpd.set_format("$title - $album")
-			obvious.basic_mpd.set_update_interval(0.5)
-			right_layout:add(obvious.basic_mpd())
+			mpd.set_format("$title - $album")
+			mpd.set_update_interval(0.5)
+			right_layout:add(mpd())
+			right_layout:add(mpdwidget)
 			right_layout:add(wibox.widget.systray())
 		end
 	right_layout:add(mylayoutbox[s])
