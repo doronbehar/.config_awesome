@@ -10,3 +10,6 @@
 [submodule "copycats"]
 	path = copycats
 	url = https://github.com/copycat-killer/awesome-copycats
+[submodule "themes@serialoverflow"]
+	path = themes@serialoverflow
+	url = https://github.com/serialoverflow/awesome-themes
