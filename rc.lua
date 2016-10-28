@@ -131,7 +131,7 @@ shifty.config.tags = {
 		position	= 1,
 		screen		= math.min(screen.count(), 2)
 	},
-	["Media"] = {
+	["media"] = {
 		init		= true,
 		position	= 2,
 		screen		= math.min(screen.count(), 2)
@@ -140,7 +140,12 @@ shifty.config.tags = {
 		init		= true,
 		position	= 3,
 		screen		= math.min(screen.count(), 2)
-	}
+	},
+	["transmission"] = {
+		init		= false,
+		position	= 4,
+		screen		= math.min(screen.count(), 2)
+	},
 }
 --}}}
 -- {{{ SHIFTY: application matching rules
@@ -150,7 +155,14 @@ shifty.config.apps = {
 		match = {
 			"ncmpcpp",
 		},
-		tag = "Media",
+		tag = "media",
+		nopopup = false,
+	},
+	{
+		match = {
+			"transmission",
+		},
+		tag = "transmission",
 		nopopup = false,
 	},
 	{
@@ -437,6 +449,7 @@ globalkeys = awful.util.table.join(
 	awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome-stable") end),
 	awful.key({"Control","Mod1"		}, "r",			function () awful.util.spawn(terminal .. " -e ranger") end),
 	awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn(terminal .. " -e ncmpcpp") end),
+	awful.key({"Control","Mod1"		}, "d",			function () awful.util.spawn(terminal .. " -e transmission-remote-cli") end),
 	awful.key({"Control","Mod1"		}, "q",			function () awful.util.spawn("quartus") end),
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart),
 	--}}}
