@@ -433,7 +433,7 @@ globalkeys = awful.util.table.join(
 	--}}}
 	--{{{ Standard program
 	awful.key({modkey,				}, "Return",	function () awful.util.spawn(terminal) end),
-	awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn(terminal .. " -T project -e sh -c \"tmux attach-session -t project || tmux new -s project\"") end),
+	awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn(terminal .. " -T project -e sh -c \"tmux attach-session -t project || tmuxp load project\"") end),
 	awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome-stable") end),
 	awful.key({"Control","Mod1"		}, "r",			function () awful.util.spawn(terminal .. " -e ranger") end),
 	awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn(terminal .. " -e ncmpcpp") end),
