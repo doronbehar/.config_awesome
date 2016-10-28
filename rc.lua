@@ -257,7 +257,7 @@ mpdwidget = lain.widgets.mpd()
 volumewidget = lain.widgets.pulseaudio({
 	timeout = 0.2,
 	settings = function()
-		vlevel = volume_now.right .. "% | " .. volume_now.sink
+		vlevel = "R:" .. volume_now.right .. "% | L:" .. volume_now.left .. "% | " .. volume_now.sink
 		if volume_now.muted == "yes" then
 			vlevel = vlevel .. " M"
 		end
