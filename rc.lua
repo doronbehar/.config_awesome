@@ -118,33 +118,33 @@ end
 shifty.config.tags = {
 	["web"] = {
 		init		= true,
-		position	= 1,
+		position	= 1 + 1 * (2 - math.min(screen.count(), 2)),
 		screen		= 1,
 	},
 	["man"] = {
 		init		= true,
-		position	= 2,
-		screen		= 1
-	},
-	["project"] = {
-		init		= true,
-		position	= 1,
-		screen		= math.min(screen.count(), 2)
-	},
-	["media"] = {
-		init		= true,
-		position	= 2,
-		screen		= math.min(screen.count(), 2)
-	},
-	["config"] = {
-		init		= true,
-		position	= 3,
-		screen		= math.min(screen.count(), 2)
+		position	= 2 + 2 * (2 - math.min(screen.count(), 2)),
+		screen		= 1,
 	},
 	["transmission"] = {
 		init		= false,
-		position	= 4,
-		screen		= math.min(screen.count(), 2)
+		position	= 3 + 3 * (2 - math.min(screen.count(), 2)),
+		screen		= math.min(screen.count(), 2),
+	},
+	["project"] = {
+		init		= true,
+		position	= 1 + 0 * (2 - math.min(screen.count(), 2)),
+		screen		= math.min(screen.count(), 2),
+	},
+	["media"] = {
+		init		= true,
+		position	= 2 + 1 * (2 - math.min(screen.count(), 2)),
+		screen		= math.min(screen.count(), 2),
+	},
+	["config"] = {
+		init		= true,
+		position	= 3 + 2 * (2 - math.min(screen.count(), 2)),
+		screen		= math.min(screen.count(), 2),
 	},
 }
 --}}}
