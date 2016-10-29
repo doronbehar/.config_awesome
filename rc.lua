@@ -459,14 +459,14 @@ globalkeys = awful.util.table.join(
 	awful.key({"Control","Mod1"		}, "d",			function () awful.util.spawn(terminal .. " -e transmission-remote-cli") end),
 	awful.key({"Control","Mod1"		}, "q",			function () awful.util.spawn("quartus") end),
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart),
+	awful.key({modkey,"Mod1"		}, "q",			awesome.quit),
+	awful.key({modkey,"Mod1"		}, "x",			function () awful.util.spawn("systemctl poweroff",false) end),
 	--}}}
 	--{{{ bind PrintScrn to capture a screen
 	awful.key({						}, "Print",		function () awful.util.spawn("capscr all",false) end),
 	awful.key({"Control"			}, "Print",		function () awful.util.spawn("capscr frame",false) end),
 	awful.key({modkey				}, "Print",		function () awful.util.spawn("capscr window",false) end),
 	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn("screencast",false) end),
-	awful.key({modkey,"Mod1"		}, "q",			awesome.quit),
-	awful.key({modkey,"Mod1"		}, "x",			function () awful.util.spawn("systemctl poweroff",false) end),
 	--}}}
 	--{{{ Music Player:
 	awful.key({modkey,"Control"		}, "Pause",		function () awful.util.spawn("mpc toggle") end),
@@ -529,15 +529,9 @@ shifty.config.modkey = modkey
 -- This should map on the top row of your keyboard, usually 1 to 9.
 for i = 1, (shifty.config.maxtags or 9) do
 	globalkeys = awful.util.table.join(globalkeys,
-		awful.key({ modkey }, "#" .. i + 9,
-			function ()
-				awful.tag.viewonly(shifty.getpos(i))
-			end),
-		awful.key({ modkey, "Control" }, "#" .. i + 9,
-			function ()
-				awful.tag.viewtoggle(shifty.getpos(i))
-			end),
-		awful.key({ modkey, "Shift" }, "#" .. i + 9,
+		awful.key({modkey,			}, "#" .. i + 9,function () awful.tag.viewonly(shifty.getpos(i)) end),
+		awful.key({modkey,"Control"	}, "#" .. i + 9,function () awful.tag.viewtoggle(shifty.getpos(i)) end),
+		awful.key({modkey,"Shift"	}, "#" .. i + 9,
 			function ()
 				if client.focus then
 					local t = shifty.getpos(i)
