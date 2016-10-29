@@ -12,7 +12,7 @@ function tag.move2position(incr)
 	local new_tag_index = awful.util.cycle(tag_count, old_tag_index + incr)
 	awful.tag.move(new_tag_index, tag)
 end
---}}}
+-- }}}
 
 -- {{{ tag.move2screen(incr)
 -- Move a tag with all of it's clients to a different screen.
@@ -28,7 +28,7 @@ function tag.move2screen(incr)
 		awful.tag.viewonly(tag)
 	end
 end
---}}}
+-- }}}
 
 -- {{{ tag.rename()
 -- Rename a tag
@@ -47,7 +47,7 @@ function tag.rename()
 		end
 	end)
 end
---}}}
+-- }}}
 
 return tag
 

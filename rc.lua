@@ -1,4 +1,4 @@
---{{{ Libraries
+-- {{{ Libraries
 
 -- Standard awesome library
 -- package.path = package.path .. ";/usr/share/awesome/lib/?.lua"
@@ -33,7 +33,7 @@ local mpd = require("obvious.basic_mpd")
 -- * Awesome Copycats 'lain' widgets
 local lain = require("lain")
 
---}}}
+-- }}}
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -147,7 +147,7 @@ shifty.config.tags = {
 		screen		= math.min(screen.count(), 2)
 	},
 }
---}}}
+-- }}}
 -- {{{ SHIFTY: application matching rules
 -- order here matters, early rules will be applied first
 shifty.config.apps = {
@@ -185,7 +185,7 @@ shifty.config.apps = {
 			)
 	},
 }
---}}}
+-- }}}
 -- {{{ SHIFTY: default tag creation rules
 -- parameter description
 --	* floatBars : if floating clients should always have a titlebar
@@ -223,7 +223,7 @@ shifty.config.defaults = {
 	guess_name = true,
 	persist = true,
 }
---}}}
+-- }}}
 -- }}}
 
 -- {{{ Tyrannical:
@@ -398,7 +398,7 @@ shifty.init()
 
 -- {{{ globalkeys
 globalkeys = awful.util.table.join(
-	--{{{ Tags and window manipulation and movement
+	-- {{{ Tags and window manipulation and movement
 	awful.key({modkey,				}, "Tab",		function() awful.screen.focus_relative( 1) end),
 	awful.key({modkey,				}, "i",			function() awful.screen.focus_relative( 1) end),
 	awful.key({modkey,				}, "u",			function() awful.screen.focus_relative(-1) end),
@@ -437,8 +437,8 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,"Shift"		}, "r",			util.tag.rename),
 	-- creat a new tag:
 	awful.key({modkey,				}, "n",			shifty.add),
-	--}}}
-	--{{{ Layout manipulation
+	-- }}}
+	-- {{{ Layout manipulation
 	awful.key({modkey,				}, "Up",		function () awful.client.swap.byidx(  1) end),
 	awful.key({modkey,				}, "Down",		function () awful.client.swap.byidx( -1) end),
 	awful.key({modkey,				}, "Right",		function () awful.tag.incmwfact( 0.02) end),
@@ -449,8 +449,8 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,"Control"		}, "Left",		function () awful.tag.incncol(-1) end),
 	awful.key({modkey,				}, "space",		function () awful.layout.inc(layouts, 1) end),
 	awful.key({modkey,"Shift"		}, "space",		function () awful.layout.inc(layouts,-1) end),
-	--}}}
-	--{{{ Standard program
+	-- }}}
+	-- {{{ Standard program
 	awful.key({modkey,				}, "Return",	function () awful.util.spawn(terminal) end),
 	awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn(terminal .. " -T project -e sh -c \"tmux attach-session -t project || tmuxp load project\"") end),
 	awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome-stable") end),
@@ -461,14 +461,14 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart),
 	awful.key({modkey,"Mod1"		}, "q",			awesome.quit),
 	awful.key({modkey,"Mod1"		}, "x",			function () awful.util.spawn("systemctl poweroff",false) end),
-	--}}}
-	--{{{ bind PrintScrn to capture a screen
+	-- }}}
+	-- {{{ bind PrintScrn to capture a screen
 	awful.key({						}, "Print",		function () awful.util.spawn("capscr all",false) end),
 	awful.key({"Control"			}, "Print",		function () awful.util.spawn("capscr frame",false) end),
 	awful.key({modkey				}, "Print",		function () awful.util.spawn("capscr window",false) end),
 	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn("screencast",false) end),
-	--}}}
-	--{{{ Music Player:
+	-- }}}
+	-- {{{ Music Player:
 	awful.key({modkey,"Control"		}, "Pause",		function () awful.util.spawn("mpc toggle") end),
 	awful.key({modkey,"Control"		}, "F9",		function () awful.util.spawn("mpc next") end),
 	awful.key({modkey,"Control"		}, "F8",		function () awful.util.spawn("mpc prev") end),
@@ -477,14 +477,14 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,"Control"		}, "F10",		function () awful.util.spawn("mpc volume +5") end),
 	awful.key({modkey,"Control"		}, "F7",		function () awful.util.spawn("mpc volume -5") end),
 	awful.key({modkey,"Control"		}, "Scroll_Lock", function () awful.util.spawn("mpc-toggle-mute") end),
-	--}}}
-	--{{{ General Machine Volume managment:
+	-- }}}
+	-- {{{ General Machine Volume managment:
 	awful.key({modkey 				}, "F10",		function () awful.util.spawn("amixer -D pulse set Master 4%+", false) end),
 	awful.key({modkey				}, "F7",		function () awful.util.spawn("amixer -D pulse set Master 4%-", false) end),
 	awful.key({modkey				}, "Scroll_Lock", function () awful.util.spawn("amixer -D pulse set Master toggle", false) end),
 	awful.key({modkey				}, "F1",		function () awful.util.spawn("toggle-sinks", false) end),
-	--}}}
-	--{{{ Prompt
+	-- }}}
+	-- {{{ Prompt
 	awful.key({modkey				}, "r",			function () mypromptbox[mouse.screen]:run()end),
 	awful.key({modkey				}, "x",
 		function ()
@@ -493,15 +493,15 @@ globalkeys = awful.util.table.join(
 			awful.util.eval, nil,
 			awful.util.getdir("cache") .. "/history_eval")
 		end),
-	--}}}
-	--{{{ Menubar
+	-- }}}
+	-- {{{ Menubar
 	awful.key({modkey,"Mod1"		}, "m",			function () menubar.show() end),
 	awful.key({modkey,				}, "s",			function () mymainmenu:show() end)
-	--}}}
+	-- }}}
 )
 -- }}}
 
---{{{ clientkeys.
+-- {{{ clientkeys.
 clientkeys = awful.util.table.join(
 	awful.key({modkey,				}, "f",			function (c) c.fullscreen = not c.fullscreen  end),
 	awful.key({modkey,				}, "q",			function (c) c:kill()                         end),
@@ -517,11 +517,11 @@ clientkeys = awful.util.table.join(
 			c.maximized_vertical   = not c.maximized_vertical
 		end)
 )
---}}}
+-- }}}
 
 -- }}}
 
---{{{ SHIFTY: assign client keys to shifty for use in match() function(manage hook)
+-- {{{ SHIFTY: assign client keys to shifty for use in match() function(manage hook)
 shifty.config.clientkeys = clientkeys
 shifty.config.modkey = modkey
 -- Bind all key numbers to tags.
@@ -529,9 +529,8 @@ shifty.config.modkey = modkey
 -- This should map on the top row of your keyboard, usually 1 to 9.
 for i = 1, (shifty.config.maxtags or 9) do
 	globalkeys = awful.util.table.join(globalkeys,
-		awful.key({modkey,			}, "#" .. i + 9,function () awful.tag.viewonly(shifty.getpos(i)) end),
-		awful.key({modkey,"Control"	}, "#" .. i + 9,function () awful.tag.viewtoggle(shifty.getpos(i)) end),
-		awful.key({modkey,"Shift"	}, "#" .. i + 9,
+		awful.key({modkey,						}, "#" .. i + 9,	function () awful.tag.viewonly(shifty.getpos(i)) end),
+		awful.key({modkey,"Shift"				}, "#" .. i + 9,
 			function ()
 				if client.focus then
 					local t = shifty.getpos(i)
@@ -539,7 +538,10 @@ for i = 1, (shifty.config.maxtags or 9) do
 					awful.tag.viewonly(t)
 				end
 			end),
-		awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
+		awful.key({modkey,"Mod1"				}, "#" .. i + 9,	function () util.clients.move2(shifty.getpos(i)) end),
+		-- Unconventional tasks
+		awful.key({modkey,"Control"				}, "#" .. i + 9,	function () awful.tag.viewtoggle(shifty.getpos(i)) end),
+		awful.key({modkey,"Control","Shift"		}, "#" .. i + 9,
 			function ()
 				if client.focus then
 					awful.client.toggletag(shifty.getpos(i))
@@ -551,15 +553,15 @@ clientbuttons = awful.util.table.join(
 	awful.button({ modkey }, 1, awful.mouse.client.move),
 	awful.button({ modkey }, 3, awful.mouse.client.resize)
 )
---}}}
+-- }}}
 
 -- {{{Set keys
 root.keys(globalkeys)
 -- }}}
 
---{{{
+-- {{{
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
---}}}
+-- }}}
 
 -- vim:ft=lua:foldmethod=marker
