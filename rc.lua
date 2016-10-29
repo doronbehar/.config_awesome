@@ -166,6 +166,13 @@ shifty.config.apps = {
 		nopopup = false,
 	},
 	{
+		match = {
+			"project",
+		},
+		tag = "project",
+		nopopup = false,
+	},
+	{
 		match = {""},
 		buttons = awful.util.table.join(
 			awful.button({}, 1, function (c) client.focus = c; c:raise() end),
