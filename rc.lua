@@ -407,7 +407,7 @@ for s = 1, screen.count() do
 end
 -- }}}
 
--- {{{ Globalkeys
+-- {{{ Global keys
 globalkeys = awful.util.table.join(
 	-- {{{ Tags and window manipulation and movement
 	awful.key({modkey,				}, "Tab",		function() awful.screen.focus_relative( 1) end),
@@ -513,9 +513,12 @@ globalkeys = awful.util.table.join(
 -- {{{ Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it works on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
+-- In order for it to work for the numeric keypad on the right you add:
+numericpad = { "KP_End", "KP_Down", "KP_Next", "KP_Left", "KP_Begin", "KP_Right", "KP_Home", "KP_Up", "KP_Prior" }
 for i = 1, (shifty.config.maxtags or 9) do
 	globalkeys = awful.util.table.join(globalkeys,
 		awful.key({modkey,						}, "#" .. i + 9,	function () awful.tag.viewonly(shifty.getpos(i)) end),
+		awful.key({modkey,						}, numericpad[i],	function () awful.tag.viewonly(shifty.getpos(i)) end),
 		awful.key({modkey,"Shift"				}, "#" .. i + 9,
 			function ()
 				if client.focus then
@@ -524,21 +527,38 @@ for i = 1, (shifty.config.maxtags or 9) do
 					awful.tag.viewonly(t)
 				end
 			end),
+		awful.key({modkey,"Shift"				}, numericpad[i],
+			function ()
+				if client.focus then
+					local t = shifty.getpos(i)
+					awful.client.movetotag(t)
+					awful.tag.viewonly(t)
+				end
+			end),
 		awful.key({modkey,"Mod1"				}, "#" .. i + 9,	function () util.clients.move2(shifty.getpos(i)) end),
+		awful.key({modkey,"Mod1"				}, numericpad[i],	function () util.clients.move2(shifty.getpos(i)) end),
 		-- Unconventional tasks
 		awful.key({modkey,"Control"				}, "#" .. i + 9,	function () awful.tag.viewtoggle(shifty.getpos(i)) end),
+		awful.key({modkey,"Control"				}, numericpad[i],	function () awful.tag.viewtoggle(shifty.getpos(i)) end),
 		awful.key({modkey,"Control","Shift"		}, "#" .. i + 9,
 			function ()
 				if client.focus then
 					awful.client.toggletag(shifty.getpos(i))
 				end
-			end))
+			end),
+		awful.key({modkey,"Control","Shift"		}, numericpad[i],
+			function ()
+				if client.focus then
+					awful.client.toggletag(shifty.getpos(i))
+				end
+			end)
+	)
 end
 -- }}}
 -- Set keys
 root.keys(globalkeys)
 -- }}}
--- {{{ Clientkeys.
+-- {{{ Client keys.
 clientkeys = awful.util.table.join(
 	awful.key({modkey,				}, "f",			function (c) c.fullscreen = not c.fullscreen  end),
 	awful.key({modkey,				}, "q",			function (c) c:kill()                         end),
