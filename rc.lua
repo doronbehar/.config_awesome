@@ -26,15 +26,12 @@ local shifty = require("shifty")
 local tyrannical = require("tyrannical")
 -- * A library of mine to manipulate tags and clients.
 local util = require("util")
--- * sound widget:
---local volumewidget = require("volumewidget")
 -- * Obvious widgets library
-local mpd = require("obvious.basic_mpd")
+local obvious = require("obvious")
 -- * Awesome Copycats 'lain' widgets
 local lain = require("lain")
 
 -- }}}
-
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -64,8 +61,6 @@ end
 -- }}}
 
 -- {{{ Variable definitions
--- Themes define colours, icons, font and wallpapers.
-beautiful.init(os.getenv("HOME") .. "/.config/awesome/mytheme.lua")
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt"
 editor = os.getenv("EDITOR") or "editor"
@@ -76,6 +71,7 @@ editor_cmd = terminal .. " -e " .. editor
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
+shifty.config.modkey = modkey
 -- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
@@ -92,18 +88,22 @@ local layouts =
 	awful.layout.suit.max.fullscreen,
 	awful.layout.suit.magnifier
 }
+-- Menubar configuration
+menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
-
--- {{{ Wallpaper
+-- {{{ Themes define colours, icons, font and wallpapers.
+beautiful.init(os.getenv("HOME") .. "/.config/awesome/mytheme.lua")
 if beautiful.wallpaper then
 	for s = 1, screen.count() do
 		gears.wallpaper.maximized(beautiful.wallpaper, s, true)
 	end
 end
+client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
+client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
--- {{{ Shifty:
--- {{{ Available options for each tag:
+-- {{{ Tag configurations
+-- Available options for each tag:
 	-- init			:boolean	-- Create this tag at startup and be persistant.
 	-- position		:integer	-- the position of the window.
 	-- screen		:integer	-- the index of the screen: _Tip:_ use `screen = math.max(screen.count(), 2)` for the second monitor
@@ -148,7 +148,7 @@ shifty.config.tags = {
 	},
 }
 -- }}}
--- {{{ SHIFTY: application matching rules
+-- {{{ Application matching rules
 -- order here matters, early rules will be applied first
 shifty.config.apps = {
 	{
@@ -186,7 +186,7 @@ shifty.config.apps = {
 	},
 }
 -- }}}
--- {{{ SHIFTY: default tag creation rules
+-- {{{ Default tag creation rules
 -- parameter description
 --	* floatBars : if floating clients should always have a titlebar
 --	* guess_name : should shifty try and guess tag names when creating
@@ -224,8 +224,6 @@ shifty.config.defaults = {
 	persist = true,
 }
 -- }}}
--- }}}
-
 -- {{{ Tyrannical:
 -- First, set some settings
 tyrannical.settings.default_layout =  awful.layout.suit.tile
@@ -250,6 +248,13 @@ tyrannical.properties.size_hints_honor = {
 }
 -- }}}
 
+-- {{{ Wibox
+mywibox = {}
+for s = 1, screen.count() do
+	-- Create the wibox
+	mywibox[s] = awful.wibox({ position = "top", height ="20", screen = s })
+end
+-- }}}
 -- {{{ Menu
 -- Create a laucher widget and a main menu
 mymainmenu = awful.menu({
@@ -266,14 +271,14 @@ mylauncher = awful.widget.launcher({
 	image = beautiful.awesome_icon,
 	menu = mymainmenu
 })
--- Menubar configuration
-menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
-
--- {{{ Wibox
--- Create a wibox for each screen and add it
-mpdwidget = lain.widgets.mpd()
-volumewidget = lain.widgets.pulseaudio({
+-- {{{ Widgets
+mywidgets = {}
+mywidgets.mpd_notifier = lain.widgets.mpd()
+mywidgets.mpd = obvious.basic_mpd
+mywidgets.mpd.set_format("$title - $album")
+mywidgets.mpd.set_update_interval(0.5)
+mywidgets.volume = lain.widgets.pulseaudio({
 	timeout = 0.2,
 	settings = function()
 		vlevel = "R:" .. volume_now.right .. "% | L:" .. volume_now.left .. "% | " .. volume_now.sink
@@ -283,20 +288,11 @@ volumewidget = lain.widgets.pulseaudio({
 		widget:set_markup(lain.util.markup("#7493d2", vlevel))
 	end
 })
-mywibox = {}
-mypromptbox = {}
-mylayoutbox = {}
-mytaglist = {}
-mytaglist.buttons = awful.util.table.join(
-	awful.button({ }, 1, awful.tag.viewonly),
-	awful.button({ modkey }, 1, awful.client.movetotag),
-	awful.button({ }, 3, awful.tag.viewtoggle),
-	awful.button({ modkey }, 3, awful.client.toggletag),
-	awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
-	awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)
-)
+mywidgets.clock = awful.widget.textclock(" | %d/%m/%y - %H:%M:%S ",1)
+mywidgets.systray = wibox.widget.systray()
+-- }}}
+-- {{{ Tasklist
 mytasklist = {}
--- {{{ tasklist buttons.
 mytasklist.buttons = awful.util.table.join(
 	awful.button({ }, 1,
 		function (c)
@@ -337,12 +333,21 @@ mytasklist.buttons = awful.util.table.join(
 			if client.focus then client.focus:raise() end
 		end)
 )
+for s = 1, screen.count() do
+	-- Create a tasklist widget
+	mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
+end
 -- }}}
--- {{{ Promptboxes
+-- {{{ Promptbox
+mypromptbox = {}
 for s = 1, screen.count() do
 	-- Create a promptbox for each screen
 	mypromptbox[s] = awful.widget.prompt()
-	-- Create an imagebox widget which will contains an icon indicating which layout we're using.
+end
+-- }}}
+-- {{{ Layoutbox
+mylayoutbox = {}
+for s = 1, screen.count() do
 	-- We need one layoutbox per screen.
 	mylayoutbox[s] = awful.widget.layoutbox(s)
 	mylayoutbox[s]:buttons(
@@ -351,12 +356,31 @@ for s = 1, screen.count() do
 		awful.button({ }, 3, function () awful.layout.inc(layouts, -1) end),
 		awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
 		awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
+end
+-- }}}
+-- {{{ Taglist
+mytaglist = {}
+mytaglist.buttons = awful.util.table.join(
+	awful.button({ }, 1, awful.tag.viewonly),
+	awful.button({ modkey }, 1, awful.client.movetotag),
+	awful.button({ }, 3, awful.tag.viewtoggle),
+	awful.button({ modkey }, 3, awful.client.toggletag),
+	awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
+	awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)
+)
+for s = 1, screen.count() do
 	-- Create a taglist widget
 	mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
-	-- Create a tasklist widget
-	mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
-	-- Create the wibox
-	mywibox[s] = awful.wibox({ position = "top", height ="20", screen = s })
+	-- Create an imagebox widget which will contains an icon indicating which layout we're using.
+end
+-- SHIFTY: initialize shifty
+-- the assignment of shifty.taglist must always be after its actually
+-- initialized with awful.widget.taglist.new()
+shifty.taglist = mytaglist
+shifty.init()
+-- }}}
+-- {{{ Bringing all of the wibox components together
+for s = 1, screen.count() do
 	-- Widgets that are aligned to the left
 	local left_layout = wibox.layout.fixed.horizontal()
 	left_layout:add(mylauncher)
@@ -365,15 +389,13 @@ for s = 1, screen.count() do
 	-- Widgets that are aligned to the right
 	local right_layout = wibox.layout.fixed.horizontal()
 		if s == math.min(screen.count(), 2) then
-			right_layout:add(volumewidget)
-			right_layout:add(awful.widget.textclock(" | %d/%m/%y - %H:%M:%S ",1))
+			right_layout:add(mywidgets.volume)
+			right_layout:add(mywidgets.clock)
 		end
 		if s == 1 then
-			mpd.set_format("$title - $album")
-			mpd.set_update_interval(0.5)
-			right_layout:add(mpd())
-			right_layout:add(mpdwidget)
-			right_layout:add(wibox.widget.systray())
+			right_layout:add(mywidgets.mpd())
+			right_layout:add(mywidgets.mpd_notifier)
+			right_layout:add(mywidgets.systray)
 		end
 	right_layout:add(mylayoutbox[s])
 	-- Now bring it all together (with the tasklist in the middle)
@@ -384,19 +406,8 @@ for s = 1, screen.count() do
 	mywibox[s]:set_widget(layout)
 end
 -- }}}
--- }}}
 
--- {{{ Tags
--- SHIFTY: initialize shifty
--- the assignment of shifty.taglist must always be after its actually
--- initialized with awful.widget.taglist.new()
-shifty.taglist = mytaglist
-shifty.init()
--- }}}
-
--- {{{ Key bindings
-
--- {{{ globalkeys
+-- {{{ Globalkeys
 globalkeys = awful.util.table.join(
 	-- {{{ Tags and window manipulation and movement
 	awful.key({modkey,				}, "Tab",		function() awful.screen.focus_relative( 1) end),
@@ -499,32 +510,7 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,				}, "s",			function () mymainmenu:show() end)
 	-- }}}
 )
--- }}}
-
--- {{{ clientkeys.
-clientkeys = awful.util.table.join(
-	awful.key({modkey,				}, "f",			function (c) c.fullscreen = not c.fullscreen  end),
-	awful.key({modkey,				}, "q",			function (c) c:kill()                         end),
-	awful.key({modkey,"Shift"		}, "q",			awful.client.restore),
-	awful.key({modkey,"Shift"		}, "space",		awful.client.floating.toggle                     ),
-	awful.key({modkey,"Control"		}, "Return",	function (c) c:swap(awful.client.getmaster()) end),
-	awful.key({modkey,"Shift"		}, "u",			function (c) awful.client.movetoscreen(c,c.screen-1) end ),
-	awful.key({modkey,"Shift"		}, "i",			function (c) awful.client.movetoscreen(c,c.screen+1) end ),
-	awful.key({modkey,				}, "t",			function (c) c.ontop = not c.ontop            end),
-	awful.key({modkey,				}, "m",
-		function (c)
-			c.maximized_horizontal = not c.maximized_horizontal
-			c.maximized_vertical   = not c.maximized_vertical
-		end)
-)
--- }}}
-
--- }}}
-
--- {{{ SHIFTY: assign client keys to shifty for use in match() function(manage hook)
-shifty.config.clientkeys = clientkeys
-shifty.config.modkey = modkey
--- Bind all key numbers to tags.
+-- {{{ Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it works on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
 for i = 1, (shifty.config.maxtags or 9) do
@@ -548,20 +534,33 @@ for i = 1, (shifty.config.maxtags or 9) do
 				end
 			end))
 end
-clientbuttons = awful.util.table.join(
-	awful.button({ }, 1, function (c) client.focus = c; c:raise() end),
-	awful.button({ modkey }, 1, awful.mouse.client.move),
-	awful.button({ modkey }, 3, awful.mouse.client.resize)
-)
 -- }}}
-
--- {{{Set keys
+-- Set keys
 root.keys(globalkeys)
 -- }}}
-
--- {{{
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+-- {{{ Clientkeys.
+clientkeys = awful.util.table.join(
+	awful.key({modkey,				}, "f",			function (c) c.fullscreen = not c.fullscreen  end),
+	awful.key({modkey,				}, "q",			function (c) c:kill()                         end),
+	awful.key({modkey,"Shift"		}, "q",			awful.client.restore),
+	awful.key({modkey,"Shift"		}, "space",		awful.client.floating.toggle                     ),
+	awful.key({modkey,"Control"		}, "Return",	function (c) c:swap(awful.client.getmaster()) end),
+	awful.key({modkey,"Shift"		}, "u",			function (c) awful.client.movetoscreen(c,c.screen-1) end ),
+	awful.key({modkey,"Shift"		}, "i",			function (c) awful.client.movetoscreen(c,c.screen+1) end ),
+	awful.key({modkey,				}, "t",			function (c) c.ontop = not c.ontop            end),
+	awful.key({modkey,				}, "m",
+		function (c)
+			c.maximized_horizontal = not c.maximized_horizontal
+			c.maximized_vertical   = not c.maximized_vertical
+		end)
+)
+-- SHIFTY: assign client keys to shifty for use in match() function(manage hook)
+shifty.config.clientkeys = clientkeys
+clientbuttons = awful.util.table.join(
+	awful.button({					}, 1, function (c) client.focus = c; c:raise() end),
+	awful.button({modkey,			}, 1, awful.mouse.client.move),
+	awful.button({modkey,			}, 3, awful.mouse.client.resize)
+)
 -- }}}
 
 -- vim:ft=lua:foldmethod=marker
