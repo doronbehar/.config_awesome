@@ -274,6 +274,8 @@ mylauncher = awful.widget.launcher({
 -- }}}
 -- {{{ Widgets
 mywidgets = {}
+mywidgets.divider = wibox.widget.textbox()
+mywidgets.divider:set_text(" | ")
 mywidgets.mpd_notifier = lain.widgets.mpd()
 mywidgets.mpd = obvious.basic_mpd
 mywidgets.mpd.set_format("$title - $album")
@@ -285,10 +287,11 @@ mywidgets.volume = lain.widgets.pulseaudio({
 		if volume_now.muted == "yes" then
 			vlevel = vlevel .. " M"
 		end
-		widget:set_markup(lain.util.markup("#7493d2", vlevel))
+		widget:set_markup(lain.util.markup.fg("#7493d2", vlevel))
 	end
 })
-mywidgets.clock = awful.widget.textclock(" | %d/%m/%y - %H:%M:%S ",1)
+mywidgets.date = awful.widget.textclock("%d/%m/%y",1)
+mywidgets.clock = awful.widget.textclock("%H:%M:%S",1)
 mywidgets.systray = wibox.widget.systray()
 -- }}}
 -- {{{ Tasklist
@@ -381,24 +384,28 @@ shifty.init()
 -- }}}
 -- {{{ Bringing all of the wibox components together
 for s = 1, screen.count() do
-	-- Widgets that are aligned to the left
 	local left_layout = wibox.layout.fixed.horizontal()
 	left_layout:add(mylauncher)
 	left_layout:add(mytaglist[s])
 	left_layout:add(mypromptbox[s])
-	-- Widgets that are aligned to the right
 	local right_layout = wibox.layout.fixed.horizontal()
-		if s == math.min(screen.count(), 2) then
-			right_layout:add(mywidgets.volume)
-			right_layout:add(mywidgets.clock)
-		end
-		if s == 1 then
-			right_layout:add(mywidgets.mpd())
-			right_layout:add(mywidgets.mpd_notifier)
-			right_layout:add(mywidgets.systray)
-		end
+	if s == math.min(screen.count(), 2) then
+		right_layout:add(mywidgets.volume)
+		right_layout:add(mywidgets.divider)
+		right_layout:add(mywidgets.date)
+		right_layout:add(mywidgets.divider)
+	end
+	if s == 1 then
+		right_layout:add(mywidgets.mpd())
+		right_layout:add(mywidgets.divider)
+		right_layout:add(mywidgets.mpd_notifier)
+	end
+	right_layout:add(mywidgets.clock)
+	right_layout:add(mywidgets.divider)
+	if s == 1 then
+		right_layout:add(mywidgets.systray)
+	end
 	right_layout:add(mylayoutbox[s])
-	-- Now bring it all together (with the tasklist in the middle)
 	local layout = wibox.layout.align.horizontal()
 	layout:set_left(left_layout)
 	layout:set_middle(mytasklist[s])
@@ -461,19 +468,20 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,				}, "space",		function () awful.layout.inc(layouts, 1) end),
 	awful.key({modkey,"Shift"		}, "space",		function () awful.layout.inc(layouts,-1) end),
 	-- }}}
-	-- {{{ Standard program
+	-- {{{ Launchers
 	awful.key({modkey,				}, "Return",	function () awful.util.spawn(terminal) end),
 	awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn(terminal .. " -T project -e sh -c \"tmux attach-session -t project || tmuxp load project\"") end),
 	awful.key({"Control","Mod1"		}, "w",			function () awful.util.spawn("google-chrome-stable") end),
 	awful.key({"Control","Mod1"		}, "r",			function () awful.util.spawn(terminal .. " -e ranger") end),
 	awful.key({"Control","Mod1"		}, "p",			function () awful.util.spawn(terminal .. " -e ncmpcpp") end),
 	awful.key({"Control","Mod1"		}, "d",			function () awful.util.spawn(terminal .. " -e transmission-remote-cli") end),
+	awful.key({"Control","Mod1"		}, "h",			function () awful.util.spawn(terminal .. " -e htop") end),
 	awful.key({"Control","Mod1"		}, "q",			function () awful.util.spawn("quartus") end),
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart),
 	awful.key({modkey,"Mod1"		}, "q",			awesome.quit),
 	awful.key({modkey,"Mod1"		}, "x",			function () awful.util.spawn("systemctl poweroff",false) end),
 	-- }}}
-	-- {{{ bind PrintScrn to capture a screen
+	-- {{{ Bind PrintScrn to capture a screen
 	awful.key({						}, "Print",		function () awful.util.spawn("capscr all",false) end),
 	awful.key({"Control"			}, "Print",		function () awful.util.spawn("capscr frame",false) end),
 	awful.key({modkey				}, "Print",		function () awful.util.spawn("capscr window",false) end),
