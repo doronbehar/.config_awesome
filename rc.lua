@@ -88,7 +88,9 @@ local layouts =
 	awful.layout.suit.spiral.dwindle,
 	awful.layout.suit.max,
 	awful.layout.suit.max.fullscreen,
-	awful.layout.suit.magnifier
+	awful.layout.suit.magnifier,
+	lain.layout.termfair,
+	lain.layout.centerfair,
 }
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it

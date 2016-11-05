@@ -12,6 +12,7 @@ theme.wallpaper                                 = mywallpapers .. "/firewatch-to
 theme.font                                      = "Terminus 9"
 theme.menu_height                               = 15
 theme.menu_width                                = 100
+theme.useless_gap_width                         = 0
 
 -- {{{1 Colors
 theme.fg_normal                                 = "#DDDDFF"
