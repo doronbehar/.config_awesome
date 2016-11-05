@@ -28,6 +28,8 @@ local tyrannical = require("tyrannical")
 local util = require("util")
 -- * Obvious widgets library
 local obvious = require("obvious")
+-- * Vicious widgets library
+local vicious = require("vicious")
 -- * Awesome Copycats 'lain' widgets
 local lain = require("lain")
 
@@ -277,9 +279,18 @@ mywidgets = {}
 mywidgets.divider = wibox.widget.textbox()
 mywidgets.divider:set_text(" | ")
 mywidgets.mpd_notifier = lain.widgets.mpd()
-mywidgets.mpd = obvious.basic_mpd
-mywidgets.mpd.set_format("$title - $album")
-mywidgets.mpd.set_update_interval(0.5)
+mpdwidget = wibox.widget.textbox()
+vicious.register(mpdwidget, vicious.widgets.mpd,
+	function (mpdwidget, args)
+		if args["{state}"] == "Stop" then
+			return " - "
+		else
+			return args["{Album}"] .. ' - ' .. args["{Title}"]
+		end
+	end,
+	10
+)
+mywidgets.mpd = mpdwidget
 mywidgets.volume = lain.widgets.pulseaudio({
 	timeout = 0.2,
 	settings = function()
@@ -396,7 +407,7 @@ for s = 1, screen.count() do
 		right_layout:add(mywidgets.divider)
 	end
 	if s == 1 then
-		right_layout:add(mywidgets.mpd())
+		right_layout:add(mywidgets.mpd)
 		right_layout:add(mywidgets.divider)
 		right_layout:add(mywidgets.mpd_notifier)
 	end

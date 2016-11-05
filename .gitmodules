@@ -13,3 +13,6 @@
 [submodule "themes@serialoverflow"]
 	path = themes@serialoverflow
 	url = https://github.com/serialoverflow/awesome-themes
+[submodule "vicious"]
+	path = vicious
+	url = http://git.sysphere.org/vicious
