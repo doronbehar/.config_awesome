@@ -435,6 +435,8 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,				}, "u",			function() awful.screen.focus_relative(-1) end),
 	awful.key({modkey,				}, "l",			awful.tag.viewnext),
 	awful.key({modkey,				}, "h",			awful.tag.viewprev),
+	awful.key({modkey,				}, "]",			function () lain.util.tag_view_nonempty(1) end),
+	awful.key({modkey,				}, "[",			function () lain.util.tag_view_nonempty(-1) end),
 	awful.key({modkey,				}, "j",
 		function ()
 			awful.client.focus.byidx( 1)
