@@ -18,7 +18,7 @@ local menubar = require("menubar")
 -- Added libraries
 -- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?.lua"
 -- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?/init.lua"
---
+
 -- * Arch linux library for xdg-menu
 local xdg_menu = require("archmenu")
 -- * shifty - dynamic tagging library
@@ -32,6 +32,8 @@ local obvious = require("obvious")
 local vicious = require("vicious")
 -- * Awesome Copycats 'lain' widgets
 local lain = require("lain")
+-- * pulseaudio dbus widget
+local pulseaudio_widget = require("pulseaudio_widget")
 
 -- }}}
 -- {{{ Error handling
@@ -293,16 +295,7 @@ vicious.register(mpdwidget, vicious.widgets.mpd,
 	10
 )
 mywidgets.mpd = mpdwidget
-mywidgets.volume = lain.widgets.pulseaudio({
-	timeout = 0.2,
-	settings = function()
-		vlevel = "R:" .. volume_now.right .. "% | L:" .. volume_now.left .. "% | " .. volume_now.sink
-		if volume_now.muted == "yes" then
-			vlevel = vlevel .. " M"
-		end
-		widget:set_markup(lain.util.markup.fg("#7493d2", vlevel))
-	end
-})
+mywidgets.volume = pulseaudio_widget
 mywidgets.date = awful.widget.textclock("%d/%m/%y",1)
 mywidgets.clock = awful.widget.textclock("%H:%M:%S",1)
 mywidgets.systray = wibox.widget.systray()
@@ -513,9 +506,9 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,"Control"		}, "Scroll_Lock", function () awful.util.spawn("mpc-toggle-mute") end),
 	-- }}}
 	-- {{{ General Machine Volume managment:
-	awful.key({modkey 				}, "F10",		function () awful.util.spawn("amixer -D pulse set Master 4%+", false) end),
-	awful.key({modkey				}, "F7",		function () awful.util.spawn("amixer -D pulse set Master 4%-", false) end),
-	awful.key({modkey				}, "Scroll_Lock", function () awful.util.spawn("amixer -D pulse set Master toggle", false) end),
+	awful.key({modkey 				}, "F10",		pulseaudio_widget.volume_up),
+	awful.key({modkey				}, "F7",		pulseaudio_widget.volume_down),
+	awful.key({modkey				}, "Scroll_Lock", pulseaudio_widget.toggle_muted),
 	awful.key({modkey				}, "F1",		function () awful.util.spawn("toggle-sinks", false) end),
 	-- }}}
 	-- {{{ Prompt
