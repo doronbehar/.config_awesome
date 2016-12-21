@@ -34,6 +34,8 @@ local vicious = require("vicious")
 local lain = require("lain")
 -- * pulseaudio dbus widget
 local pulseaudio_widget = require("pulseaudio_widget")
+-- * mpris media player for mpd
+local media_player = require("media_player")
 
 -- }}}
 -- {{{ Error handling
@@ -96,6 +98,8 @@ local layouts =
 }
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
+-- mpris mpd
+mpd = media_player.MediaPlayer:new("mpd")
 -- }}}
 -- {{{ Themes define colours, icons, font and wallpapers.
 beautiful.init(os.getenv("HOME") .. "/.config/awesome/mytheme.lua")
@@ -282,19 +286,6 @@ mylauncher = awful.widget.launcher({
 mywidgets = {}
 mywidgets.divider = wibox.widget.textbox()
 mywidgets.divider:set_text(" | ")
-mywidgets.mpd_notifier = lain.widgets.mpd()
-mpdwidget = wibox.widget.textbox()
-vicious.register(mpdwidget, vicious.widgets.mpd,
-	function (mpdwidget, args)
-		if args["{state}"] == "Stop" then
-			return " - "
-		else
-			return args["{Album}"] .. ' - ' .. args["{Title}"]
-		end
-	end,
-	10
-)
-mywidgets.mpd = mpdwidget
 mywidgets.volume = pulseaudio_widget
 mywidgets.date = awful.widget.textclock("%d/%m/%y",1)
 mywidgets.clock = awful.widget.textclock("%H:%M:%S",1)
@@ -401,13 +392,7 @@ for s = 1, screen.count() do
 		right_layout:add(mywidgets.date)
 		right_layout:add(mywidgets.divider)
 	end
-	if s == 1 then
-		right_layout:add(mywidgets.mpd)
-		right_layout:add(mywidgets.divider)
-		right_layout:add(mywidgets.mpd_notifier)
-	end
 	right_layout:add(mywidgets.clock)
-	right_layout:add(mywidgets.divider)
 	if s == 1 then
 		right_layout:add(mywidgets.systray)
 	end
@@ -496,9 +481,9 @@ globalkeys = awful.util.table.join(
 	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn("screencast",false) end),
 	-- }}}
 	-- {{{ Music Player:
-	awful.key({modkey,"Control"		}, "Pause",		function () awful.util.spawn("mpc toggle") end),
-	awful.key({modkey,"Control"		}, "F9",		function () awful.util.spawn("mpc next") end),
-	awful.key({modkey,"Control"		}, "F8",		function () awful.util.spawn("mpc prev") end),
+	awful.key({modkey,"Control"		}, "Pause",		function () mpd:play() end),
+	awful.key({modkey,"Control"		}, "F9",		function () mpd:next() end),
+	awful.key({modkey,"Control"		}, "F8",		function () mpd:previous() end),
 	awful.key({modkey,"Control"		}, "F12",		function () awful.util.spawn("mpc seek +5") end),
 	awful.key({modkey,"Control"		}, "F11",		function () awful.util.spawn("mpc seek -5") end),
 	awful.key({modkey,"Control"		}, "F10",		function () awful.util.spawn("mpc volume +5") end),
