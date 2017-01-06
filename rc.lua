@@ -20,7 +20,7 @@ local menubar = require("menubar")
 -- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?/init.lua"
 
 -- * Arch linux library for xdg-menu
-local xdg_menu = require("archmenu")
+require("archmenu")
 -- * shifty - dynamic tagging library
 local shifty = require("shifty")
 local tyrannical = require("tyrannical")
@@ -478,7 +478,7 @@ globalkeys = awful.util.table.join(
 	awful.key({						}, "Print",		function () awful.util.spawn("capscr all",false) end),
 	awful.key({"Control"			}, "Print",		function () awful.util.spawn("capscr frame",false) end),
 	awful.key({modkey				}, "Print",		function () awful.util.spawn("capscr window",false) end),
-	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn("screencast",false) end),
+	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn("recordmydesktop --no-sound",false) end),
 	-- }}}
 	-- {{{ Music Player:
 	awful.key({modkey,"Control"		}, "Pause",		function () mpd:play() end),
