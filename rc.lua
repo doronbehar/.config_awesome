@@ -3,7 +3,6 @@
 -- Standard awesome library
 -- package.path = package.path .. ";/usr/share/awesome/lib/?.lua"
 -- package.path = package.path .. ";/usr/share/awesome/lib/?/init.lua"
---
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
@@ -34,8 +33,6 @@ local vicious = require("vicious")
 local lain = require("lain")
 -- * pulseaudio dbus widget
 local pulseaudio_widget = require("pulseaudio_widget")
--- * mpris media player for mpd
-local media_player = require("media_player")
 
 -- }}}
 -- {{{ Error handling
@@ -98,8 +95,9 @@ local layouts =
 }
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
--- mpris mpd
-mpd = media_player.MediaPlayer:new("mpd")
+-- obvious mpd parameters
+obvious.basic_mpd.set_format("$title - $album")
+obvious.basic_mpd.set_update_interval(0.5)
 -- }}}
 -- {{{ Themes define colours, icons, font and wallpapers.
 beautiful.init(os.getenv("HOME") .. "/.config/awesome/mytheme.lua")
@@ -392,6 +390,10 @@ for s = 1, screen.count() do
 		right_layout:add(mywidgets.date)
 		right_layout:add(mywidgets.divider)
 	end
+	if s == 1 then
+		right_layout:add(obvious.basic_mpd())
+		right_layout:add(mywidgets.divider)
+	end
 	right_layout:add(mywidgets.clock)
 	if s == 1 then
 		right_layout:add(mywidgets.systray)
@@ -481,13 +483,21 @@ globalkeys = awful.util.table.join(
 	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn("recordmydesktop --no-sound",false) end),
 	-- }}}
 	-- {{{ Music Player:
-	awful.key({modkey,"Control"		}, "Pause",		function () mpd:play() end),
-	awful.key({modkey,"Control"		}, "F9",		function () mpd:next() end),
-	awful.key({modkey,"Control"		}, "F8",		function () mpd:previous() end),
+	awful.key({modkey,"Control"		}, "Pause",		function () obvious.basic_mpd.connection:toggle_play() end),
+	awful.key({modkey,"Control"		}, "F9",
+		function ()
+			obvious.basic_mpd.connection:next()
+			obvious.basic_mpd.update()
+		end),
+	awful.key({modkey,"Control"		}, "F8",
+		function ()
+			obvious.basic_mpd.connection:previous()
+			obvious.basic_mpd.update()
+		end),
 	awful.key({modkey,"Control"		}, "F12",		function () awful.util.spawn("mpc seek +5") end),
 	awful.key({modkey,"Control"		}, "F11",		function () awful.util.spawn("mpc seek -5") end),
-	awful.key({modkey,"Control"		}, "F10",		function () awful.util.spawn("mpc volume +5") end),
-	awful.key({modkey,"Control"		}, "F7",		function () awful.util.spawn("mpc volume -5") end),
+	awful.key({modkey,"Control"		}, "F10",		function () obvious.basic_mpd.connection:volume_up(5) end),
+	awful.key({modkey,"Control"		}, "F7",		function () obvious.basic_mpd.connection:volume_down(5) end),
 	awful.key({modkey,"Control"		}, "Scroll_Lock", function () awful.util.spawn("mpc-toggle-mute") end),
 	-- }}}
 	-- {{{ General Machine Volume managment:

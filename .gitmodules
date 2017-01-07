@@ -25,6 +25,3 @@
 [submodule "ldbus_api"]
 	path = ldbus_api
 	url = https://github.com/stefano-m/lua-ldbus_api
-[submodule "media_player"]
-	path = media_player
-	url = https://github.com/stefano-m/lua-media_player
