@@ -477,9 +477,9 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,"Mod1"		}, "x",			function () awful.util.spawn("systemctl poweroff",false) end),
 	-- }}}
 	-- {{{ Bind PrintScrn to capture a screen
-	awful.key({						}, "Print",		function () awful.util.spawn("capscr all",false) end),
-	awful.key({"Control"			}, "Print",		function () awful.util.spawn("capscr frame",false) end),
-	awful.key({modkey				}, "Print",		function () awful.util.spawn("capscr window",false) end),
+	awful.key({						}, "Print",		function () awful.util.spawn("maim $HOME/pictures/screenshots/$(date +%d.%m.%Y-%H:%M:%S).png",false) end),
+	awful.key({"Control"			}, "Print",		function () awful.util.spawn("maim -s -c 1,0,0.6 $HOME/pictures/screenshots/$(date +%d.%m.%Y-%H:%M:%S).png",false) end),
+	awful.key({modkey				}, "Print",		function () awful.util.spawn("maim $HOME/pictures/screenshots/$(date +%d.%m.%Y-%H:%M:%S).png",false) end),
 	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn("recordmydesktop --no-sound",false) end),
 	-- }}}
 	-- {{{ Music Player:
