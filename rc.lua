@@ -122,7 +122,7 @@ local function set_wallpaper(s)
 		gears.wallpaper.maximized(wallpaper, s, true)
 	end
 end
-beautiful.init(awful.util.get_themes_dir() .. "default/theme.lua")
+beautiful.init(os.getenv("HOME") .. "/.config/awesome/mytheme.lua")
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 -- }}}
