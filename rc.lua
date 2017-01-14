@@ -135,8 +135,6 @@ mylauncher = awful.widget.launcher({
 	image = beautiful.awesome_icon,
 	menu = mymainmenu
 })
--- Create a promptbox for each screen
-mypromptbox = awful.widget.prompt()
 -- Helper
 mydivider = wibox.widget.textbox()
 mydivider:set_text(" | ")
@@ -243,9 +241,11 @@ awful.screen.connect_for_each_screen(function(s)
 	set_wallpaper(s)
 	-- Each screen has its own tag table
 	tags[s] = awful.tag(tags.settings[s.index].names, s, tags.settings[s.index].layout)
+	-- Create a promptbox for each screen
+	s.mypromptbox = awful.widget.prompt()
 	-- Create an imagebox widget for each screen
-	mylayoutbox = awful.widget.layoutbox(s)
-	mylayoutbox:buttons(
+	s.mylayoutbox = awful.widget.layoutbox(s)
+	s.mylayoutbox:buttons(
 		awful.util.table.join(
 			awful.button({					}, 1, function () awful.layout.inc( 1) end),
 			awful.button({					}, 3, function () awful.layout.inc(-1) end),
@@ -254,11 +254,11 @@ awful.screen.connect_for_each_screen(function(s)
 		)
 	)
 	-- Create a taglist widget
-	mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
+	s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
 	-- Create a tasklist widget
-	mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
+	s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons)
 	-- Create the wibox
-	mywibox = awful.wibar({
+	s.mywibox = awful.wibar({
 		position = "top",
 		height ="20",
 		screen = s
@@ -274,7 +274,8 @@ awful.screen.connect_for_each_screen(function(s)
 			mydate,
 			mydivider,
 			myclock,
-			mysystray
+			mysystray,
+			s.mylayoutbox
 		},
 		{
 			layout = wibox.layout.fixed.horizontal,
@@ -283,19 +284,19 @@ awful.screen.connect_for_each_screen(function(s)
 			mykeyboardlayout,
 			mydivider,
 			myclock,
-			mylayoutbox
+			s.mylayoutbox
 		}
 	}
 	myleftwidgets = {
 		layout = wibox.layout.fixed.horizontal,
 		mylauncher,
-		mytaglist,
-		mypromptbox,
+		s.mytaglist,
+		s.mypromptbox,
 	}
-	mywibox:setup {
+	s.mywibox:setup {
 		layout = wibox.layout.align.horizontal,
 		myleftwidgets,
-		mytasklist, -- Middle widget
+		s.mytasklist, -- Middle widget
 		myrightwidgets[s.index]
 	}
 end)
