@@ -357,7 +357,7 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,"Mod1"		}, "l",			function() util.move_clients(1) end,
 		{description = "move all to next tag", group = "clients movement"}),
 	awful.key({modkey,"Mod1"		}, "h",			function() util.move_clients(-1) end,
-		{description = "move all to orevious tag", group = "clients movement"}),
+		{description = "move all to previous tag", group = "clients movement"}),
 	awful.key({modkey,"Mod1"		}, "i",			function() util.move_clients_screen(1) end,
 		{description = "move all to next screen", group = "clients movement"}),
 	awful.key({modkey,"Mod1"		}, "u",			function() util.move_clients_screen(-1) end,
@@ -376,7 +376,7 @@ globalkeys = awful.util.table.join(
 		{description = "go to previously focused", group = "tags focus"}),
 	-- }}}
 	-- {{{ Tags Edit
-	awful.key({modkey,				}, "t",			function() lain.util.add_tag() end,
+	awful.key({modkey,				}, "n",			function() lain.util.add_tag() end,
 		{description = "create a new tag with a prompt", group = "tags edit"}),
 	awful.key({modkey,				}, "w",			function() lain.util.delete_tag() end,
 		{description = "delete currently focused tag", group = "tags edit"}),
@@ -411,7 +411,7 @@ globalkeys = awful.util.table.join(
 				history_path = awful.util.get_cache_dir() .. "/history_eval"
 			}
 		end,
-		{description = "execute a lua command prompt", group = "prompts"}),
+		{description = "run a lua command", group = "prompts"}),
 	-- }}}
 	-- {{{ HELP
 	awful.key({modkey,"Shift"		}, "/",			hotkeys_popup.show_help,
