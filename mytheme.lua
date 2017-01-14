@@ -1,15 +1,29 @@
----------------------------
--- Default awesome theme --
----------------------------
-
-local theme = {}
-
 local util = require('awful.util')
-local themes_path = util.get_themes_dir()
-local icon_path = util.get_awesome_icon_dir()
 
-theme.font          = "sans 8"
+local theme                                     = {}
 
+-- {{{ Directories
+local copycats_themes_dir                       = util.get_configuration_dir() .. "themes@copycats/"
+local system_themes_dir                         = util.get_themes_dir()
+local serialoverflow_themes_dir                 = util.get_configuration_dir() .. "themes@serialoverflow/"
+local mywallpapers                              = util.get_configuration_dir() .. "wallpapers/"
+local system_icon_dir                           = util.get_awesome_icon_dir()
+-- }}}
+
+-- {{{ General
+theme.wallpaper                                 = mywallpapers .. "firewatch-tower.png"
+theme.font                                      = "Terminus 9"
+theme.awesome_icon                              = system_icon_dir .. "awesome16.png"
+theme.icon_theme                                = nil
+theme.menu_submenu_icon                         = system_themes_dir .. "default/submenu.png"
+theme.menu_height                               = 15
+theme.menu_width                                = 100
+theme.useless_gap                               = 0
+theme.useless_gap_width                         = 0
+theme.border_width                              = 1
+-- }}}
+
+-- {{{ Colors
 theme.bg_normal     = "#222222"
 theme.bg_focus      = "#535d6c"
 theme.bg_urgent     = "#ff0000"
@@ -21,93 +35,65 @@ theme.fg_focus      = "#ffffff"
 theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
 
-theme.useless_gap   = 0
-theme.border_width  = 1
 theme.border_normal = "#000000"
 theme.border_focus  = "#535d6c"
 theme.border_marked = "#91231c"
+-- }}}
 
--- There are other variable sets
--- overriding the default one when
--- defined, the sets are:
--- taglist_[bg|fg]_[focus|urgent|occupied|empty|volatile]
--- tasklist_[bg|fg]_[focus|urgent]
--- titlebar_[bg|fg]_[normal|focus]
--- tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
--- mouse_finder_[color|timeout|animate_timeout|radius|factor]
--- Example:
---theme.taglist_bg_focus = "#ff0000"
+-- {{{ Taglist Icons
+theme.taglist_squares_sel   = system_themes_dir .. "default/taglist/squarefw.png"
+theme.taglist_squares_unsel = system_themes_dir .. "default/taglist/squarew.png"
+-- }}}
 
--- Display the taglist squares
-theme.taglist_squares_sel   = themes_path.."default/taglist/squarefw.png"
-theme.taglist_squares_unsel = themes_path.."default/taglist/squarew.png"
+-- {{{ Titlebar Icons
+theme.titlebar_close_button_normal = system_themes_dir .. "default/titlebar/close_normal.png"
+theme.titlebar_close_button_focus  = system_themes_dir .. "default/titlebar/close_focus.png"
 
--- Variables set for theming the menu:
--- menu_[bg|fg]_[normal|focus]
--- menu_[border_color|border_width]
-theme.menu_submenu_icon = themes_path.."default/submenu.png"
-theme.menu_height = 15
-theme.menu_width  = 100
+theme.titlebar_minimize_button_normal = system_themes_dir .. "default/titlebar/minimize_normal.png"
+theme.titlebar_minimize_button_focus  = system_themes_dir .. "default/titlebar/minimize_focus.png"
 
--- You can add as many variables as
--- you wish and access them by using
--- beautiful.variable in your rc.lua
---theme.bg_widget = "#cc0000"
+theme.titlebar_ontop_button_normal_inactive = system_themes_dir .. "default/titlebar/ontop_normal_inactive.png"
+theme.titlebar_ontop_button_focus_inactive  = system_themes_dir .. "default/titlebar/ontop_focus_inactive.png"
+theme.titlebar_ontop_button_normal_active = system_themes_dir .. "default/titlebar/ontop_normal_active.png"
+theme.titlebar_ontop_button_focus_active  = system_themes_dir .. "default/titlebar/ontop_focus_active.png"
 
--- Define the image to load
-theme.titlebar_close_button_normal = themes_path.."default/titlebar/close_normal.png"
-theme.titlebar_close_button_focus  = themes_path.."default/titlebar/close_focus.png"
+theme.titlebar_sticky_button_normal_inactive = system_themes_dir .. "default/titlebar/sticky_normal_inactive.png"
+theme.titlebar_sticky_button_focus_inactive  = system_themes_dir .. "default/titlebar/sticky_focus_inactive.png"
+theme.titlebar_sticky_button_normal_active = system_themes_dir .. "default/titlebar/sticky_normal_active.png"
+theme.titlebar_sticky_button_focus_active  = system_themes_dir .. "default/titlebar/sticky_focus_active.png"
 
-theme.titlebar_minimize_button_normal = themes_path.."default/titlebar/minimize_normal.png"
-theme.titlebar_minimize_button_focus  = themes_path.."default/titlebar/minimize_focus.png"
+theme.titlebar_floating_button_normal_inactive = system_themes_dir .. "default/titlebar/floating_normal_inactive.png"
+theme.titlebar_floating_button_focus_inactive  = system_themes_dir .. "default/titlebar/floating_focus_inactive.png"
+theme.titlebar_floating_button_normal_active = system_themes_dir .. "default/titlebar/floating_normal_active.png"
+theme.titlebar_floating_button_focus_active  = system_themes_dir .. "default/titlebar/floating_focus_active.png"
 
-theme.titlebar_ontop_button_normal_inactive = themes_path.."default/titlebar/ontop_normal_inactive.png"
-theme.titlebar_ontop_button_focus_inactive  = themes_path.."default/titlebar/ontop_focus_inactive.png"
-theme.titlebar_ontop_button_normal_active = themes_path.."default/titlebar/ontop_normal_active.png"
-theme.titlebar_ontop_button_focus_active  = themes_path.."default/titlebar/ontop_focus_active.png"
+theme.titlebar_maximized_button_normal_inactive = system_themes_dir .. "default/titlebar/maximized_normal_inactive.png"
+theme.titlebar_maximized_button_focus_inactive  = system_themes_dir .. "default/titlebar/maximized_focus_inactive.png"
+theme.titlebar_maximized_button_normal_active = system_themes_dir .. "default/titlebar/maximized_normal_active.png"
+theme.titlebar_maximized_button_focus_active  = system_themes_dir .. "default/titlebar/maximized_focus_active.png"
+-- }}}
 
-theme.titlebar_sticky_button_normal_inactive = themes_path.."default/titlebar/sticky_normal_inactive.png"
-theme.titlebar_sticky_button_focus_inactive  = themes_path.."default/titlebar/sticky_focus_inactive.png"
-theme.titlebar_sticky_button_normal_active = themes_path.."default/titlebar/sticky_normal_active.png"
-theme.titlebar_sticky_button_focus_active  = themes_path.."default/titlebar/sticky_focus_active.png"
+-- {{{ Layout Icons
+theme.layout_fairh = system_themes_dir .. "default/layouts/fairhw.png"
+theme.layout_fairv = system_themes_dir .. "default/layouts/fairvw.png"
+theme.layout_floating  = system_themes_dir .. "default/layouts/floatingw.png"
+theme.layout_magnifier = system_themes_dir .. "default/layouts/magnifierw.png"
+theme.layout_max = system_themes_dir .. "default/layouts/maxw.png"
+theme.layout_fullscreen = system_themes_dir .. "default/layouts/fullscreenw.png"
+theme.layout_tilebottom = system_themes_dir .. "default/layouts/tilebottomw.png"
+theme.layout_tileleft   = system_themes_dir .. "default/layouts/tileleftw.png"
+theme.layout_tile = system_themes_dir .. "default/layouts/tilew.png"
+theme.layout_tiletop = system_themes_dir .. "default/layouts/tiletopw.png"
+theme.layout_spiral  = system_themes_dir .. "default/layouts/spiralw.png"
+theme.layout_dwindle = system_themes_dir .. "default/layouts/dwindlew.png"
+theme.layout_cornernw = system_themes_dir .. "default/layouts/cornernww.png"
+theme.layout_cornerne = system_themes_dir .. "default/layouts/cornernew.png"
+theme.layout_cornersw = system_themes_dir .. "default/layouts/cornersww.png"
+theme.layout_cornerse = system_themes_dir .. "default/layouts/cornersew.png"
+-- }}}
 
-theme.titlebar_floating_button_normal_inactive = themes_path.."default/titlebar/floating_normal_inactive.png"
-theme.titlebar_floating_button_focus_inactive  = themes_path.."default/titlebar/floating_focus_inactive.png"
-theme.titlebar_floating_button_normal_active = themes_path.."default/titlebar/floating_normal_active.png"
-theme.titlebar_floating_button_focus_active  = themes_path.."default/titlebar/floating_focus_active.png"
 
-theme.titlebar_maximized_button_normal_inactive = themes_path.."default/titlebar/maximized_normal_inactive.png"
-theme.titlebar_maximized_button_focus_inactive  = themes_path.."default/titlebar/maximized_focus_inactive.png"
-theme.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/maximized_normal_active.png"
-theme.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
-
-theme.wallpaper = themes_path.."default/background.png"
-
--- You can use your own layout icons like this:
-theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
-theme.layout_fairv = themes_path.."default/layouts/fairvw.png"
-theme.layout_floating  = themes_path.."default/layouts/floatingw.png"
-theme.layout_magnifier = themes_path.."default/layouts/magnifierw.png"
-theme.layout_max = themes_path.."default/layouts/maxw.png"
-theme.layout_fullscreen = themes_path.."default/layouts/fullscreenw.png"
-theme.layout_tilebottom = themes_path.."default/layouts/tilebottomw.png"
-theme.layout_tileleft   = themes_path.."default/layouts/tileleftw.png"
-theme.layout_tile = themes_path.."default/layouts/tilew.png"
-theme.layout_tiletop = themes_path.."default/layouts/tiletopw.png"
-theme.layout_spiral  = themes_path.."default/layouts/spiralw.png"
-theme.layout_dwindle = themes_path.."default/layouts/dwindlew.png"
-theme.layout_cornernw = themes_path.."default/layouts/cornernww.png"
-theme.layout_cornerne = themes_path.."default/layouts/cornernew.png"
-theme.layout_cornersw = themes_path.."default/layouts/cornersww.png"
-theme.layout_cornerse = themes_path.."default/layouts/cornersew.png"
-
-theme.awesome_icon = icon_path.."awesome16.png"
-
--- Define the icon theme for application icons. If not set then the icons
--- from /usr/share/icons and /usr/share/icons/hicolor will be used.
-theme.icon_theme = nil
 
 return theme
 
--- vim: filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80
-
+-- vim:filetype=lua:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:textwidth=80:foldmethod=marker
