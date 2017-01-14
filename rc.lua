@@ -149,25 +149,6 @@ mymusicplayer = obvious.basic_mpd()
 -- 2nd screen only
 mysystray = wibox.widget.systray()
 -- }}}
--- {{{ Right Widgets Setup
-rightwidgets = {
-	{
-		mykeyboardlayout,
-		mydivider,
-		myvolume,
-		mydivider,
-		mydate,
-		mydivider,
-		myclock,
-		mysystray
-	},
-	{
-		mykeyboardlayout,
-		mydivider,
-		myclock
-	}
-}
--- }}}
 -- {{{ Tags
 tags = {
 	settings = {
@@ -283,16 +264,8 @@ awful.screen.connect_for_each_screen(function(s)
 		screen = s
 	})
 	-- Add widgets to the wibox
-	mywibox:setup {
-		layout = wibox.layout.align.horizontal,
-		{ -- Left widgets
-			layout = wibox.layout.fixed.horizontal,
-			mylauncher,
-			mytaglist,
-			mypromptbox,
-		},
-		mytasklist, -- Middle widget
-		{ -- Right widgets
+	myrightwidgets = {
+		{
 			layout = wibox.layout.fixed.horizontal,
 			mykeyboardlayout,
 			mydivider,
@@ -301,9 +274,29 @@ awful.screen.connect_for_each_screen(function(s)
 			mydate,
 			mydivider,
 			myclock,
-			mysystray,
-			mylayoutbox
+			mysystray
 		},
+		{
+			layout = wibox.layout.fixed.horizontal,
+			mymusicplayer,
+			mydivider,
+			mykeyboardlayout,
+			mydivider,
+			myclock,
+			mylayoutbox
+		}
+	}
+	myleftwidgets = {
+		layout = wibox.layout.fixed.horizontal,
+		mylauncher,
+		mytaglist,
+		mypromptbox,
+	}
+	mywibox:setup {
+		layout = wibox.layout.align.horizontal,
+		myleftwidgets,
+		mytasklist, -- Middle widget
+		myrightwidgets[s.index]
 	}
 end)
 -- }}}
