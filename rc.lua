@@ -350,17 +350,17 @@ globalkeys = awful.util.table.join(
 		{description = "select previous", group = "clients layout"}),
 	-- }}}
 	-- {{{ Clients Movement
-	awful.key({modkey,"Shift"		}, "l",			function() util.tag.moveclient(1) end,
+	awful.key({modkey,"Shift"		}, "l",			function() util.move_client(1) end,
 		{description = "move to next tag", group = "clients movement"}),
-	awful.key({modkey,"Shift"		}, "h",			function() util.tag.moveclient(-1) end,
+	awful.key({modkey,"Shift"		}, "h",			function() util.move_client(-1) end,
 		{description = "move to previous tag", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "l",			function() util.clients.move2tag(1) end,
+	awful.key({modkey,"Mod1"		}, "l",			function() util.move_clients(1) end,
 		{description = "move all to next tag", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "h",			function() util.clients.move2tag(-1) end,
+	awful.key({modkey,"Mod1"		}, "h",			function() util.move_clients(-1) end,
 		{description = "move all to orevious tag", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "i",			function() util.clients.move2screen(1) end,
+	awful.key({modkey,"Mod1"		}, "i",			function() util.move_clients_screen(1) end,
 		{description = "move all to next screen", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "u",			function() util.clients.move2screen(-1) end,
+	awful.key({modkey,"Mod1"		}, "u",			function() util.move_clients_screen(-1) end,
 		{description = "move all to previous screen", group = "clients movement"}),
 	-- }}}
 	-- {{{ Tags Focus
@@ -388,9 +388,9 @@ globalkeys = awful.util.table.join(
 		{description = "move to next index", group = "tags movement"}),
 	awful.key({modkey,"Control"		}, "h",			function() lain.util.move_tag(-1) end,
 		{description = "move to previous index", group = "tags movement"}),
-	awful.key({modkey,"Control"		}, "i",			function() util.tag.move2screen(1) end,
+	awful.key({modkey,"Control"		}, "i",			function() util.move_tag_screen(1) end,
 		{description = "move to next screen", group = "tags movement"}),
-	awful.key({modkey,"Control"		}, "u",			function() util.tag.move2screen(-1) end,
+	awful.key({modkey,"Control"		}, "u",			function() util.move_tag_screen(-1) end,
 		{description = "move to previous screen", group = "tags movement"}),
 	-- }}}
 	-- {{{ Screens Focus
@@ -410,7 +410,7 @@ globalkeys = awful.util.table.join(
 				exe_callback = awful.util.eval,
 				history_path = awful.util.get_cache_dir() .. "/history_eval"
 			}
-			end,
+		end,
 		{description = "execute a lua command prompt", group = "prompts"}),
 	-- }}}
 	-- {{{ HELP
@@ -544,32 +544,32 @@ end
 clientkeys = awful.util.table.join(
 	-- {{{ Clients Edit
 	awful.key({modkey,				}, "q",	  function (c) c:kill() end,
-		{description = "close", group = "client edit"}),
+		{description = "close", group = "clients edit"}),
 	-- }}}
-	-- {{{ Client movement
+	-- {{{ Client Movement
 	awful.key({modkey,				}, "i",	  function (c) c:move_to_screen() end,
-		{description = "move to screen", group = "client movement"}),
+		{description = "move to screen", group = "clients movement"}),
 	-- }}}
-	-- {{{ Clients layout
+	-- {{{ Clients Layout
 	awful.key({modkey,"Control"		}, "Return", function (c) c:swap(awful.client.getmaster()) end,
 		{description = "move to master", group = "clients layout"}),
 	awful.key({modkey,"Control"		}, "space",  awful.client.floating.toggle,
-		{description = "toggle floating", group = "client"}),
+		{description = "toggle floating", group = "clients layout"}),
 	awful.key({modkey,				}, "t",	  function (c) c.ontop = not c.ontop end,
-		{description = "toggle keep on top", group = "client"}),
+		{description = "toggle keep on top", group = "clients layout"}),
 	awful.key({ modkey,		   }, "f",
 		function (c)
 			c.fullscreen = not c.fullscreen
 			c:raise()
 		end,
-		{description = "toggle fullscreen", group = "client"}
+		{description = "toggle fullscreen", group = "clients layout"}
 	),
 	awful.key({modkey,				}, "m",
 		function (c)
 			c.maximized = not c.maximized
 			c:raise()
 		end,
-		{description = "maximize", group = "client"}
+		{description = "maximize", group = "clients layout"}
 	),
 	awful.key({modkey,				}, "n",
 		function (c)
@@ -577,7 +577,7 @@ clientkeys = awful.util.table.join(
 			-- minimized, since minimized clients can't have the focus.
 			c.minimized = true
 		end,
-		{description = "minimize", group = "client"}
+		{description = "minimize", group = "clients layout"}
 	),
 	awful.key({modkey,"Shift"		}, "n",
 		function ()
@@ -588,7 +588,7 @@ clientkeys = awful.util.table.join(
 				c:raise()
 			end
 		end,
-		{description = "restore minimized", group = "client"}
+		{description = "restore minimized", group = "clients layout"}
 	)
 	-- }}}
 )
