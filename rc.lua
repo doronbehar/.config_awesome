@@ -426,7 +426,7 @@ globalkeys = awful.util.table.join(
 	-- {{{ Launchers
 	awful.key({modkey,				}, "Return",	function () awful.util.spawn(terminal) end,
 		{description = "open a terminal", group = "launchers"}),
-	awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn(terminal .. " -T project -e sh -c \"tmux attach-session -t project || tmuxp load project || tmuxinator start project\"") end,
+	awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn_with_shell(terminal .. " -T project -e sh -c \"tmux attach-session -t project || tmuxp load project || tmuxinator start project\"") end,
 		{description = "open a tmux terminal with tmuxinator", group = "launchers"}),
 	-- }}}
 	-- {{{ Session
@@ -438,13 +438,13 @@ globalkeys = awful.util.table.join(
 		{description = "poweroff machine if no other users are using it", group = "session"}),
 	-- }}}
 	-- {{{ PrintScrn
-	awful.key({						}, "Print",		function () awful.util.spawn("maim $HOME/pictures/screenshots/desktop:$(date +%d.%m.%Y-%H:%M:%S).png",false) end,
+	awful.key({						}, "Print",		function () awful.util.spawn_with_shell("maim --format png " .. os.getenv("HOME") .. "/pictures/screenshots/desktop:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
 		{description = "screenshot all desktop and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
-	awful.key({"Control"			}, "Print",		function () awful.util.spawn("maim -s -c 1,0,0.6 $HOME/pictures/screenshots/selection:$(date +%d.%m.%Y-%H:%M:%S).png",false) end,
+	awful.key({"Control"			}, "Print",		function () awful.util.spawn_with_shell("maim --format png -s -c 1,0,0.6 " .. os.getenv("HOME") .. "/pictures/screenshots/selection:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
 		{description = "screenshot a selection and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
-	awful.key({modkey				}, "Print",		function () awful.util.spawn("maim -i $(xdotool getactivewindow) $HOME/pictures/screenshots/$(xdotool getwindowname $(xdotool getactivewindow)):$(date +%d.%m.%Y-%H:%M:%S).png",false) end,
+	awful.key({modkey				}, "Print",		function () awful.util.spawn_with_shell("maim --format png -i $(xdotool getactivewindow) " .. os.getenv("HOME") .. "/pictures/screenshots/$(xdotool getwindowname $(xdotool getactivewindow)):" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
 		{description = "screenshot the current window focused and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
-	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn("recordmydesktop --no-sound",false) end,
+	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn_with_shell("recordmydesktop --no-sound",false) end,
 		{description = "record the desktop", group = "PrintScrn"}),
 	-- }}}
 	-- {{{ Music Player:
