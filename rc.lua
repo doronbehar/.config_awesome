@@ -327,7 +327,7 @@ globalkeys = awful.util.table.join(
 		{description = "create a new tag with a prompt", group = "tags edit"}),
 	awful.key({modkey,				}, "w",			function () lain.util.delete_tag() end,
 		{description = "delete currently focused tag", group = "tags edit"}),
-	awful.key({modkey,"Shift"		}, "r",			function () lain.util.rename_tag() end,
+	awful.key({modkey,				}, "r",			function () lain.util.rename_tag() end,
 		{description = "rename currently focused tag", group = "tags edit"}),
 	-- }}}
 	-- {{{ Tags Movement
@@ -421,36 +421,47 @@ globalkeys = awful.util.table.join(
 		{description = "toggle volume mute", group = "music player"}),
 	-- }}}
 	-- {{{ General Machine Volume managment:
-	awful.key({modkey 				}, "F10",		pulseaudio_widget.volume_up,
+	awful.key({modkey,				}, "F10",		pulseaudio_widget.volume_up,
 		{description = "volume up", group = "machine volume"}),
-	awful.key({modkey				}, "F7",		pulseaudio_widget.volume_down,
+	awful.key({modkey,				}, "F7",		pulseaudio_widget.volume_down,
 		{description = "volume down", group = "machine volume"}),
-	awful.key({modkey				}, "Scroll_Lock", pulseaudio_widget.toggle_muted,
+	awful.key({modkey,				}, "Scroll_Lock", pulseaudio_widget.toggle_muted,
 		{description = "toggle volume mute", group = "machine volume"}),
-	awful.key({modkey				}, "F1",		function () awful.util.spawn("toggle-sinks", false) end,
+	awful.key({modkey,				}, "F1",		function () awful.util.spawn("toggle-sinks", false) end,
 		{description = "cycle through available sinks", group = "machine volume"})
 	-- }}}
 )
 -- }}}
 -- {{{ Bind all key numbers to tags.
-local numericpad = { "KP_End", "KP_Down", "KP_Next", "KP_Left", "KP_Begin", "KP_Right", "KP_Home", "KP_Up", "KP_Prior" }
+local numericpad = {87, 88, 89, 83, 84, 85, 79, 80, 81}
 for i = 1, 9 do
 	globalkeys = awful.util.table.join(globalkeys,
 		-- {{{ Clients focus
-		awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
-				function ()
-					if client.focus then
-						local tag = client.focus.screen.tags[i]
-						if tag then
-							client.focus:toggle_tag(tag)
-						end
+		awful.key({modkey,"Control","Shift"	}, "#" .. i + 9,
+			function ()
+				if client.focus then
+					local tag = client.focus.screen.tags[i]
+					if tag then
+						client.focus:toggle_tag(tag)
 					end
-				end,
+				end
+			end,
+			{description = "toggle focused client on tag #" .. i, group = "clients focus"}
+		),
+		awful.key({modkey,"Control","Shift"	}, "#" .. numericpad[i],
+			function ()
+				if client.focus then
+					local tag = client.focus.screen.tags[i]
+					if tag then
+						client.focus:toggle_tag(tag)
+					end
+				end
+			end,
 			{description = "toggle focused client on tag #" .. i, group = "clients focus"}
 		),
 		-- }}}
 		-- {{{ Tags Focus
-		awful.key({modkey				}, "#" .. i + 9,
+		awful.key({modkey					}, "#" .. i + 9,
 			function ()
 				local screen = awful.screen.focused()
 				local tag = screen.tags[i]
@@ -460,7 +471,27 @@ for i = 1, 9 do
 			end,
 			{description = "view tag #"..i, group = "tags focus"}
 		),
-		awful.key({modkey,"Control"		}, "#" .. i + 9,
+		awful.key({modkey					}, "#" .. numericpad[i],
+			function ()
+				local screen = awful.screen.focused()
+				local tag = screen.tags[i]
+				if tag then
+					tag:view_only()
+				end
+			end,
+			{description = "view tag #"..i, group = "tags focus"}
+		),
+		awful.key({modkey,"Control"			}, "#" .. i + 9,
+			function ()
+				local screen = awful.screen.focused()
+				local tag = screen.tags[i]
+				if tag then
+					awful.tag.viewtoggle(tag)
+				end
+			end,
+			{description = "toggle tag #" .. i, group = "tags focus"}
+		),
+		awful.key({modkey,"Control"			}, "#" .. numericpad[i],
 			function ()
 				local screen = awful.screen.focused()
 				local tag = screen.tags[i]
@@ -472,15 +503,26 @@ for i = 1, 9 do
 		),
 		-- }}}
 		-- {{{ Tags Movement
-		awful.key({ modkey, "Shift" }, "#" .. i + 9,
-				function ()
-					if client.focus then
-						local tag = client.focus.screen.tags[i]
-						if tag then
-							client.focus:move_to_tag(tag)
-						end
+		awful.key({modkey,"Shift"			}, "#" .. i + 9,
+			function ()
+				if client.focus then
+					local tag = client.focus.screen.tags[i]
+					if tag then
+						client.focus:move_to_tag(tag)
 					end
-				end,
+				end
+			end,
+			{description = "move focused client to tag #"..i, group = "tags movement"}
+		),
+		awful.key({modkey,"Shift"			}, "#" .. numericpad[i],
+			function ()
+				if client.focus then
+					local tag = client.focus.screen.tags[i]
+					if tag then
+						client.focus:move_to_tag(tag)
+					end
+				end
+			end,
 			{description = "move focused client to tag #"..i, group = "tags movement"}
 		)
 		-- }}}
@@ -571,25 +613,6 @@ clientkeys = awful.util.table.join(
 			c:raise()
 		end,
 		{description = "maximize", group = "clients layout"}
-	),
-	awful.key({modkey,"Control"		}, "n",
-		function (c)
-			-- The client currently has the input focus, so it cannot be
-			-- minimized, since minimized clients can't have the focus.
-			c.minimized = true
-		end,
-		{description = "minimize", group = "clients layout"}
-	),
-	awful.key({modkey,"Shift"		}, "n",
-		function ()
-			local c = awful.client.restore()
-			-- Focus restored client
-			if c then
-				client.focus = c
-				c:raise()
-			end
-		end,
-		{description = "restore minimized", group = "clients layout"}
 	)
 	-- }}}
 )
