@@ -336,9 +336,9 @@ globalkeys = awful.util.table.join(
 		{description = "move to next index", group = "tags movement"}),
 	awful.key({modkey,"Control"		}, "h",			function () lain.util.move_tag(-1) end,
 		{description = "move to previous index", group = "tags movement"}),
-	awful.key({modkey,"Control"		}, "i",			function () util.move_tag_screen(1) end,
+	awful.key({modkey,"Control"		}, "i",			function () util.move_tag_to_screen(1) end,
 		{description = "move to next screen", group = "tags movement"}),
-	awful.key({modkey,"Control"		}, "u",			function () util.move_tag_screen(-1) end,
+	awful.key({modkey,"Control"		}, "u",			function () util.move_tag_to_screen(-1) end,
 		{description = "move to previous screen", group = "tags movement"}),
 	-- }}}
 	-- {{{ Screens Focus
@@ -519,13 +519,13 @@ clientkeys = awful.util.table.join(
 		{description = "move to next tag", group = "clients movement"}),
 	awful.key({modkey,"Shift"		}, "h",			function (c) c:move_to_tag(c.screen.tags[awful.util.cycle(#c.screen.tags, c.first_tag.index - 1)]) end,
 		{description = "move to previous tag", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "l",			function () util.move_all_clients_tag(1) end,
+	awful.key({modkey,"Mod1"		}, "l",			function () util.move_all_clients_to_tag(1) end,
 		{description = "move all to next tag", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "h",			function () util.move_all_clients_tag(-1) end,
+	awful.key({modkey,"Mod1"		}, "h",			function () util.move_all_clients_to_tag(-1) end,
 		{description = "move all to previous tag", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "i",			function () util.move_all_clients_screen(1) end,
+	awful.key({modkey,"Mod1"		}, "i",			function () util.move_all_clients_to_screen(1) end,
 		{description = "move all to next screen", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "u",			function () util.move_all_clients_screen(-1) end,
+	awful.key({modkey,"Mod1"		}, "u",			function () util.move_all_clients_to_screen(-1) end,
 		{description = "move all to previous screen", group = "clients movement"}),
 	-- }}}
 	-- {{{ Clients Layout
