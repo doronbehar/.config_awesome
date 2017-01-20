@@ -90,7 +90,6 @@ awful.layout.layouts = {
 	awful.layout.suit.max.fullscreen,
 	awful.layout.suit.magnifier,
 	lain.layout.termfair,
-	lain.layout.centerfair,
 	awful.layout.suit.corner.nw,
 	awful.layout.suit.corner.ne,
 	awful.layout.suit.corner.sw,
