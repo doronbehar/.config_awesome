@@ -510,9 +510,23 @@ clientkeys = awful.util.table.join(
 	awful.key({modkey,				}, "q",	 		function (c) c:kill() end,
 		{description = "close", group = "clients edit"}),
 	-- }}}
-	-- {{{ Client Movement
-	awful.key({modkey,				}, "i",	  function (c) c:move_to_screen() end,
-		{description = "move to screen", group = "clients movement"}),
+	-- {{{ Clients Movement
+	awful.key({modkey,"Shift"		}, "i",			function (c) c:move_to_screen(c.screen.index + 1) end,
+		{description = "move to next screen", group = "clients movement"}),
+	awful.key({modkey,"Shift"		}, "u",			function (c) c:move_to_screen(c.screen.index - 1) end,
+		{description = "move to previous screen", group = "clients movement"}),
+	awful.key({modkey,"Shift"		}, "l",			function (c) util.move_client_tag(c, 1) end,
+		{description = "move to next tag", group = "clients movement"}),
+	awful.key({modkey,"Shift"		}, "h",			function (c) util.move_client_tag(c, -1) end,
+		{description = "move to previous tag", group = "clients movement"}),
+	awful.key({modkey,"Mod1"		}, "l",			function () util.move_all_clients_tag(1) end,
+		{description = "move all to next tag", group = "clients movement"}),
+	awful.key({modkey,"Mod1"		}, "h",			function () util.move_all_clients_tag(-1) end,
+		{description = "move all to previous tag", group = "clients movement"}),
+	awful.key({modkey,"Mod1"		}, "i",			function () util.move_all_clients_screen(1) end,
+		{description = "move all to next screen", group = "clients movement"}),
+	awful.key({modkey,"Mod1"		}, "u",			function () util.move_all_clients_screen(-1) end,
+		{description = "move all to previous screen", group = "clients movement"}),
 	-- }}}
 	-- {{{ Clients Layout
 	awful.key({modkey,				}, "Up",		function () awful.client.swap.byidx(  1) end,
