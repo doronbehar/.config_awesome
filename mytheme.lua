@@ -1,3 +1,5 @@
+local xresources = require("beautiful.xresources")
+local dpi = xresources.apply_dpi
 local util = require('awful.util')
 
 local theme                                     = {}
@@ -16,13 +18,13 @@ theme.font                                      = "Terminus 9"
 theme.awesome_icon                              = system_icon_dir .. "awesome16.png"
 theme.icon_theme                                = nil
 theme.menu_submenu_icon                         = system_themes_dir .. "default/submenu.png"
-theme.menu_height                               = 15
-theme.menu_width                                = 100
+theme.menu_height                               = dpi(15)
+theme.menu_width                                = dpi(100)
 theme.menu_border_width                         = 0
 theme.submenu_icon                              = copycats_themes_dir .. "powerarrow-darker/icons/submenu.png"
 theme.useless_gap                               = 0
 theme.useless_gap_width                         = 0
-theme.border_width                              = 1
+theme.border_width                              = dpi(1)
 -- }}}
 
 -- {{{ Colors
