@@ -46,16 +46,6 @@ function util.move_all_clients_screen(incr)
 end
 -- }}}
 
--- {{{ util.move_client_tag
-function util.move_client_tag(c,incr)
-	local s = awful.screen.focused()
-	local t = s.selected_tag
-	new_tag = s.tags[awful.util.cycle(#s.tags, t.index + incr)]
-	c:move_to_tag(new_tag)
-	awful.tag.viewonly(new_tag)
-end
--- }}}
-
 return util
 
 -- vim:ft=lua:foldmethod=marker

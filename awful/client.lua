@@ -11,6 +11,7 @@ local util = require("awful.util")
 local spawn = require("awful.spawn")
 local object = require("gears.object")
 local grect = require("gears.geometry").rectangle
+local tag = require("awful.tag")
 local pairs = pairs
 local type = type
 local ipairs = ipairs
@@ -356,6 +357,7 @@ function client.object.move_to_tag(self, target)
         self.screen = s
         self:tags({ target })
     end
+    tag.viewonly(target)
 end
 
 --- Toggle a tag on a client.
