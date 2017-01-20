@@ -23,8 +23,6 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 require("archmenu")
 -- * tags and clients manipulation.
 local util = require("util")
--- * Obvious widgets
-local obvious = require("obvious")
 -- * Copycats' `lain`
 local lain = require("lain")
 -- * pulseaudio dbus widget
@@ -140,9 +138,6 @@ mydivider:set_text(" | ")
 -- 1st screen only
 myvolume = pulseaudio_widget
 mydate = awful.widget.textclock("%d/%m/%y",1)
-obvious.basic_mpd.set_format("$title - $album")
-obvious.basic_mpd.set_update_interval(0.5)
-mymusicplayer = obvious.basic_mpd()
 -- 2nd screen only
 mysystray = wibox.widget.systray()
 -- }}}
@@ -278,8 +273,6 @@ awful.screen.connect_for_each_screen(function (s)
 		},
 		{
 			layout = wibox.layout.fixed.horizontal,
-			mymusicplayer,
-			mydivider,
 			mykeyboardlayout,
 			mydivider,
 			myclock,
@@ -395,27 +388,19 @@ globalkeys = awful.util.table.join(
 		{description = "record the desktop", group = "PrintScrn"}),
 	-- }}}
 	-- {{{ Music Player:
-	awful.key({modkey,"Control"		}, "Pause",		function () obvious.basic_mpd.connection:toggle_play() end,
+	awful.key({modkey,"Control"		}, "Pause",		function () awful.util.spawn("mpc toggle") end,
 		{description = "toggle Play/Pause", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F9",
-		function ()
-			obvious.basic_mpd.connection:next()
-			obvious.basic_mpd.update()
-		end,
+	awful.key({modkey,"Control"		}, "F9",		function () awful.util.spawn("mpc next") end,
 		{description = "next song in playlist", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F8",
-		function ()
-			obvious.basic_mpd.connection:previous()
-			obvious.basic_mpd.update()
-		end,
+	awful.key({modkey,"Control"		}, "F8",		function () awful.util.spawn("mpc previous") end,
 		{description = "privious song in playlist", group = "music player"}),
 	awful.key({modkey,"Control"		}, "F12",		function () awful.util.spawn("mpc seek +5") end,
 		{description = "seek forward", group = "music player"}),
 	awful.key({modkey,"Control"		}, "F11",		function () awful.util.spawn("mpc seek -5") end,
 		{description = "seek backwards", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F10",		function () obvious.basic_mpd.connection:volume_up(5) end,
+	awful.key({modkey,"Control"		}, "F10",		function () awful.util.spawn("mpc volume +5") end,
 		{description = "volume up", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F7",		function () obvious.basic_mpd.connection:volume_down(5) end,
+	awful.key({modkey,"Control"		}, "F7",		function () awful.util.spawn("mpc volume -5") end,
 		{description = "volume down", group = "music player"}),
 	awful.key({modkey,"Control"		}, "Scroll_Lock", function () awful.util.spawn("mpc-toggle-mute") end,
 		{description = "toggle volume mute", group = "music player"}),
