@@ -33,14 +33,14 @@ end
 function util.move_all_clients_to_screen(incr)
 	local s = awful.screen.focused()
 	local t = s.selected_tag
+	local new_screen = awful.util.cycle(screen:count(), s.index + incr)
 	local dumb = function()
 		return true
 	end
 	for c in awful.util.table.iterate(t:clients(),dumb,1) do
-		c:move_to_screen(s)
+		c:move_to_screen(new_screen)
 	end
-	awful.screen.focus(t.screen)
-	awful.tag.viewonly(new_tag)
+	awful.screen.focus(new_screen)
 end
 -- }}}
 
