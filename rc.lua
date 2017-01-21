@@ -340,7 +340,7 @@ globalkeys = awful.util.table.join(
 		{description = "focus the previous screen", group = "screens focus"}),
 	-- }}}
 	-- {{{ Prompts
-	awful.key({modkey				}, "r", function () awful.screen.focused().mypromptbox:run() end,
+	awful.key({modkey				}, "e", function () awful.screen.focused().mypromptbox:run() end,
 		{description = "run a shell command", group = "prompts"}),
 	awful.key({modkey				}, "x",
 		function ()
