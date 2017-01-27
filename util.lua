@@ -7,7 +7,7 @@ function util.move_tag_to_screen(incr)
 	local s = awful.screen.focused()
 	local t = s.selected_tag
 	t.screen = awful.util.cycle(screen:count(), s.index + incr)
-	awful.screen.focus(s)
+	awful.screen.focus_relative(incr)
 	awful.tag.viewonly(t)
 end
 -- }}}
@@ -40,7 +40,7 @@ function util.move_all_clients_to_screen(incr)
 	for c in awful.util.table.iterate(t:clients(),dumb,1) do
 		c:move_to_screen(new_screen)
 	end
-	awful.screen.focus(new_screen)
+	awful.screen.focus_relative(incr)
 end
 -- }}}
 
