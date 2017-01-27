@@ -392,7 +392,7 @@ globalkeys = awful.util.table.join(
 		{description = "toggle Play/Pause", group = "music player"}),
 	awful.key({modkey,"Control"		}, "F9",		function () awful.util.spawn("mpc next") end,
 		{description = "next song in playlist", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F8",		function () awful.util.spawn("mpc previous") end,
+	awful.key({modkey,"Control"		}, "F8",		function () awful.util.spawn("mpc prev") end,
 		{description = "privious song in playlist", group = "music player"}),
 	awful.key({modkey,"Control"		}, "F12",		function () awful.util.spawn("mpc seek +5") end,
 		{description = "seek forward", group = "music player"}),
