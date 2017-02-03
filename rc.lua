@@ -376,6 +376,8 @@ globalkeys = awful.util.table.join(
 		{description = "quit awesome", group = "session"}),
 	awful.key({modkey,"Mod1"		}, "x",			function () awful.util.spawn("systemctl poweroff",false) end,
 		{description = "poweroff machine if no other users are using it", group = "session"}),
+	awful.key({modkey,"Mod1"		}, "z",			function () awful.util.spawn("xtrlock -b",false) end,
+		{description = "lock xsession with a blank screen (xtrlock)", group = "session"}),
 	-- }}}
 	-- {{{ PrintScrn
 	awful.key({						}, "Print",		function () awful.util.spawn_with_shell("maim --format png " .. os.getenv("HOME") .. "/pictures/screenshots/desktop:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
