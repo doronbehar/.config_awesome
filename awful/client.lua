@@ -926,10 +926,12 @@ function client.incwfact(add, c)
     t:emit_signal("property::windowfact")
 end
 
---- Get a client's dockable state.
+--- Get a client dockable state.
 --
 -- @client c A client.
--- @treturn bool
+-- @return True or false. Note that some windows might be dockable even if you
+--   did not set them manually. For example, windows with a type "utility",
+--   "toolbar" or "dock"
 -- @deprecated awful.client.dockable.get
 function client.dockable.get(c)
     util.deprecate("Use c.dockable instead of awful.client.dockable.get")
@@ -937,12 +939,8 @@ function client.dockable.get(c)
 end
 
 --- If the client is dockable.
---
 -- A dockable client is an application confined to the edge of the screen. The
--- space it occupies is substracted from the `screen.workarea`.
---
--- Clients with a type of "utility", "toolbar" or "dock" are dockable by
--- default.
+-- space it occupy is substracted from the `screen.workarea`.
 --
 -- **Signal:**
 --
@@ -966,8 +964,7 @@ function client.object.get_dockable(c)
     return value
 end
 
---- Set a client's dockable state, overriding auto-detection.
---
+--- Set a client dockable state, overriding auto-detection.
 -- With this enabled you can dock windows by moving them from the center
 -- to the edge of the workarea.
 --
