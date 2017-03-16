@@ -27,6 +27,8 @@ local util = require("util")
 local lain = require("lain")
 -- * pulseaudio dbus widget
 local pulseaudio_widget = require("pulseaudio_widget")
+-- * mpris media player for mpd
+local media_player = require("media_player")
 
 -- }}}
 
@@ -72,6 +74,8 @@ editor_cmd = terminal .. " -e " .. editor
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
+-- mpris mpd
+mpd = media_player.MediaPlayer:new("mpd")
 -- }}}
 -- {{{ Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
@@ -390,11 +394,11 @@ globalkeys = awful.util.table.join(
 		{description = "record the desktop", group = "PrintScrn"}),
 	-- }}}
 	-- {{{ Music Player:
-	awful.key({modkey,"Control"		}, "Pause",		function () awful.util.spawn("mpc toggle") end,
+	awful.key({modkey,"Control"		}, "Pause",		function () mpd:play() end,
 		{description = "toggle Play/Pause", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F9",		function () awful.util.spawn("mpc next") end,
+	awful.key({modkey,"Control"		}, "F9",		function () mpd:next() end,
 		{description = "next song in playlist", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F8",		function () awful.util.spawn("mpc prev") end,
+	awful.key({modkey,"Control"		}, "F8",		function () mpd:previous() end,
 		{description = "privious song in playlist", group = "music player"}),
 	awful.key({modkey,"Control"		}, "F12",		function () awful.util.spawn("mpc seek +5") end,
 		{description = "seek forward", group = "music player"}),
