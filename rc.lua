@@ -384,11 +384,11 @@ globalkeys = awful.util.table.join(
 		{description = "lock xsession with a blank screen (xtrlock)", group = "session"}),
 	-- }}}
 	-- {{{ PrintScrn
-	awful.key({						}, "Print",		function () awful.util.spawn_with_shell("maim --format png " .. os.getenv("HOME") .. "/pictures/screenshots/desktop:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
+	awful.key({						}, "Print",		function () awful.util.spawn_with_shell("maim --format=png " .. os.getenv("HOME") .. "/pictures/screenshots/desktop:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
 		{description = "screenshot all desktop and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
-	awful.key({"Control"			}, "Print",		function () awful.util.spawn_with_shell("maim --format png -s -c 1,0,0.6 " .. os.getenv("HOME") .. "/pictures/screenshots/selection:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
+	awful.key({"Control"			}, "Print",		function () awful.util.spawn_with_shell("maim --format=png -s -c 1,0,0.6 " .. os.getenv("HOME") .. "/pictures/screenshots/selection:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
 		{description = "screenshot a selection and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
-	awful.key({modkey				}, "Print",		function () awful.util.spawn_with_shell("maim --format png -i $(xdotool getactivewindow) " .. os.getenv("HOME") .. "/pictures/screenshots/$(xdotool getwindowname $(xdotool getactivewindow)):" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
+	awful.key({modkey				}, "Print",		function () awful.util.spawn_with_shell("maim --format=png -i $(xdotool getactivewindow) " .. os.getenv("HOME") .. "/pictures/screenshots/$(xdotool getwindowname $(xdotool getactivewindow)):" .. os.date("%Y.%m.%d-%X") .. ".png",true) end,
 		{description = "screenshot the current window focused and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
 	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn_with_shell("recordmydesktop --no-sound",false) end,
 		{description = "record the desktop", group = "PrintScrn"}),
