@@ -16,9 +16,6 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 
 -- Added libraries
--- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?.lua"
--- package.path = package.path .. ";/home/doron/repos/dotfiles/.config/awesome/?/init.lua"
-
 -- * Arch linux xdg-menu
 require("archmenu")
 -- * tags and clients manipulation.
