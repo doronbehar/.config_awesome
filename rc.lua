@@ -389,10 +389,6 @@ globalkeys = awful.util.table.join(
 	-- {{{ Session
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart,
 		{description = "reload awesome", group = "session"}),
-	awful.key({modkey,"Mod1"		}, "q",			function () awesome.quit() end,
-		{description = "quit awesome", group = "session"}),
-	awful.key({modkey,"Mod1"		}, "x",			function () awful.util.spawn("systemctl poweroff",false) end,
-		{description = "poweroff machine if no other users are using it", group = "session"}),
 	awful.key({modkey,"Mod1"		}, "z",			function () awful.util.spawn("xtrlock -b",false) end,
 		{description = "lock xsession with a blank screen (xtrlock)", group = "session"}),
 	-- }}}
