@@ -147,16 +147,6 @@ tags = {
 	settings = {
 		{
 			names = {
-				"web",
-				"man"
-			},
-			layout = {
-				awful.layout.suit.floating,
-				awful.layout.suit.max
-			}
-		},
-		{
-			names = {
 				"project",
 				"media",
 				"config"
@@ -165,6 +155,16 @@ tags = {
 				awful.layout.suit.tile,
 				awful.layout.suit.tile,
 				awful.layout.suit.tile
+			}
+		},
+		{
+			names = {
+				"web",
+				"man"
+			},
+			layout = {
+				awful.layout.suit.floating,
+				awful.layout.suit.max
 			}
 		}
 	}
