@@ -170,6 +170,22 @@ tags = {
 	}
 }
 -- }}}
+-- {{{ repair tags.settings if screen:count is different than the hypothetical number of screens defined
+-- tags.settings (#tags.settings)
+screen_count = screen:count()
+estimated_screen_count = #tags.settings
+if estimated_screen_count > screen_count then
+	for i = screen_count + 1, estimated_screen_count do
+		for _,v in ipairs(tags.settings[i].names) do
+			table.insert(tags.settings[screen_count].names, v)
+		end
+		for _,v in ipairs(tags.settings[i].layout) do
+			table.insert(tags.settings[screen_count].layout, v)
+		end
+		tags.settings[i] = nil
+	end
+end
+-- }}}
 -- {{{ Taglist buttons
 local taglist_buttons = awful.util.table.join(
 	awful.button({						}, 1, function (t) t:view_only() end),
