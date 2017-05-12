@@ -383,8 +383,6 @@ globalkeys = awful.util.table.join(
 	-- {{{ Launchers
 	awful.key({modkey,				}, "Return",	function () awful.util.spawn(terminal) end,
 		{description = "open a terminal", group = "launchers"}),
-	awful.key({"Control","Mod1"		}, "t",			function () awful.util.spawn_with_shell(terminal .. " -T project -e sh -c \"tmux attach-session -t project || tmuxp load project || tmuxinator start project\"") end,
-		{description = "open a tmux terminal with tmuxinator", group = "launchers"}),
 	-- }}}
 	-- {{{ Session
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart,
