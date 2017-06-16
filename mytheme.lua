@@ -15,7 +15,7 @@ local system_icon_dir                           = util.get_awesome_icon_dir()
 local theme                                     = {}
 
 -- {{{ General
-theme.wallpaper                                 = mywallpapers .. "firewatch-tower.png"
+theme.wallpaper                                 = mywallpapers .. "Yosemite-Color-Block.png"
 theme.font                                      = "Terminus 9"
 theme.awesome_icon                              = system_icon_dir .. "awesome16.png"
 theme.icon_theme                                = nil
