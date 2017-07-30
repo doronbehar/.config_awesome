@@ -1,8 +1,6 @@
 -- {{{ Libraries
 
 -- Standard awesome library
--- package.path = package.path .. ";/usr/share/awesome/lib/?.lua"
--- package.path = package.path .. ";/usr/share/awesome/lib/?/init.lua"
 local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
@@ -14,10 +12,13 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+-- Enable hotkeys help widget for VIM and other apps
+-- when client with a matching name is opened:
+require("awful.hotkeys_popup.keys")
 
 -- Added libraries
 -- * Arch linux xdg-menu
-require("archmenu")
+local xdg_menu = require("archmenu")
 -- * tags and clients manipulation.
 local util = require("util")
 -- * Copycats' `lain`
@@ -95,19 +96,6 @@ awful.layout.layouts = {
 	awful.layout.suit.corner.se,
 }
 -- }}}
--- {{{ Menu
-mymainmenu = awful.menu({
-	items = {
-		{ "Apps", xdgmenu },
-		{ "Manual", terminal .. " -e man awesome" },
-		{ "Config", editor_cmd .. " " .. awesome.conffile },
-		{ "Terminal", terminal },
-		{ "Restart", awful.util.restart },
-		{ "Quit", function () awesome.quit() end }
-	}
-})
--- }}}
-
 -- {{{ Theme
 local function set_wallpaper(s)
 	-- Wallpaper
@@ -120,9 +108,23 @@ local function set_wallpaper(s)
 		gears.wallpaper.maximized(wallpaper, s, true)
 	end
 end
-beautiful.init(os.getenv("HOME") .. "/.config/awesome/mytheme.lua")
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
+beautiful.init(os.getenv("HOME") .. "/.config/awesome/mytheme.lua")
+-- }}}
+
+-- {{{ Menu
+mymainmenu = awful.menu({
+	items = {
+		{ "Apps", xdgmenu },
+		{ "hotkeys", function() return false, hotkeys_popup.show_help end},
+		{ "Manual", terminal .. " -e man awesome" },
+		{ "Config", editor_cmd .. " " .. awesome.conffile },
+		{ "Terminal", terminal },
+		{ "Restart", awful.util.restart },
+		{ "Quit", function () awesome.quit() end }
+	}
+})
 -- }}}
 
 -- {{{ Widgets
