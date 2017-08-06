@@ -132,7 +132,7 @@ mymainmenu = awful.menu({
 -- {{{ Widgets
 -- Common to all screens
 mykeyboardlayout = awful.widget.keyboardlayout()
-myclock = awful.widget.textclock("%H:%M:%S",1)
+myclock = wibox.widget.textclock("%H:%M:%S",1)
 mylauncher = awful.widget.launcher({
 	image = beautiful.awesome_icon,
 	menu = mymainmenu
@@ -142,7 +142,7 @@ mydivider = wibox.widget.textbox()
 mydivider:set_text(" | ")
 -- 1st screen only
 myvolume = pulseaudio_widget
-mydate = awful.widget.textclock("%d/%m/%y",1)
+mydate = wibox.widget.textclock("%d/%m/%y",1)
 -- 2nd screen only
 mysystray = wibox.widget.systray()
 -- }}}
@@ -250,7 +250,7 @@ local tasklist_buttons = awful.util.table.join(
 	awful.button({						}, 5, function () awful.client.focus.byidx(-1) end)
 )
 -- }}}
--- {{{ Bringing all widgets together
+-- {{{ Bringing all widgets tags and tasklist together
 awful.screen.connect_for_each_screen(function (s)
 	-- Wallpaper
 	set_wallpaper(s)
@@ -385,23 +385,23 @@ globalkeys = awful.util.table.join(
 		{description = "show main menu", group = "menus"}),
 	-- }}}
 	-- {{{ Launchers
-	awful.key({modkey,				}, "Return",	function () awful.util.spawn(terminal) end,
+	awful.key({modkey,				}, "Return",	function () awful.spawn(terminal) end,
 		{description = "open a terminal", group = "launchers"}),
 	-- }}}
 	-- {{{ Session
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart,
 		{description = "reload awesome", group = "session"}),
-	awful.key({modkey,"Mod1"		}, "z",			function () awful.util.spawn("xtrlock -b",false) end,
+	awful.key({modkey,"Mod1"		}, "z",			function () awful.spawn("xtrlock -b",false) end,
 		{description = "lock xsession with a blank screen (xtrlock)", group = "session"}),
 	-- }}}
 	-- {{{ PrintScrn
-	awful.key({						}, "Print",		function () awful.util.spawn_with_shell("maim --format=png " .. os.getenv("HOME") .. "/pictures/screenshots/desktop:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
+	awful.key({						}, "Print",		function () awful.spawn.with_shell("maim --format=png " .. os.getenv("HOME") .. "/pictures/screenshots/desktop:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
 		{description = "screenshot all desktop and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
-	awful.key({"Control"			}, "Print",		function () awful.util.spawn_with_shell("maim --format=png -s -c 1,0,0.6 " .. os.getenv("HOME") .. "/pictures/screenshots/selection:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
+	awful.key({"Control"			}, "Print",		function () awful.spawn.with_shell("maim --format=png -s -c 1,0,0.6 " .. os.getenv("HOME") .. "/pictures/screenshots/selection:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
 		{description = "screenshot a selection and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
-	awful.key({modkey				}, "Print",		function () awful.util.spawn_with_shell("maim --format=png -i $(xdotool getactivewindow) " .. os.getenv("HOME") .. "/pictures/screenshots/$(xdotool getwindowname $(xdotool getactivewindow)):" .. os.date("%Y.%m.%d-%X") .. ".png",true) end,
+	awful.key({modkey				}, "Print",		function () awful.spawn.with_shell("maim --format=png -i $(xdotool getactivewindow) " .. os.getenv("HOME") .. "/pictures/screenshots/$(xdotool getwindowname $(xdotool getactivewindow)):" .. os.date("%Y.%m.%d-%X") .. ".png",true) end,
 		{description = "screenshot the current window focused and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
-	awful.key({"Mod1"				}, "Print",		function () awful.util.spawn_with_shell("recordmydesktop --no-sound",false) end,
+	awful.key({"Mod1"				}, "Print",		function () awful.spawn.with_shell("recordmydesktop --no-sound",false) end,
 		{description = "record the desktop", group = "PrintScrn"}),
 	-- }}}
 	-- {{{ Music Player:
@@ -411,15 +411,15 @@ globalkeys = awful.util.table.join(
 		{description = "next song in playlist", group = "music player"}),
 	awful.key({modkey,"Control"		}, "F8",		function () mpd:previous() end,
 		{description = "privious song in playlist", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F12",		function () awful.util.spawn("mpc seek +5") end,
+	awful.key({modkey,"Control"		}, "F12",		function () awful.spawn("mpc seek +5") end,
 		{description = "seek forward", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F11",		function () awful.util.spawn("mpc seek -5") end,
+	awful.key({modkey,"Control"		}, "F11",		function () awful.spawn("mpc seek -5") end,
 		{description = "seek backwards", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F10",		function () awful.util.spawn("mpc volume +5") end,
+	awful.key({modkey,"Control"		}, "F10",		function () awful.spawn("mpc volume +5") end,
 		{description = "volume up", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F7",		function () awful.util.spawn("mpc volume -5") end,
+	awful.key({modkey,"Control"		}, "F7",		function () awful.spawn("mpc volume -5") end,
 		{description = "volume down", group = "music player"}),
-	awful.key({modkey,"Control"		}, "Scroll_Lock", function () awful.util.spawn("mpc-toggle-mute") end,
+	awful.key({modkey,"Control"		}, "Scroll_Lock", function () awful.spawn("mpc-toggle-mute") end,
 		{description = "toggle volume mute", group = "music player"}),
 	-- }}}
 	-- {{{ General Machine Volume managment:
@@ -427,9 +427,9 @@ globalkeys = awful.util.table.join(
 		{description = "volume up", group = "machine volume"}),
 	awful.key({modkey,				}, "F7",		pulseaudio_widget.volume_down,
 		{description = "volume down", group = "machine volume"}),
-	awful.key({modkey,				}, "Scroll_Lock", pulseaudio_widget.toggle_muted,
+	awful.key({modkey,				}, "Scroll_Lock",pulseaudio_widget.toggle_muted,
 		{description = "toggle volume mute", group = "machine volume"}),
-	awful.key({modkey,				}, "F1",		function () awful.util.spawn("toggle-sinks", false) end,
+	awful.key({modkey,				}, "F1",		function () awful.spawn("toggle-sinks", false) end,
 		{description = "cycle through available sinks", group = "machine volume"})
 	-- }}}
 )
