@@ -27,6 +27,8 @@ local lain = require("lain")
 local pulseaudio_widget = require("pulseaudio_widget")
 -- * mpris media player for mpd
 local media_player = require("media_player")
+-- * conky widgets framework
+local conky = require("conky")
 
 -- }}}
 
