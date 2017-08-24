@@ -143,6 +143,21 @@ mydivider:set_text(" | ")
 -- 1st screen only
 myvolume = pulseaudio_widget
 mydate = wibox.widget.textclock("%d/%m/%y",1)
+mycpu = conky.widget({
+	icon = beautiful.widget_cpu,
+	label = "CPU:",
+	conky = "${cpu}%",
+})
+myram = conky.widget({
+	icon = beautiful.widget_mem,
+	label = "RAM:",
+	conky = "${memperc}%"
+})
+mygpu = conky.widget({
+	icon = beautiful.widget_temp,
+	label = "GPU:",
+	conky = "${hwmon 0 temp 1}"
+})
 -- 2nd screen only
 mysystray = wibox.widget.systray()
 -- }}}
@@ -283,6 +298,12 @@ awful.screen.connect_for_each_screen(function (s)
 		{
 			layout = wibox.layout.fixed.horizontal,
 			mykeyboardlayout,
+			mydivider,
+			mycpu,
+			mydivider,
+			myram,
+			mydivider,
+			mygpu,
 			mydivider,
 			myvolume,
 			mydivider,
