@@ -147,6 +147,17 @@ mycpu = conky.widget({
 	icon = beautiful.widget_cpu,
 	label = "CPU:",
 	conky = "${cpu}%",
+	background = {
+		bg = beautiful.bg_normal
+	},
+	updater = function(conky_update, conky_wibox, _, _, background)
+		conky_wibox:set_text(conky_update)
+		if (tonumber(conky_update) or 0) > 80 then
+			background.bg = "red"
+		else
+			background.bg = beautiful.bg_normal
+		end
+	end
 })
 myram = conky.widget({
 	icon = beautiful.widget_mem,
@@ -156,7 +167,7 @@ myram = conky.widget({
 mygpu = conky.widget({
 	icon = beautiful.widget_temp,
 	label = "GPU:",
-	conky = "${hwmon 0 temp 1}"
+	conky = "${hwmon 0 temp 1}%"
 })
 -- 2nd screen only
 mysystray = wibox.widget.systray()
