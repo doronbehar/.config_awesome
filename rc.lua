@@ -114,7 +114,7 @@ local function set_wallpaper(s)
 end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
-beautiful.init(os.getenv("HOME") .. "/.config/awesome/mytheme.lua")
+beautiful.init(awful.util.get_configuration_dir() .. "mytheme.lua")
 -- }}}
 
 -- {{{ Menu
