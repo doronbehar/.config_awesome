@@ -29,6 +29,8 @@ local pulseaudio_widget = require("pulseaudio_widget")
 local media_player = require("media_player")
 -- * conky widgets framework
 local conky = require("conky")
+-- * constrain-mounse for multi-monitor setup for games
+local constrm = require("constrain-mouse")
 
 -- }}}
 
@@ -366,6 +368,8 @@ globalkeys = awful.util.table.join(
 	awful.key({modkey,				}, "[",			function () lain.util.tag_view_nonempty(-1) end,
 		{description = "view previous nonempty", group = "tags focus"}),
 	awful.key({modkey,				}, "Escape",	awful.tag.history.restore,
+		{description = "go to previously focused", group = "tags focus"}),
+	awful.key({modkey,				}, "`",			constrm.toggle,
 		{description = "go to previously focused", group = "tags focus"}),
 	-- }}}
 	-- {{{ Tags Edit
