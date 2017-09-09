@@ -148,18 +148,7 @@ mydate = wibox.widget.textclock("%d/%m/%y",1)
 mycpu = conky.widget({
 	icon = beautiful.widget_cpu,
 	label = "CPU:",
-	conky = "${cpu}%",
-	background = {
-		bg = beautiful.bg_normal
-	},
-	updater = function(conky_update, conky_wibox, _, _, background)
-		conky_wibox:set_text(conky_update)
-		if (tonumber(conky_update) or 0) > 80 then
-			background.bg = "red"
-		else
-			background.bg = beautiful.bg_normal
-		end
-	end
+	conky = "${cpu}%"
 })
 myram = conky.widget({
 	icon = beautiful.widget_mem,
