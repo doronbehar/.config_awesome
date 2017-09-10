@@ -1,4 +1,5 @@
 local awful = require("awful")
+local gears = require("gears")
 
 local util = {}
 
@@ -6,9 +7,9 @@ local util = {}
 function util.move_tag_to_screen(incr)
 	local s = awful.screen.focused()
 	local t = s.selected_tag
-	t.screen = awful.util.cycle(screen:count(), s.index + incr)
+	t.screen = gears.math.cycle(screen:count(), s.index + incr)
 	awful.screen.focus_relative(incr)
-	awful.tag.viewonly(t)
+	t:view_only()
 end
 -- }}}
 
@@ -17,14 +18,14 @@ end
 function util.move_all_clients_to_tag(incr)
 	local s = awful.screen.focused()
 	local t = s.selected_tag
-	local new_tag = s.tags[awful.util.cycle(#s.tags, t.index + incr)]
+	local new_tag = s.tags[gears.math.cycle(#s.tags, t.index + incr)]
 	local dumb = function()
 		return true
 	end
 	for c in awful.util.table.iterate(t:clients(),dumb,1) do
 		c:move_to_tag(new_tag)
 	end
-	awful.tag.viewonly(new_tag)
+	new_tag:view_only()
 end
 -- }}}
 
@@ -33,7 +34,7 @@ end
 function util.move_all_clients_to_screen(incr)
 	local s = awful.screen.focused()
 	local t = s.selected_tag
-	local new_screen = awful.util.cycle(screen:count(), s.index + incr)
+	local new_screen = gears.math.cycle(screen:count(), s.index + incr)
 	local dumb = function()
 		return true
 	end
