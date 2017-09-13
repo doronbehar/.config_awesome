@@ -76,8 +76,6 @@ editor_cmd = terminal .. " -e " .. editor
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
--- mpris mpd
-mpd = media_player.MediaPlayer:new("mpd")
 -- }}}
 -- {{{ Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
@@ -133,6 +131,8 @@ mymainmenu = awful.menu({
 
 -- {{{ Widgets
 -- Common to all screens
+-- mpris mpd
+mpd = media_player.MediaPlayer:new("mpd")
 mykeyboardlayout = awful.widget.keyboardlayout()
 myclock = wibox.widget.textclock("%H:%M:%S",1)
 mylauncher = awful.widget.launcher({
