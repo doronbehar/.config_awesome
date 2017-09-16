@@ -31,7 +31,8 @@ local media_player = require("media_player")
 local conky = require("conky")
 -- * constrain-mounse for multi-monitor setup for games
 local constrm = require("constrain-mouse")
-
+-- * getting width and hight of an image
+local image = require('image')
 -- }}}
 
 -- {{{ Error handling
@@ -384,6 +385,8 @@ globalkeys = awful.util.table.join(
 		{description = "focus the next screen", group = "screens focus"}),
 	awful.key({modkey,				}, "u",			function () awful.screen.focus_relative(-1) end,
 		{description = "focus the previous screen", group = "screens focus"}),
+	awful.key({modkey,				}, "d",			function () naughty.destroy_all_notifications(nil, nil) end,
+		{description = "Destroy all notifications", group = "screens focus"}),
 	-- }}}
 	-- {{{ Prompts
 	awful.key({modkey				}, "e", function () awful.screen.focused().mypromptbox:run() end,
@@ -653,6 +656,19 @@ clientbuttons = awful.util.table.join(
 -- }}}
 -- {{{ Set keys
 root.keys(globalkeys)
+-- }}}
+
+-- {{{ Notifications configuration
+-- The following callback function makes sure that no matter what size a notification wants to present an icon, it's size won't be above 250 pixels.
+naughty.config.notify_callback = function(args)
+	if args.icon then
+		local icon_width, icon_height = image.width_and_height(args.icon)
+		if icon_width > 250 and icon_height > 250 then
+			args.icon_size = 250
+		end
+	end
+	return args
+end
 -- }}}
 
 -- {{{ Rules
