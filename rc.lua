@@ -24,6 +24,7 @@ local util = require("util")
 -- * Copycats' `lain`
 local lain = require("lain")
 -- * pulseaudio dbus widget
+pcall(require, "luarocks.loader")
 local pulseaudio_widget = require("pulseaudio_widget")
 -- * mpris media player for mpd
 local media_player = require("media_player")
@@ -457,8 +458,12 @@ globalkeys = awful.util.table.join(
 		{description = "volume down", group = "machine volume"}),
 	awful.key({modkey,				}, "Scroll_Lock",pulseaudio_widget.toggle_muted,
 		{description = "toggle volume mute", group = "machine volume"}),
-	awful.key({modkey,				}, "F1",		function () awful.spawn("toggle-sinks", false) end,
-		{description = "cycle through available sinks", group = "machine volume"})
+	awful.key({modkey,"Shift"		}, "F10",		pulseaudio_widget.volume_up_mic,
+		{description = "microphone volume up", group = "machine volume"}),
+	awful.key({modkey,"Shift"		}, "F7",		pulseaudio_widget.volume_down_mic,
+		{description = "microphone volume down", group = "machine volume"}),
+	awful.key({modkey,"Shift"		}, "Scroll_Lock",pulseaudio_widget.toggle_muted_mic,
+		{description = "microphone toggle volume mute", group = "machine volume"})
 	-- }}}
 )
 -- }}}

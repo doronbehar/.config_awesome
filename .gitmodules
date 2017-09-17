@@ -4,9 +4,6 @@
 [submodule "themes@serialoverflow"]
 	path = themes@serialoverflow
 	url = https://github.com/serialoverflow/awesome-themes
-[submodule "pulseaudio_dbus"]
-	path = pulseaudio_dbus
-	url = https://github.com/stefano-m/lua-pulseaudio_dbus
 [submodule "pulseaudio_widget"]
 	path = pulseaudio_widget
 	url = https://github.com/stefano-m/awesome-pulseaudio_widget
