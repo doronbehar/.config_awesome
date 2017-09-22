@@ -667,9 +667,14 @@ root.keys(globalkeys)
 -- The following callback function makes sure that no matter what size a notification wants to present an icon, it's size won't be above 250 pixels.
 naughty.config.notify_callback = function(args)
 	if args.icon then
-		local icon_width, icon_height = image.width_and_height(args.icon)
-		if icon_width > 250 and icon_height > 250 then
-			args.icon_size = 250
+		if type(args.icon) == "string" then
+			icon_fpath = string.gsub(args.icon, "^file://", "", 1)
+			if gears.filesystem.file_readable(icon_fpath) then
+				local icon_width, icon_height = image.width_and_height(icon_fpath)
+				if icon_width > 250 and icon_height > 250 then
+					args.icon_size = 250
+				end
+			end
 		end
 	end
 	return args

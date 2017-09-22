@@ -22,14 +22,9 @@ local gears = require("gears")
 
 local image = {}
 function image.width_and_height(file)
-	file = string.gsub(file, "^file://", "", 1)
 	local fileinfo=type(file)
 	if type(file)=="string" then
-		if gears.filesystem.file_readable(file) then
-			file=assert(io.open(file,"rb"))
-		else
-			return 0,0
-		end
+		file=assert(io.open(file,"rb"))
 	else
 		fileinfo=file:seek("cur")
 	end
