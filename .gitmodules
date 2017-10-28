@@ -7,9 +7,6 @@
 [submodule "pulseaudio_widget"]
 	path = pulseaudio_widget
 	url = https://github.com/stefano-m/awesome-pulseaudio_widget
-[submodule "media_player"]
-	path = media_player
-	url = https://github.com/stefano-m/lua-media_player
 [submodule "tests/inspect"]
 	path = tests/inspect
 	url = https://github.com/kikito/inspect.lua
