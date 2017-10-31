@@ -749,7 +749,9 @@ awful.rules.rules = {
 		properties = {
 			titlebars_enabled = true
 		}
-	}
+	},
+	-- Conky's rules
+	conky.rules()
 }
 -- }}}
 
