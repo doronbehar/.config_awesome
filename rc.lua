@@ -28,6 +28,8 @@ pcall(require, "luarocks.loader")
 local pulseaudio_widget = require("pulseaudio_widget")
 -- * mpris media player for mpd
 local media_player = require("media_player")
+-- * connman network widgets
+local connman = require("connman_widget")
 -- * conky widgets framework
 local conky = require("conky")
 -- * constrain-mounse for multi-monitor setup for games
@@ -311,6 +313,8 @@ awful.screen.connect_for_each_screen(function (s)
 			myram,
 			mydivider,
 			mygpu,
+			mydivider,
+			connman,
 			mydivider,
 			myvolume,
 			mydivider,
