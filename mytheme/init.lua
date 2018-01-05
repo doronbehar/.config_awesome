@@ -6,9 +6,7 @@ local util = require('awful.util')
 
 -- {{{ Directories
 local configuration_dir                         = util.get_configuration_dir()
-local copycats_themes_dir                       = configuration_dir .. "themes@copycats/"
 local system_themes_dir                         = util.get_themes_dir()
-local serialoverflow_themes_dir                 = configuration_dir .. "themes@serialoverflow/"
 local system_icon_dir                           = util.get_awesome_icon_dir()
 -- }}}
 
@@ -23,19 +21,19 @@ theme.useless_gap_width                         = 0
 theme.border_width                              = dpi(1)
 -- }}}
 -- {{{ Layout Icons
-theme.layout_tile                               = copycats_themes_dir .. "powerarrow-darker/icons/tile.png"
-theme.layout_tilegaps                           = copycats_themes_dir .. "powerarrow-darker/icons/tilegaps.png"
-theme.layout_tileleft                           = copycats_themes_dir .. "powerarrow-darker/icons/tileleft.png"
-theme.layout_tilebottom                         = copycats_themes_dir .. "powerarrow-darker/icons/tilebottom.png"
-theme.layout_tiletop                            = copycats_themes_dir .. "powerarrow-darker/icons/tiletop.png"
-theme.layout_fairv                              = copycats_themes_dir .. "powerarrow-darker/icons/fairv.png"
-theme.layout_fairh                              = copycats_themes_dir .. "powerarrow-darker/icons/fairh.png"
-theme.layout_spiral                             = copycats_themes_dir .. "powerarrow-darker/icons/spiral.png"
-theme.layout_dwindle                            = copycats_themes_dir .. "powerarrow-darker/icons/dwindle.png"
-theme.layout_max                                = copycats_themes_dir .. "powerarrow-darker/icons/max.png"
-theme.layout_fullscreen                         = copycats_themes_dir .. "powerarrow-darker/icons/fullscreen.png"
-theme.layout_magnifier                          = copycats_themes_dir .. "powerarrow-darker/icons/magnifier.png"
-theme.layout_floating                           = copycats_themes_dir .. "powerarrow-darker/icons/floating.png"
+theme.layout_tile                               = configuration_dir .. "mytheme/icons/tile.png"
+theme.layout_tilegaps                           = configuration_dir .. "mytheme/icons/tilegaps.png"
+theme.layout_tileleft                           = configuration_dir .. "mytheme/icons/tileleft.png"
+theme.layout_tilebottom                         = configuration_dir .. "mytheme/icons/tilebottom.png"
+theme.layout_tiletop                            = configuration_dir .. "mytheme/icons/tiletop.png"
+theme.layout_fairv                              = configuration_dir .. "mytheme/icons/fairv.png"
+theme.layout_fairh                              = configuration_dir .. "mytheme/icons/fairh.png"
+theme.layout_spiral                             = configuration_dir .. "mytheme/icons/spiral.png"
+theme.layout_dwindle                            = configuration_dir .. "mytheme/icons/dwindle.png"
+theme.layout_max                                = configuration_dir .. "mytheme/icons/max.png"
+theme.layout_fullscreen                         = configuration_dir .. "mytheme/icons/fullscreen.png"
+theme.layout_magnifier                          = configuration_dir .. "mytheme/icons/magnifier.png"
+theme.layout_floating                           = configuration_dir .. "mytheme/icons/floating.png"
 theme.layout_cornernw                           = system_themes_dir .. "default/layouts/cornernww.png"
 theme.layout_cornerne                           = system_themes_dir .. "default/layouts/cornernew.png"
 theme.layout_cornersw                           = system_themes_dir .. "default/layouts/cornersww.png"
@@ -51,7 +49,7 @@ theme.menu_submenu_icon                         = system_themes_dir .. "default/
 theme.menu_height                               = dpi(15)
 theme.menu_width                                = dpi(100)
 theme.menu_border_width                         = 0
-theme.submenu_icon                              = copycats_themes_dir .. "powerarrow-darker/icons/submenu.png"
+theme.submenu_icon                              = configuration_dir .. "mytheme/icons/submenu.png"
 -- }}}
 
 -- {{{ Colors
@@ -78,27 +76,27 @@ theme.mouse_finder_color                        = "#CC9393"
 -- }}}
 
 -- {{{ Widgets Icons
-theme.widget_ac                                 = copycats_themes_dir .. "powerarrow-darker/icons/ac.png"
-theme.widget_battery                            = copycats_themes_dir .. "powerarrow-darker/icons/battery.png"
-theme.widget_battery_low                        = copycats_themes_dir .. "powerarrow-darker/icons/battery_low.png"
-theme.widget_battery_empty                      = copycats_themes_dir .. "powerarrow-darker/icons/battery_empty.png"
-theme.widget_mem                                = copycats_themes_dir .. "powerarrow-darker/icons/mem.png"
-theme.widget_cpu                                = copycats_themes_dir .. "powerarrow-darker/icons/cpu.png"
-theme.widget_temp                               = copycats_themes_dir .. "powerarrow-darker/icons/temp.png"
-theme.widget_net                                = copycats_themes_dir .. "powerarrow-darker/icons/net.png"
-theme.widget_hdd                                = copycats_themes_dir .. "powerarrow-darker/icons/hdd.png"
-theme.widget_music                              = copycats_themes_dir .. "powerarrow-darker/icons/note.png"
-theme.widget_music_on                           = copycats_themes_dir .. "powerarrow-darker/icons/note_on.png"
-theme.widget_vol                                = copycats_themes_dir .. "powerarrow-darker/icons/vol.png"
-theme.widget_vol_low                            = copycats_themes_dir .. "powerarrow-darker/icons/vol_low.png"
-theme.widget_vol_no                             = copycats_themes_dir .. "powerarrow-darker/icons/vol_no.png"
-theme.widget_vol_mute                           = copycats_themes_dir .. "powerarrow-darker/icons/vol_mute.png"
-theme.widget_mail                               = copycats_themes_dir .. "powerarrow-darker/icons/mail.png"
-theme.widget_mail_on                            = copycats_themes_dir .. "powerarrow-darker/icons/mail_on.png"
+theme.widget_ac                                 = configuration_dir .. "mytheme/icons/ac.png"
+theme.widget_battery                            = configuration_dir .. "mytheme/icons/battery.png"
+theme.widget_battery_low                        = configuration_dir .. "mytheme/icons/battery_low.png"
+theme.widget_battery_empty                      = configuration_dir .. "mytheme/icons/battery_empty.png"
+theme.widget_mem                                = configuration_dir .. "mytheme/icons/mem.png"
+theme.widget_cpu                                = configuration_dir .. "mytheme/icons/cpu.png"
+theme.widget_temp                               = configuration_dir .. "mytheme/icons/temp.png"
+theme.widget_net                                = configuration_dir .. "mytheme/icons/net.png"
+theme.widget_hdd                                = configuration_dir .. "mytheme/icons/hdd.png"
+theme.widget_music                              = configuration_dir .. "mytheme/icons/note.png"
+theme.widget_music_on                           = configuration_dir .. "mytheme/icons/note_on.png"
+theme.widget_vol                                = configuration_dir .. "mytheme/icons/vol.png"
+theme.widget_vol_low                            = configuration_dir .. "mytheme/icons/vol_low.png"
+theme.widget_vol_no                             = configuration_dir .. "mytheme/icons/vol_no.png"
+theme.widget_vol_mute                           = configuration_dir .. "mytheme/icons/vol_mute.png"
+theme.widget_mail                               = configuration_dir .. "mytheme/icons/mail.png"
+theme.widget_mail_on                            = configuration_dir .. "mytheme/icons/mail_on.png"
 -- }}}
 -- {{{ Taglist
-theme.taglist_squares_sel                       = copycats_themes_dir .. "powerarrow-darker/icons/square_sel.png"
-theme.taglist_squares_unsel                     = copycats_themes_dir .. "powerarrow-darker/icons/square_unsel.png"
+theme.taglist_squares_sel                       = configuration_dir .. "mytheme/icons/square_sel.png"
+theme.taglist_squares_unsel                     = configuration_dir .. "mytheme/icons/square_unsel.png"
 theme.taglist_fg_focus                          = "#D8D782"
 -- }}}
 -- {{{ Tasklist
