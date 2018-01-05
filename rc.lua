@@ -114,7 +114,7 @@ local function set_wallpaper(s)
 end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
-beautiful.init(awful.util.get_configuration_dir() .. "mytheme/init.lua")
+beautiful.init(gears.get_configuration_dir() .. "mytheme/init.lua")
 -- }}}
 
 -- {{{ Menu
@@ -125,7 +125,7 @@ mymainmenu = awful.menu({
 		{ "Manual", terminal .. " -e man awesome" },
 		{ "Config", editor_cmd .. " " .. awesome.conffile },
 		{ "Terminal", terminal },
-		{ "Restart", awful.util.restart },
+		{ "Restart", gears.restart },
 		{ "Quit", function () awesome.quit() end }
 	}
 })
@@ -210,7 +210,7 @@ if estimated_screen_count > screen_count then
 end
 -- }}}
 -- {{{ Taglist buttons
-local taglist_buttons = awful.util.table.join(
+local taglist_buttons = gears.table.join(
 	awful.button({						}, 1, function (t) t:view_only() end),
 	awful.button({modkey				}, 1,
 		function (t)
@@ -232,7 +232,7 @@ local taglist_buttons = awful.util.table.join(
 )
 -- }}}
 -- {{{ Tasklist
-local tasklist_buttons = awful.util.table.join(
+local tasklist_buttons = gears.table.join(
 	awful.button({						}, 1,
 		function (c)
 			if c == client.focus then
@@ -280,7 +280,7 @@ awful.screen.connect_for_each_screen(function (s)
 	-- Create an imagebox widget for each screen
 	s.mylayoutbox = awful.widget.layoutbox(s)
 	s.mylayoutbox:buttons(
-		awful.util.table.join(
+		gears.table.join(
 			awful.button({					}, 1, function () awful.layout.inc( 1) end),
 			awful.button({					}, 3, function () awful.layout.inc(-1) end),
 			awful.button({					}, 4, function () awful.layout.inc( 1) end),
@@ -343,14 +343,14 @@ end)
 -- }}}
 
 -- {{{ Mouse bindings
-root.buttons(awful.util.table.join(
+root.buttons(gears.table.join(
 	awful.button({ }, 3, function () mymainmenu:toggle() end),
 	awful.button({ }, 4, awful.tag.viewnext),
 	awful.button({ }, 5, awful.tag.viewprev)
 ))
 -- }}}
 -- {{{ Global keys
-globalkeys = awful.util.table.join(
+globalkeys = gears.table.join(
 	-- {{{ Tags Focus
 	awful.key({modkey,				}, "l",			awful.tag.viewnext,
 		{description = "view next", group = "tags focus"}),
@@ -399,8 +399,8 @@ globalkeys = awful.util.table.join(
 			awful.prompt.run {
 				prompt = "Run Lua code: ",
 				textbox = awful.screen.focused().mypromptbox.widget,
-				exe_callback = awful.util.eval,
-				history_path = awful.util.get_cache_dir() .. "/history_eval"
+				exe_callback = gears.eval,
+				history_path = gears.get_cache_dir() .. "/history_eval"
 			}
 		end,
 		{description = "run a lua command", group = "prompts"}),
@@ -420,7 +420,7 @@ globalkeys = awful.util.table.join(
 		{description = "open a terminal", group = "launchers"}),
 	-- }}}
 	-- {{{ Session
-	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart,
+	awful.key({modkey,"Mod1"		}, "r",			gears.restart,
 		{description = "reload awesome", group = "session"}),
 	awful.key({modkey,"Mod1"		}, "z",			function () awful.spawn("xtrlock -b",false) end,
 		{description = "lock xsession with a blank screen (xtrlock)", group = "session"}),
@@ -472,7 +472,7 @@ globalkeys = awful.util.table.join(
 -- {{{ Bind all key numbers to tags.
 local numericpad = {87, 88, 89, 83, 84, 85, 79, 80, 81}
 for i = 1, 9 do
-	globalkeys = awful.util.table.join(globalkeys,
+	globalkeys = gears.table.join(globalkeys,
 		-- {{{ Clients focus
 		awful.key({modkey,"Control","Shift"	}, "#" .. i + 9,
 			function ()
@@ -567,7 +567,7 @@ for i = 1, 9 do
 end
 -- }}}
 -- {{{ Client keys
-clientkeys = awful.util.table.join(
+clientkeys = gears.table.join(
 	-- {{{ Clients Focus
 	awful.key({modkey,				}, "j", function () awful.client.focus.byidx( 1) end,
 		{description = "focus next by index", group = "clients focus"}),
@@ -593,9 +593,9 @@ clientkeys = awful.util.table.join(
 		{description = "move to next screen", group = "clients movement"}),
 	awful.key({modkey,"Shift"		}, "u",			function (c) c:move_to_screen(c.screen.index - 1) end,
 		{description = "move to previous screen", group = "clients movement"}),
-	awful.key({modkey,"Shift"		}, "l",			function (c) c:move_to_tag(c.screen.tags[awful.util.cycle(#c.screen.tags, c.first_tag.index + 1)]) end,
+	awful.key({modkey,"Shift"		}, "l",			function (c) c:move_to_tag(c.screen.tags[gears.cycle(#c.screen.tags, c.first_tag.index + 1)]) end,
 		{description = "move to next tag", group = "clients movement"}),
-	awful.key({modkey,"Shift"		}, "h",			function (c) c:move_to_tag(c.screen.tags[awful.util.cycle(#c.screen.tags, c.first_tag.index - 1)]) end,
+	awful.key({modkey,"Shift"		}, "h",			function (c) c:move_to_tag(c.screen.tags[gears.cycle(#c.screen.tags, c.first_tag.index - 1)]) end,
 		{description = "move to previous tag", group = "clients movement"}),
 	awful.key({modkey,"Mod1"		}, "l",			function () util.move_all_clients_to_tag(1) end,
 		{description = "move all to next tag", group = "clients movement"}),
@@ -655,7 +655,7 @@ clientkeys = awful.util.table.join(
 )
 -- }}}
 -- {{{ Client buttons
-clientbuttons = awful.util.table.join(
+clientbuttons = gears.table.join(
 	awful.button({					}, 1, function (c) client.focus = c; c:raise() end),
 	awful.button({modkey,			}, 1, awful.mouse.client.move),
 	awful.button({modkey,			}, 3, awful.mouse.client.resize)
@@ -769,7 +769,7 @@ end)
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function (c)
 	-- buttons for the titlebar
-	local buttons = awful.util.table.join(
+	local buttons = gears.table.join(
 		awful.button({					}, 1,
 			function ()
 				client.focus = c
