@@ -147,6 +147,25 @@ mydivider:set_text(" | ")
 -- 1st screen only
 myvolume = pulseaudio_widget
 mydate = wibox.widget.textclock("%d/%m/%y",1)
+mycalendar = awful.widget.calendar_popup.month({
+    position = "tr",
+    screen = 1,
+    opacity = 1,
+    bg = string.sub(beautiful.bg_normal, 1, 7) .. "80",
+    font = beautiful.font,
+    spacing = 0,
+    week_numbers = true,
+    start_sunday = true,
+    long_weekdays = true,
+    style_month = {fg_color = "#FFFFFF"},
+    style_header = {fg_color = "#FFFFFF"},
+    style_weekday = {fg_color = "#FFFFFF"},
+    style_weeknumber = {fg_color = "#CCCCFF"},
+    style_normal = {fg_color = "#FFFFFF"},
+    style_focus = {},
+
+})
+mycalendar:attach(mydate)
 mycpu = lain.widget.cpu({
 	settings = function()
 		widget:set_markup(cpu_now.usage)
@@ -418,6 +437,8 @@ globalkeys = gears.table.join(
 	-- {{{ Launchers
 	awful.key({modkey,				}, "Return",	function () awful.spawn(terminal) end,
 		{description = "open a terminal", group = "launchers"}),
+	awful.key({modkey, "Shift"		}, "d",			function () mycalendar:toggle() end,
+		{description = "Toggle calendar popup", group = "launchers"}),
 	-- }}}
 	-- {{{ Session
 	awful.key({modkey,"Mod1"		}, "r",			gears.restart,
