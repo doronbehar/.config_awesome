@@ -30,8 +30,6 @@ local pulseaudio_widget = require("pulseaudio_widget")
 local media_player = require("media_player")
 -- * connman network widgets
 local connman = require("connman_widget")
--- * conky widgets framework
-local conky = require("conky")
 -- * constrain-mounse for multi-monitor setup for games
 local constrm = require("constrain-mouse")
 -- * getting width and hight of an image
@@ -149,21 +147,20 @@ mydivider:set_text(" | ")
 -- 1st screen only
 myvolume = pulseaudio_widget
 mydate = wibox.widget.textclock("%d/%m/%y",1)
-mycpu = conky.widget({
-	icon = beautiful.widget_cpu,
-	conky = "${cpu}%"
+mycpu = lain.widget.cpu({
+	settings = function()
+		widget:set_markup(cpu_now.usage)
+	end
 })
-myram = conky.widget({
-	icon = beautiful.widget_mem,
-	conky = "${memperc}%"
+mymem = lain.widget.mem({
+	settings = function()
+		widget:set_markup(mem_now.used)
+	end
 })
-mygpu = conky.widget({
-	icon = beautiful.widget_temp,
-	conky = "${hwmon 0 temp 1}%"
-})
-mympd = conky.widget({
-	icon = beautiful.widget_music,
-	conky = "${mpd_smart}"
+mytemp = lain.widget.temp({
+	settings = function()
+		widget:set_markup(coretemp_now)
+	end
 })
 -- 2nd screen only
 mysystray = wibox.widget.systray()
@@ -306,13 +303,11 @@ awful.screen.connect_for_each_screen(function (s)
 			layout = wibox.layout.fixed.horizontal,
 			mykeyboardlayout,
 			mydivider,
-			mympd,
-			mydivider,
 			mycpu,
 			mydivider,
-			myram,
+			mymem,
 			mydivider,
-			mygpu,
+			mytemp,
 			mydivider,
 			connman,
 			mydivider,
@@ -754,8 +749,6 @@ awful.rules.rules = {
 			titlebars_enabled = true
 		}
 	},
-	-- Conky's rules
-	conky.rules()
 }
 -- }}}
 

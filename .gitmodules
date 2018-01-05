@@ -7,9 +7,6 @@
 [submodule "pulseaudio_widget"]
 	path = pulseaudio_widget
 	url = https://github.com/stefano-m/awesome-pulseaudio_widget
-[submodule "conky"]
-	path = conky
-	url = https://github.com/varingst/awesome-conky
 [submodule "constrain-mouse"]
 	path = constrain-mouse
 	url = https://github.com/varingst/awesome-constrain-mouse
