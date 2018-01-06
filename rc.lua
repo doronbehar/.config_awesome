@@ -114,7 +114,7 @@ local function set_wallpaper(s)
 end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
-beautiful.init(gears.get_configuration_dir() .. "mytheme/init.lua")
+beautiful.init(gears.filesystem.get_configuration_dir() .. "mytheme/init.lua")
 -- }}}
 
 -- {{{ Menu
@@ -125,7 +125,7 @@ mymainmenu = awful.menu({
 		{ "Manual", terminal .. " -e man awesome" },
 		{ "Config", editor_cmd .. " " .. awesome.conffile },
 		{ "Terminal", terminal },
-		{ "Restart", gears.restart },
+		{ "Restart", awful.util.restart },
 		{ "Quit", function () awesome.quit() end }
 	}
 })
@@ -418,8 +418,8 @@ globalkeys = gears.table.join(
 			awful.prompt.run {
 				prompt = "Run Lua code: ",
 				textbox = awful.screen.focused().mypromptbox.widget,
-				exe_callback = gears.eval,
-				history_path = gears.get_cache_dir() .. "/history_eval"
+				exe_callback = awful.util.eval,
+				history_path = gears.filesystem.get_cache_dir() .. "/history_eval"
 			}
 		end,
 		{description = "run a lua command", group = "prompts"}),
@@ -441,7 +441,7 @@ globalkeys = gears.table.join(
 		{description = "Toggle calendar popup", group = "launchers"}),
 	-- }}}
 	-- {{{ Session
-	awful.key({modkey,"Mod1"		}, "r",			gears.restart,
+	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart,
 		{description = "reload awesome", group = "session"}),
 	awful.key({modkey,"Mod1"		}, "z",			function () awful.spawn("xtrlock -b",false) end,
 		{description = "lock xsession with a blank screen (xtrlock)", group = "session"}),
@@ -614,9 +614,9 @@ clientkeys = gears.table.join(
 		{description = "move to next screen", group = "clients movement"}),
 	awful.key({modkey,"Shift"		}, "u",			function (c) c:move_to_screen(c.screen.index - 1) end,
 		{description = "move to previous screen", group = "clients movement"}),
-	awful.key({modkey,"Shift"		}, "l",			function (c) c:move_to_tag(c.screen.tags[gears.cycle(#c.screen.tags, c.first_tag.index + 1)]) end,
+	awful.key({modkey,"Shift"		}, "l",			function (c) c:move_to_tag(c.screen.tags[gears.math.cycle(#c.screen.tags, c.first_tag.index + 1)]) end,
 		{description = "move to next tag", group = "clients movement"}),
-	awful.key({modkey,"Shift"		}, "h",			function (c) c:move_to_tag(c.screen.tags[gears.cycle(#c.screen.tags, c.first_tag.index - 1)]) end,
+	awful.key({modkey,"Shift"		}, "h",			function (c) c:move_to_tag(c.screen.tags[gears.math.cycle(#c.screen.tags, c.first_tag.index - 1)]) end,
 		{description = "move to previous tag", group = "clients movement"}),
 	awful.key({modkey,"Mod1"		}, "l",			function () util.move_all_clients_to_tag(1) end,
 		{description = "move all to next tag", group = "clients movement"}),

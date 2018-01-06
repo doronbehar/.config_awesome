@@ -1,13 +1,13 @@
 -- {{{ Libraries
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
-local util = require('awful.util')
+local gears = require('gears')
 -- }}}
 
 -- {{{ Directories
-local configuration_dir                         = util.get_configuration_dir()
-local system_themes_dir                         = util.get_themes_dir()
-local system_icon_dir                           = util.get_awesome_icon_dir()
+local configuration_dir                         = gears.filesystem.get_configuration_dir()
+local system_themes_dir                         = gears.filesystem.get_themes_dir()
+local system_icon_dir                           = gears.filesystem.get_awesome_icon_dir()
 -- }}}
 
 local theme                                     = {}
