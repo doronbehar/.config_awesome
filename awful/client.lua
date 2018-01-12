@@ -561,7 +561,7 @@ end
 -- @client c A client.
 -- @param s True or false.
 function client.floating.set(c, s)
-    util.deprecate("Use c.floating = true instead of awful.client.floating.set")
+    gdebug.deprecate("Use c.floating = true instead of awful.client.floating.set", {deprecated_in=4})
     client.object.set_floating(c, s)
 end
 
@@ -618,7 +618,7 @@ end
 --
 -- This property is read only.
 -- @property is_fixed
--- @param boolean The floating state
+-- @param boolean The fixed size state
 -- @see size_hints
 -- @see size_hints_honor
 
@@ -669,17 +669,39 @@ function client.object.get_floating(c)
         if value ~= nil then
             return value
         end
-        if c.type ~= "normal"
+        return client.property.get(c, "_implicitly_floating") or false
+    end
+end
+
+-- When a client is not explicitly assigned a floating state, it might
+-- implicitly end up being floating. The following makes sure that
+-- property::floating is still emitted if this implicit floating state changes.
+
+local function update_implicitly_floating(c)
+    local explicit = client.property.get(c, "floating")
+    if explicit ~= nil then
+        return
+    end
+    local cur = client.property.get(c, "_implicitly_floating")
+    local new = c.type ~= "normal"
             or c.fullscreen
             or c.maximized_vertical
             or c.maximized_horizontal
             or c.maximized
-            or client.object.is_fixed(c) then
-            return true
-        end
-        return false
+            or client.object.is_fixed(c)
+    if cur ~= new then
+        client.property.set(c, "_implicitly_floating", new)
+        c:emit_signal("property::floating")
     end
 end
+
+capi.client.connect_signal("property::type", update_implicitly_floating)
+capi.client.connect_signal("property::fullscreen", update_implicitly_floating)
+capi.client.connect_signal("property::maximized_vertical", update_implicitly_floating)
+capi.client.connect_signal("property::maximized_horizontal", update_implicitly_floating)
+capi.client.connect_signal("property::maximized", update_implicitly_floating)
+capi.client.connect_signal("property::size_hints", update_implicitly_floating)
+capi.client.connect_signal("manage", update_implicitly_floating)
 
 --- Toggle the floating state of a client between 'auto' and 'true'.
 -- Use `c.floating = not c.floating`
@@ -716,7 +738,7 @@ end
 -- @property y
 -- @param integer
 
---- The width of the wibox.
+--- The width of the client.
 --
 -- **Signal:**
 --
@@ -725,7 +747,7 @@ end
 -- @property width
 -- @param width
 
---- The height of the wibox.
+--- The height of the client.
 --
 -- **Signal:**
 --
