@@ -443,8 +443,8 @@ globalkeys = gears.table.join(
 	-- {{{ Session
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart,
 		{description = "reload awesome", group = "session"}),
-	awful.key({modkey,"Mod1"		}, "z",			function () awful.spawn("xtrlock -b",false) end,
-		{description = "lock xsession with a blank screen (xtrlock)", group = "session"}),
+	awful.key({modkey,"Mod1"		}, "z",			function () awful.spawn("xlock -mode blank -startCmd 'ssh-add -D; gpg-connect-agent reloadagent /bye'", false) end,
+		{description = "lock xsession with a blank screen (xlock)", group = "session"}),
 	-- }}}
 	-- {{{ PrintScrn
 	awful.key({						}, "Print",		function () awful.spawn.with_shell("maim --format=png " .. os.getenv("HOME") .. "/pictures/screenshots/desktop:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
