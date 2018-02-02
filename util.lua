@@ -56,6 +56,71 @@ function util.move_all_clients_to_screen(incr)
 end
 -- }}}
 
+-- {{{ util.view_nonempty_tag(direction, sc)
+-- view the next empty tag in the direction
+function util.view_nonempty_tag(direction, sc)
+	local s = sc or awful.screen.focused()
+	for i = 1, #s.tags do
+		 awful.tag.viewidx(direction, s)
+		 if #s.clients > 0 then
+			  return
+		 end
+	end
+end
+-- }}}
+
+-- {{{ util.add_tag(layout)
+-- add a tag.
+function util.add_tag(layout)
+	awful.prompt.run {
+		prompt = "New tag name: ",
+		textbox = awful.screen.focused().mypromptbox.widget,
+		exe_callback = function(name)
+			if not name or #name == 0 then return end
+			awful.tag.add(name, { screen = awful.screen.focused(), layout = layout or awful.layout.suit.tile }):view_only()
+		end
+	}
+end
+-- }}}
+
+-- {{{ util.delete_tag()
+-- delete the current tag.
+function util.delete_tag()
+	local t = awful.screen.focused().selected_tag
+	if not t then return end
+	t:delete()
+end
+-- }}}
+
+-- {{{ util.rename_tag()
+-- rename the current tag.
+function util.rename_tag()
+	awful.prompt.run {
+		prompt = "Rename tag: ",
+		textbox = awful.screen.focused().mypromptbox.widget,
+		exe_callback = function(new_name)
+			if not new_name or #new_name == 0 then return end
+			local t = awful.screen.focused().selected_tag
+			if t then
+				t.name = new_name
+			end
+		end
+	}
+end
+-- }}}
+
+-- {{{ util.move_tag(pos)
+-- move the current tag to pos
+function util.move_tag(pos)
+	local tag = awful.screen.focused().selected_tag
+	if tonumber(pos) <= -1 then
+		awful.tag.move(tag.index - 1, tag)
+	else
+		awful.tag.move(tag.index + 1, tag)
+	end
+end
+-- }}}
+
 return util
 
 -- vim:ft=lua:foldmethod=marker
