@@ -4,9 +4,3 @@
 [submodule "constrain-mouse"]
 	path = constrain-mouse
 	url = https://github.com/varingst/awesome-constrain-mouse
-[submodule "connman_widget"]
-	path = connman_widget
-	url = https://github.com/stefano-m/awesome-connman_widget
-[submodule "lain"]
-	path = lain
-	url = https://github.com/lcpz/lain

@@ -21,15 +21,11 @@ require("awful.hotkeys_popup.keys")
 local xdg_menu = require("archmenu")
 -- * tags and clients manipulation.
 local util = require("util")
--- * Copycats' `lain`
-local lain = require("lain")
 -- * pulseaudio dbus widget
 pcall(require, "luarocks.loader")
 local pulseaudio_widget = require("pulseaudio_widget")
 -- * mpris media player for mpd
 local media_player = require("media_player")
--- * connman network widgets
-local connman = require("connman_widget")
 -- * constrain-mounse for multi-monitor setup for games
 local constrm = require("constrain-mouse")
 -- * getting width and hight of an image
@@ -93,7 +89,6 @@ awful.layout.layouts = {
 	awful.layout.suit.max,
 	awful.layout.suit.max.fullscreen,
 	awful.layout.suit.magnifier,
-	lain.layout.termfair,
 	awful.layout.suit.corner.nw,
 	awful.layout.suit.corner.ne,
 	awful.layout.suit.corner.sw,
@@ -135,7 +130,6 @@ mymainmenu = awful.menu({
 -- Common to all screens
 -- mpris mpd
 mpd = media_player.MediaPlayer:new("mpd")
-mykeyboardlayout = awful.widget.keyboardlayout()
 myclock = wibox.widget.textclock("%H:%M:%S",1)
 mylauncher = awful.widget.launcher({
 	image = beautiful.awesome_icon,
@@ -166,23 +160,6 @@ mycalendar = awful.widget.calendar_popup.month({
 
 })
 mycalendar:attach(mydate)
-mycpu = lain.widget.cpu({
-	settings = function()
-		widget:set_markup(cpu_now.usage)
-	end
-})
-mymem = lain.widget.mem({
-	settings = function()
-		widget:set_markup(mem_now.used)
-	end
-})
-mytemp = lain.widget.temp({
-	settings = function()
-		widget:set_markup(coretemp_now)
-	end
-})
--- 2nd screen only
-mysystray = wibox.widget.systray()
 -- }}}
 -- {{{ Tags
 tags = {
@@ -320,28 +297,13 @@ awful.screen.connect_for_each_screen(function (s)
 	myrightwidgets = {
 		{
 			layout = wibox.layout.fixed.horizontal,
-			mykeyboardlayout,
-			mydivider,
-			mycpu,
-			mydivider,
-			mymem,
-			mydivider,
-			mytemp,
-			mydivider,
-			connman,
-			mydivider,
-			myvolume,
-			mydivider,
 			mydate,
 			mydivider,
 			myclock,
-			mysystray,
 			s.mylayoutbox
 		},
 		{
 			layout = wibox.layout.fixed.horizontal,
-			mykeyboardlayout,
-			mydivider,
 			myclock,
 			s.mylayoutbox
 		}
