@@ -61,10 +61,12 @@ end
 function util.view_nonempty_tag(direction, sc)
 	local s = sc or awful.screen.focused()
 	for i = 1, #s.tags do
-		 awful.tag.viewidx(direction, s)
-		 if #s.clients > 0 then
-			  return
-		 end
+		awful.tag.viewidx(direction, s)
+		for c = 1, #s.clients do
+			if s.clients[c].class ~= "Polybar" then
+				return
+			end
+		end
 	end
 end
 -- }}}
