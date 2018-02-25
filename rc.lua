@@ -18,7 +18,7 @@ require("awful.hotkeys_popup.keys")
 
 -- Added libraries
 -- * Arch linux xdg-menu
-local xdg_menu = require("archmenu")
+require("archmenu")
 -- * tags and clients manipulation.
 local util = require("util")
 -- * pulseaudio dbus widget
@@ -63,17 +63,17 @@ end
 
 -- {{{ General variables
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvt"
+local terminal = "urxvt"
 -- Set the terminal for applications that require it
 menubar.utils.terminal = terminal
-editor = os.getenv("EDITOR") or "editor"
-editor_cmd = terminal .. " -e " .. editor
+local editor = os.getenv("EDITOR") or "editor"
+local editor_cmd = terminal .. " -e " .. editor
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
 -- If you do not like this or do not have such a key,
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
-modkey = "Mod4"
+local modkey = "Mod4"
 -- }}}
 -- {{{ Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
@@ -113,7 +113,7 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "mytheme/init.lua")
 -- }}}
 
 -- {{{ Menu
-mymainmenu = awful.menu({
+local mymainmenu = awful.menu({
 	items = {
 		{ "Apps", xdgmenu },
 		{ "hotkeys", function() return false, hotkeys_popup.show_help end},
@@ -129,19 +129,18 @@ mymainmenu = awful.menu({
 -- {{{ Widgets
 -- Common to all screens
 -- mpris mpd
-mpd = media_player.MediaPlayer:new("mpd")
-myclock = wibox.widget.textclock("%H:%M:%S",1)
-mylauncher = awful.widget.launcher({
+local mpd = media_player.MediaPlayer:new("mpd")
+local myclock = wibox.widget.textclock("%H:%M:%S",1)
+local mylauncher = awful.widget.launcher({
 	image = beautiful.awesome_icon,
 	menu = mymainmenu
 })
 -- Helper
-mydivider = wibox.widget.textbox()
+local mydivider = wibox.widget.textbox()
 mydivider:set_text(" | ")
 -- 1st screen only
-myvolume = pulseaudio_widget
-mydate = wibox.widget.textclock("%d/%m/%y",1)
-mycalendar = awful.widget.calendar_popup.month({
+local mydate = wibox.widget.textclock("%d/%m/%y",1)
+local mycalendar = awful.widget.calendar_popup.month({
     position = "tr",
     screen = 1,
     opacity = 1,
@@ -162,7 +161,7 @@ mycalendar = awful.widget.calendar_popup.month({
 mycalendar:attach(mydate)
 -- }}}
 -- {{{ Tags
-tags = {
+local tags = {
 	settings = {
 		{
 			names = {
@@ -191,8 +190,8 @@ tags = {
 -- }}}
 -- {{{ repair tags.settings if screen:count is different than the hypothetical number of screens defined
 -- tags.settings (#tags.settings)
-screen_count = screen:count()
-estimated_screen_count = #tags.settings
+local screen_count = screen:count()
+local estimated_screen_count = #tags.settings
 if estimated_screen_count > screen_count then
 	for i = screen_count + 1, estimated_screen_count do
 		for _,v in ipairs(tags.settings[i].names) do
