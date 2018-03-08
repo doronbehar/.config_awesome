@@ -141,22 +141,21 @@ mydivider:set_text(" | ")
 -- 1st screen only
 local mydate = wibox.widget.textclock("%d/%m/%y",1)
 local mycalendar = awful.widget.calendar_popup.month({
-    position = "tr",
-    screen = 1,
-    opacity = 1,
-    bg = string.sub(beautiful.bg_normal, 1, 7) .. "80",
-    font = beautiful.font,
-    spacing = 0,
-    week_numbers = true,
-    start_sunday = true,
-    long_weekdays = true,
-    style_month = {fg_color = "#FFFFFF"},
-    style_header = {fg_color = "#FFFFFF"},
-    style_weekday = {fg_color = "#FFFFFF"},
-    style_weeknumber = {fg_color = "#CCCCFF"},
-    style_normal = {fg_color = "#FFFFFF"},
-    style_focus = {},
-
+	position = "tr",
+	screen = 1,
+	opacity = 1,
+	bg = string.sub(beautiful.bg_normal, 1, 7) .. "80",
+	font = beautiful.font,
+	spacing = 0,
+	week_numbers = true,
+	start_sunday = true,
+	long_weekdays = true,
+	style_month = {fg_color = "#FFFFFF"},
+	style_header = {fg_color = "#FFFFFF"},
+	style_weekday = {fg_color = "#FFFFFF"},
+	style_weeknumber = {fg_color = "#CCCCFF"},
+	style_normal = {fg_color = "#FFFFFF"},
+	style_focus = {},
 })
 mycalendar:attach(mydate)
 -- }}}
