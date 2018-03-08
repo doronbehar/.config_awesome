@@ -19,6 +19,7 @@ theme.icon_theme                                = nil
 theme.useless_gap                               = 0
 theme.useless_gap_width                         = 0
 theme.border_width                              = dpi(1)
+theme.systray_icon_spacing                      = 5
 -- }}}
 -- {{{ Layout Icons
 theme.layout_tile                               = configuration_dir .. "mytheme/icons/tile.png"
@@ -134,4 +135,4 @@ theme.titlebar_maximized_button_focus_active    = system_themes_dir .. "default/
 
 return theme
 
--- vim:filetype=lua:foldmethod=marker
+-- vim:filetype=lua:foldmethod=marker:expandtab

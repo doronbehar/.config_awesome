@@ -158,6 +158,8 @@ local mycalendar = awful.widget.calendar_popup.month({
 	style_focus = {},
 })
 mycalendar:attach(mydate)
+-- 2nd screen only
+local mysystray = wibox.widget.systray()
 -- }}}
 -- {{{ Tags
 local tags = {
@@ -295,6 +297,8 @@ awful.screen.connect_for_each_screen(function (s)
 	myrightwidgets = {
 		{
 			layout = wibox.layout.fixed.horizontal,
+			mysystray,
+			mydivider,
 			mydate,
 			mydivider,
 			myclock,
@@ -319,6 +323,10 @@ awful.screen.connect_for_each_screen(function (s)
 		myrightwidgets[s.index]
 	}
 end)
+-- }}}
+-- {{{ Spawn polybar only after the widgets are set.
+awful.spawn('killall polybar')
+awful.spawn('polybar default')
 -- }}}
 
 -- {{{ Mouse bindings
