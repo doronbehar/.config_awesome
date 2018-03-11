@@ -33,6 +33,8 @@ local media_player = require("media_player")
 local constrm = require("constrain-mouse")
 -- * getting width and hight of an image
 local image = require('image')
+-- * autostart made easy
+local autostart = require('autostart')
 -- }}}
 
 -- {{{ Error handling
@@ -327,9 +329,8 @@ awful.screen.connect_for_each_screen(function (s)
 	}
 end)
 -- }}}
--- {{{ Spawn polybar only after the widgets are set.
-awful.spawn('killall polybar')
-awful.spawn('polybar default')
+-- {{{ Only after all widgets and tags and tasklist are put, executing autostart
+autostart(require('autostart/config'))
 -- }}}
 
 -- {{{ Mouse bindings
