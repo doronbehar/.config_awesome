@@ -17,12 +17,15 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 require("awful.hotkeys_popup.keys")
 
 -- Added libraries
+-- - local libraries
 -- * Arch linux xdg-menu
 require("archmenu")
 -- * tags and clients manipulation.
 local util = require("util")
--- * pulseaudio dbus widget
+
+-- - luarocks
 pcall(require, "luarocks.loader")
+-- * pulseaudio dbus widget
 local pulseaudio_widget = require("pulseaudio_widget")
 -- * mpris media player for mpd
 local media_player = require("media_player")
