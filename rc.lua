@@ -27,8 +27,6 @@ local util = require("util")
 pcall(require, "luarocks.loader")
 -- * pulseaudio dbus widget
 local pulseaudio_widget = require("pulseaudio_widget")
--- * mpris media player for mpd
-local media_player = require("media_player")
 -- * constrain-mounse for multi-monitor setup for games
 local constrm = require("constrain-mouse")
 -- * getting width and hight of an image
@@ -133,8 +131,6 @@ local mymainmenu = awful.menu({
 
 -- {{{ Widgets
 -- Common to all screens
--- mpris mpd
-local mpd = media_player.MediaPlayer:new("mpd")
 local myclock = wibox.widget.textclock("%H:%M:%S",1)
 local mylauncher = awful.widget.launcher({
 	image = beautiful.awesome_icon,
@@ -429,11 +425,11 @@ globalkeys = gears.table.join(
 		{description = "record the desktop", group = "PrintScrn"}),
 	-- }}}
 	-- {{{ Music Player:
-	awful.key({modkey,"Control"		}, "Pause",		function () mpd:play() end,
+	awful.key({modkey,"Control"		}, "Pause",		function () awful.spawn('mpc toggle') end,
 		{description = "toggle Play/Pause", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F9",		function () mpd:next() end,
+	awful.key({modkey,"Control"		}, "F9",		function () awful.spawn('mpc next') end,
 		{description = "next song in playlist", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F8",		function () mpd:previous() end,
+	awful.key({modkey,"Control"		}, "F8",		function () awful.spawn('mpc previous') end,
 		{description = "privious song in playlist", group = "music player"}),
 	awful.key({modkey,"Control"		}, "F12",		function () awful.spawn("mpc seek +5") end,
 		{description = "seek forward", group = "music player"}),
