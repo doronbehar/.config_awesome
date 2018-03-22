@@ -668,6 +668,16 @@ naughty.config.notify_callback = function(args)
 			end
 		end
 	end
+	local c = client.focus
+	if c then
+		if c.fullscreen then
+			naughty.suspend()
+			return
+		else
+			naughty.resume()
+			return args
+		end
+	end
 	return args
 end
 -- }}}
