@@ -23,7 +23,7 @@ require("archmenu")
 -- * tags and clients manipulation.
 local util = require("util")
 -- * autostart made easy
-local autostart = require('autostart')
+local Autostart = require('autostart')
 
 -- - luarocks
 pcall(require, "luarocks.loader")
@@ -330,7 +330,8 @@ awful.screen.connect_for_each_screen(function (s)
 end)
 -- }}}
 -- {{{ Only after all widgets and tags and tasklist are put, executing autostart
-autostart(require('autostart/config'))
+autostart = Autostart.new(require('autostart/config'))
+autostart.run_all()
 -- }}}
 
 -- {{{ Mouse bindings
@@ -417,6 +418,12 @@ globalkeys = gears.table.join(
 		{description = "reload awesome", group = "session"}),
 	awful.key({modkey,"Mod1"		}, "z",			function () awful.spawn("xlock -mode blank -startCmd 'ssh-add -D; gpg-connect-agent reloadagent /bye'", false) end,
 		{description = "lock xsession with a blank screen (xlock)", group = "session"}),
+	-- }}}
+	-- {{{ Autostart module logging level
+	awful.key({modkey, "Shift"		}, "=",			function () autostart.logger:setLevel(autostart.logger.level_order + 1) end,
+		{description = "Raise autostart module logging level", group = "autostart"}),
+	awful.key({modkey,				}, "-",			function () autostart.logger:setLevel(autostart.logger.level_order - 1) end,
+		{description = "Lower autostart module logging level", group = "autostart"}),
 	-- }}}
 	-- {{{ PrintScrn
 	awful.key({						}, "Print",		function () awful.spawn.with_shell("maim --format=png " .. os.getenv("HOME") .. "/pictures/screenshots/desktop:" .. os.date("%Y.%m.%d-%X") .. ".png",false) end,
