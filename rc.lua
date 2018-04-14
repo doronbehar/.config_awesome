@@ -28,7 +28,7 @@ local Autostart = require('autostart')
 -- - luarocks
 pcall(require, "luarocks.loader")
 -- * pulseaudio dbus widget
-local pulseaudio_widget = require("pulseaudio_widget")
+local Pulseaudio = require("pulseaudio")
 -- * constrain-mounse for multi-monitor setup for games
 local constrm = require("constrain-mouse")
 -- * getting width and hight of an image
@@ -81,6 +81,7 @@ local editor_cmd = terminal .. " -e " .. editor
 local modkey = "Mod4"
 local _, _, mpd_password, mpd_hostname = string.find(os.getenv('MPD_HOST'), "([^@]+)@([a-zA-Z0-9.]+)")
 local mpc = mpd.new({password = mpd_password, hostname = mpd_hostname})
+local pulseaudio = Pulseaudio()
 -- }}}
 -- {{{ Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
@@ -453,19 +454,23 @@ globalkeys = gears.table.join(
 	awful.key({modkey,"Control"		}, "Scroll_Lock", function () mpc:send('toggleoutput 0') end,
 		{description = "toggle volume mute", group = "music player"}),
 	-- }}}
-	-- {{{ General Machine Volume managment:
-	awful.key({modkey,				}, "F10",		pulseaudio_widget.volume_up,
+	-- {{{ General Machine Volume management:
+	awful.key({modkey,				}, "F10",		pulseaudio.volume_up,
 		{description = "volume up", group = "machine volume"}),
-	awful.key({modkey,				}, "F7",		pulseaudio_widget.volume_down,
+	awful.key({modkey,				}, "F7",		pulseaudio.volume_down,
 		{description = "volume down", group = "machine volume"}),
-	awful.key({modkey,				}, "Scroll_Lock",pulseaudio_widget.toggle_muted,
+	awful.key({modkey,				}, "Scroll_Lock",pulseaudio.toggle_muted,
 		{description = "toggle volume mute", group = "machine volume"}),
-	awful.key({modkey,"Shift"		}, "F10",		pulseaudio_widget.volume_up_mic,
+	awful.key({modkey,				}, "F1",		pulseaudio.cycle_sinks,
+		{description = "cycle through available sinks", group = "machine volume"}),
+	awful.key({modkey,"Shift"		}, "F10",		pulseaudio.volume_up_mic,
 		{description = "microphone volume up", group = "machine volume"}),
-	awful.key({modkey,"Shift"		}, "F7",		pulseaudio_widget.volume_down_mic,
+	awful.key({modkey,"Shift"		}, "F7",		pulseaudio.volume_down_mic,
 		{description = "microphone volume down", group = "machine volume"}),
-	awful.key({modkey,"Shift"		}, "Scroll_Lock",pulseaudio_widget.toggle_muted_mic,
-		{description = "microphone toggle volume mute", group = "machine volume"})
+	awful.key({modkey,"Shift"		}, "Scroll_Lock",pulseaudio.toggle_muted_mic,
+		{description = "microphone toggle volume mute", group = "machine volume"}),
+	awful.key({modkey,"Shift"		}, "F1",		pulseaudio.cycle_sources,
+		{description = "cycle through available sources", group = "machine volume"})
 	-- }}}
 )
 -- }}}
