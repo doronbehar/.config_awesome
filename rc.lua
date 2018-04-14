@@ -79,7 +79,8 @@ local editor_cmd = terminal .. " -e " .. editor
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
 local modkey = "Mod4"
-local _, _, mpd_password, mpd_hostname = string.find(os.getenv('MPD_HOST'), "([^@]+)@([a-zA-Z0-9.]+)")
+local mpd_host = os.getenv('MPD_HOST') or 'localhost'
+local _, _, mpd_password, mpd_hostname = string.find(mpd_host, "([^@]+)@([a-zA-Z0-9.]+)")
 local mpc = mpd.new({password = mpd_password, hostname = mpd_hostname})
 local pulseaudio = Pulseaudio()
 -- }}}
