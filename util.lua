@@ -62,10 +62,15 @@ function util.view_nonempty_tag(direction, sc)
 	local s = sc or awful.screen.focused()
 	for i = 1, #s.tags do
 		awful.tag.viewidx(direction, s)
-		for c = 1, #s.clients do
-			if s.clients[c].class ~= "Polybar" then
+		-- now, in the newly selected tag,
+		local clients = s.selected_tag:clients()
+		-- we check if there are no clients at all
+		if #clients == 1 then
+			if clients[1].class ~= "Polybar" then
 				return
 			end
+		elseif #clients ~= 0 then
+			return
 		end
 	end
 end
