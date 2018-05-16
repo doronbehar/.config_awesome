@@ -7,6 +7,17 @@ local util = {}
 function util.move_tag_to_screen(incr)
 	local s = awful.screen.focused()
 	local t = s.selected_tag
+	local clients = t:clients()
+	for c = 1, #clients do
+		if clients[c].class == "Polybar" then
+			naughty.notify({
+				preset = naughty.config.presets.critical,
+				title = "Won't move tag to next screen since it contains polybar",
+				timeout = 10
+			})
+			return
+		end
+	end
 	-- the variable `next_tag_to_be_focused` holds the object of the tag next to the tag we want to move
 	-- and it is the tag that should be focused once the move has been made.
 	local next_tag_to_be_focused = {}
