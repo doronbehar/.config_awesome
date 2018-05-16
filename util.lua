@@ -56,12 +56,12 @@ end
 function util.move_all_clients_to_screen(incr)
 	local s = awful.screen.focused()
 	local t = s.selected_tag
+	local clients = t:clients()
 	local new_screen = gears.math.cycle(screen:count(), s.index + incr)
-	local dumb = function()
-		return true
-	end
-	for c in awful.util.table.iterate(t:clients(),dumb,1) do
-		c:move_to_screen(new_screen)
+	for c = 1, #clients do
+		if clients[c].class ~= "Polybar" then
+			clients[c]:move_to_screen(new_screen)
+		end
 	end
 	awful.screen.focus_relative(incr)
 end
