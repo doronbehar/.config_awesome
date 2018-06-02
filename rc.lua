@@ -418,7 +418,9 @@ globalkeys = gears.table.join(
 	-- {{{ Session
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart,
 		{description = "reload awesome", group = "session"}),
-	awful.key({modkey,"Mod1"		}, "z",			function () awful.spawn("xlock -mode blank -startCmd 'ssh-add -D; gpg-connect-agent reloadagent /bye'", false) end,
+	awful.key({modkey,"Mod1"		}, "z",			function () awful.spawn("xautolock -locknow", false) end,
+		{description = "lock xsession with a blank screen (xlock)", group = "session"}),
+	awful.key({modkey,"Mod1"		}, "s",			util.xautolock_toggle,
 		{description = "lock xsession with a blank screen (xlock)", group = "session"}),
 	-- }}}
 	-- {{{ Autostart module logging level

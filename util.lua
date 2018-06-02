@@ -1,7 +1,33 @@
 local awful = require("awful")
 local gears = require("gears")
+local naughty = require("naughty")
 
 local util = {}
+
+function util.xautolock_toggle()
+	local disabled_filepath = os.getenv('XDG_RUNTIME_DIR') .. '/awesome/xautolock_disabled'
+	local disabled_file = io.open(disabled_filepath, "r")
+	-- if file exists
+	if disabled_file ~= nil then
+		-- we need to disable
+		io.close(disabled_file)
+		os.remove(disabled_filepath)
+		awful.spawn('xautolock -disable')
+		naughty.notify({
+			text = "disabled xautolock",
+			timeout = 5
+		})
+	else
+		-- we need to enable
+		disabled_file = io.open(disabled_filepath, "w")
+		disabled_file:write("")
+		awful.spawn('xautolock -enable')
+		naughty.notify({
+			text = "enabled xautolock",
+			timeout = 5
+		})
+	end
+end
 
 -- {{{ util.move_tag_to_screen(incr)
 function util.move_tag_to_screen(incr)
