@@ -97,7 +97,7 @@ end
 -- view the next empty tag in the direction
 function util.view_nonempty_tag(direction, sc)
 	local s = sc or awful.screen.focused()
-	local curtag_index = awful.tag.selected().index
+	local curtag_index = s.selected_tag.index
 	for i = 1, #s.tags do
 		local nexttag = s.tags[gears.math.cycle(#s.tags, curtag_index + i)]
 		-- now, in the newly selected tag,
