@@ -97,17 +97,18 @@ end
 -- view the next empty tag in the direction
 function util.view_nonempty_tag(direction, sc)
 	local s = sc or awful.screen.focused()
+	local curtag_index = awful.tag.selected().index
 	for i = 1, #s.tags do
-		awful.tag.viewidx(direction, s)
+		local nexttag = s.tags[gears.math.cycle(#s.tags, curtag_index + i)]
 		-- now, in the newly selected tag,
-		local clients = s.selected_tag:clients()
+		local clients = nexttag:clients()
 		-- we check if there are no clients at all
 		if #clients == 1 then
 			if clients[1].class ~= "Polybar" then
-				return
+				return nexttag:view_only()
 			end
 		elseif #clients ~= 0 then
-			return
+			return nexttag:view_only()
 		end
 	end
 end
