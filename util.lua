@@ -99,7 +99,12 @@ function util.view_nonempty_tag(direction, sc)
 	local s = sc or awful.screen.focused()
 	local curtag_index = s.selected_tag.index
 	for i = 1, #s.tags do
-		local nexttag = s.tags[gears.math.cycle(#s.tags, curtag_index + i)]
+		local nexttag
+		if direction == 1 then
+			nexttag = s.tags[gears.math.cycle(#s.tags, curtag_index + i)]
+		else
+			nexttag = s.tags[gears.math.cycle(#s.tags, curtag_index - i)]
+		end
 		-- now, in the newly selected tag,
 		local clients = nexttag:clients()
 		-- we check if there are no clients at all
