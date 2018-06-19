@@ -332,7 +332,8 @@ awful.screen.connect_for_each_screen(function (s)
 end)
 -- }}}
 -- {{{ Only after all widgets and tags and tasklist are put, executing autostart
-autostart = Autostart.new(require('autostart/config'))
+autostart_config = require('autostart/config')
+autostart = Autostart.new(autostart_config)
 autostart.run_all()
 -- }}}
 
