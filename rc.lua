@@ -391,14 +391,38 @@ globalkeys = gears.table.join(
 		{description = "run a shell command", group = "prompts"}),
 	awful.key({modkey				}, "x",
 		function ()
-			awful.prompt.run {
+			awful.prompt.run({
 				prompt = "Run Lua code: ",
 				textbox = awful.screen.focused().mypromptbox.widget,
 				exe_callback = awful.util.eval,
 				history_path = gears.filesystem.get_cache_dir() .. "/history_eval"
-			}
+			})
 		end,
 		{description = "run a lua command", group = "prompts"}),
+	awful.key({modkey				}, "b",
+		function ()
+			awful.prompt.run({
+				prompt = "Run background command: ",
+				textbox = awful.screen.focused().mypromptbox.widget,
+				exe_callback = function(input)
+					if not input or #input == 0 then
+						return
+					end
+					local words ={}
+					for w in input:gmatch('%w+') do
+						table.insert(words, w)
+					end
+					local program = {
+						name = words[1],
+						bin = input
+					}
+					local pid_fp = autostart_config.pids_path .. program.name
+					autostart.spawn(program, pid_fp)
+				end,
+				history_path = gears.filesystem.get_cache_dir() .. "/history_eval"
+			})
+		end,
+		{description = "run a background command with autostart", group = "prompts"}),
 	-- }}}
 	-- {{{ HELP
 	awful.key({modkey,"Shift"		}, "/",			hotkeys_popup.show_help,
