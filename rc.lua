@@ -443,10 +443,8 @@ globalkeys = gears.table.join(
 	-- {{{ Session
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart,
 		{description = "reload awesome", group = "session"}),
-	awful.key({modkey,"Mod1"		}, "z",			function () awful.spawn("xautolock -locknow", false) end,
-		{description = "lock xsession with a blank screen (xlock)", group = "session"}),
-	awful.key({modkey,"Mod1"		}, "s",			util.xautolock_toggle,
-		{description = "lock xsession with a blank screen (xlock)", group = "session"}),
+	awful.key({modkey,"Mod1"		}, "z",			function () awful.spawn("xscreensaver-command -lock", false) end,
+		{description = "lock now the session with xscreensaver", group = "session"}),
 	-- }}}
 	-- {{{ Autostart module logging level
 	awful.key({modkey, "Shift"		}, "=",			function () autostart.logger:setLevel(autostart.logger.level_order + 1) end,
