@@ -2,10 +2,10 @@ local awful = require("awful")
 local gears = require("gears")
 local naughty = require("naughty")
 
-local util = {}
+local tag = {}
 
--- {{{ util.move_tag_to_screen(incr)
-function util.move_tag_to_screen(incr)
+-- {{{ tag.move_to_screen(incr)
+function tag.move_to_screen(incr)
 	local s = awful.screen.focused()
 	local t = s.selected_tag
 	local clients = t:clients()
@@ -36,41 +36,9 @@ function util.move_tag_to_screen(incr)
 end
 -- }}}
 
--- {{{ util.move_all_clients_to_tag(incr)
--- move all clients in a tag to a different tag.
-function util.move_all_clients_to_tag(incr)
-	local s = awful.screen.focused()
-	local t = s.selected_tag
-	local new_tag = s.tags[gears.math.cycle(#s.tags, t.index + incr)]
-	local dumb = function()
-		return true
-	end
-	for c in awful.util.table.iterate(t:clients(),dumb,1) do
-		c:move_to_tag(new_tag)
-	end
-	new_tag:view_only()
-end
--- }}}
-
--- {{{ util.move_all_clients_to_screen(incr)
--- move all of the clients of a tag to a different tag on a different screen.
-function util.move_all_clients_to_screen(incr)
-	local s = awful.screen.focused()
-	local t = s.selected_tag
-	local clients = t:clients()
-	local new_screen = gears.math.cycle(screen:count(), s.index + incr)
-	for c = 1, #clients do
-		if clients[c].class ~= "Polybar" then
-			clients[c]:move_to_screen(new_screen)
-		end
-	end
-	awful.screen.focus_relative(incr)
-end
--- }}}
-
--- {{{ util.view_nonempty_tag(direction, sc)
+-- {{{ tag.view_next_nonempty(direction, sc)
 -- view the next empty tag in the direction
-function util.view_nonempty_tag(direction, sc)
+function tag.view_next_nonempty(direction, sc)
 	local s = sc or awful.screen.focused()
 	local curtag_index = s.selected_tag.index
 	for i = 1, #s.tags do
@@ -94,9 +62,9 @@ function util.view_nonempty_tag(direction, sc)
 end
 -- }}}
 
--- {{{ util.add_tag(layout)
+-- {{{ tag.add(layout)
 -- add a tag.
-function util.add_tag(layout)
+function tag.add(layout)
 	awful.prompt.run {
 		prompt = "New tag name: ",
 		textbox = awful.screen.focused().mypromptbox.widget,
@@ -108,18 +76,18 @@ function util.add_tag(layout)
 end
 -- }}}
 
--- {{{ util.delete_tag()
+-- {{{ tag.delete()
 -- delete the current tag.
-function util.delete_tag()
+function tag.delete()
 	local t = awful.screen.focused().selected_tag
 	if not t then return end
 	t:delete()
 end
 -- }}}
 
--- {{{ util.rename_tag()
+-- {{{ tag.rename()
 -- rename the current tag.
-function util.rename_tag()
+function tag.rename()
 	awful.prompt.run {
 		prompt = "Rename tag: ",
 		textbox = awful.screen.focused().mypromptbox.widget,
@@ -134,9 +102,9 @@ function util.rename_tag()
 end
 -- }}}
 
--- {{{ util.move_tag(pos)
+-- {{{ tag.move(pos)
 -- move the current tag to pos
-function util.move_tag(pos)
+function tag.move(pos)
 	local tag = awful.screen.focused().selected_tag
 	if tonumber(pos) <= -1 then
 		awful.tag.move(tag.index - 1, tag)
@@ -146,6 +114,6 @@ function util.move_tag(pos)
 end
 -- }}}
 
-return util
+return tag
 
 -- vim:ft=lua:foldmethod=marker

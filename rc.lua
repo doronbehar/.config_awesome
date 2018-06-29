@@ -351,9 +351,9 @@ globalkeys = gears.table.join(
 		{description = "view next", group = "tags focus"}),
 	awful.key({modkey,				}, "h",			awful.tag.viewprev,
 		{description = "view previous", group = "tags focus"}),
-	awful.key({modkey,				}, "]",			function () util.view_nonempty_tag(1) end,
+	awful.key({modkey,				}, "]",			function () util.tag.view_next_nonempty(1) end,
 		{description = "view next nonempty", group = "tags focus"}),
-	awful.key({modkey,				}, "[",			function () util.view_nonempty_tag(-1) end,
+	awful.key({modkey,				}, "[",			function () util.tag.view_next_nonempty(-1) end,
 		{description = "view previous nonempty", group = "tags focus"}),
 	awful.key({modkey,				}, "Escape",	awful.tag.history.restore,
 		{description = "go to previously focused", group = "tags focus"}),
@@ -361,21 +361,21 @@ globalkeys = gears.table.join(
 		{description = "go to previously focused", group = "tags focus"}),
 	-- }}}
 	-- {{{ Tags Edit
-	awful.key({modkey,				}, "n",			function () util.add_tag() end,
+	awful.key({modkey,				}, "n",			function () util.tag.add() end,
 		{description = "create a new tag with a prompt", group = "tags edit"}),
-	awful.key({modkey,				}, "w",			function () util.delete_tag() end,
+	awful.key({modkey,				}, "w",			function () util.tag.delete() end,
 		{description = "delete currently focused tag", group = "tags edit"}),
-	awful.key({modkey,				}, "r",			function () util.rename_tag() end,
+	awful.key({modkey,				}, "r",			function () util.tag.rename() end,
 		{description = "rename currently focused tag", group = "tags edit"}),
 	-- }}}
 	-- {{{ Tags Movement
-	awful.key({modkey,"Control"		}, "l",			function () util.move_tag(1) end,
+	awful.key({modkey,"Control"		}, "l",			function () util.tag.move(1) end,
 		{description = "move to next index", group = "tags movement"}),
-	awful.key({modkey,"Control"		}, "h",			function () util.move_tag(-1) end,
+	awful.key({modkey,"Control"		}, "h",			function () util.tag.move(-1) end,
 		{description = "move to previous index", group = "tags movement"}),
-	awful.key({modkey,"Control"		}, "i",			function () util.move_tag_to_screen(1) end,
+	awful.key({modkey,"Control"		}, "i",			function () util.tag.move_to_screen(1) end,
 		{description = "move to next screen", group = "tags movement"}),
-	awful.key({modkey,"Control"		}, "u",			function () util.move_tag_to_screen(-1) end,
+	awful.key({modkey,"Control"		}, "u",			function () util.tag.move_to_screen(-1) end,
 		{description = "move to previous screen", group = "tags movement"}),
 	-- }}}
 	-- {{{ Screens Focus
@@ -628,13 +628,13 @@ clientkeys = gears.table.join(
 		{description = "move to next tag", group = "clients movement"}),
 	awful.key({modkey,"Shift"		}, "h",			function (c) c:move_to_tag(c.screen.tags[gears.math.cycle(#c.screen.tags, c.first_tag.index - 1)]) end,
 		{description = "move to previous tag", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "l",			function () util.move_all_clients_to_tag(1) end,
+	awful.key({modkey,"Mod1"		}, "l",			function () util.clients.move_all_to_tag(1) end,
 		{description = "move all to next tag", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "h",			function () util.move_all_clients_to_tag(-1) end,
+	awful.key({modkey,"Mod1"		}, "h",			function () util.clients.move_all_to_tag(-1) end,
 		{description = "move all to previous tag", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "i",			function () util.move_all_clients_to_screen(1) end,
+	awful.key({modkey,"Mod1"		}, "i",			function () util.clients.move_all_to_screen(1) end,
 		{description = "move all to next screen", group = "clients movement"}),
-	awful.key({modkey,"Mod1"		}, "u",			function () util.move_all_clients_to_screen(-1) end,
+	awful.key({modkey,"Mod1"		}, "u",			function () util.clients.move_all_to_screen(-1) end,
 		{description = "move all to previous screen", group = "clients movement"}),
 	-- }}}
 	-- {{{ Clients Layout
