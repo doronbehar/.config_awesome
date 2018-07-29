@@ -417,7 +417,13 @@ globalkeys = gears.table.join(
 						bin = input
 					}
 					local pid_fp = autostart_config.pids_path .. program.name
-					autostart.spawn(program, pid_fp)
+					local pid = autostart.spawn(program, pid_fp)
+					if type(pid) == "string" then
+						naughty.notify({
+							preset = naughty.config.presets.critical,
+							text = pid
+						})
+					end
 				end,
 				history_path = gears.filesystem.get_cache_dir() .. "/history_eval"
 			})
