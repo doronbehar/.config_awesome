@@ -332,7 +332,9 @@ awful.screen.connect_for_each_screen(function (s)
 end)
 -- }}}
 -- {{{ Only after all widgets and tags and tasklist are put, executing autostart
-autostart_config = require('autostart/config')
+local conf_dir = os.getenv('XDG_CONFIG_HOME') or os.getenv('HOME') .. '/.config'
+local autostart_conf_file = conf_dir .. '/autostart/'
+local autostart_config = dofile(conf_dir .. '/autostart/awesomewm.lua')
 autostart = Autostart.new(autostart_config)
 autostart.run_all()
 -- }}}
