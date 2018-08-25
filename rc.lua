@@ -19,7 +19,7 @@ require("awful.hotkeys_popup.keys")
 -- Added libraries
 -- - local libraries
 -- * Arch linux xdg-menu
-require("archmenu")
+dofile("/var/lib/xdg_menu/awesome.lua")
 -- * tags and clients manipulation.
 local util = require("util")
 -- * autostart made easy
