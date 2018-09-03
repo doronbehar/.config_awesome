@@ -418,7 +418,7 @@ globalkeys = gears.table.join(
 						name = words[1],
 						bin = input
 					}
-					local pid_fp = autostart_config.pids_path .. program.name
+					local pid_fp = autostart_config.pids_path .. program.name .. '.pid'
 					local pid = autostart.spawn(program, pid_fp)
 					if type(pid) == "string" then
 						naughty.notify({
