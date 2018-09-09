@@ -69,6 +69,7 @@ end
 -- {{{ General variables
 -- This is used later as the default terminal and editor to run.
 local terminal = "urxvt"
+local browser = "dex " .. os.getenv('HOME') .. "/.local/share/applications/firefox-qt-pinentry.desktop"
 -- Set the terminal for applications that require it
 menubar.utils.terminal = terminal
 local editor = os.getenv("EDITOR") or "editor"
@@ -129,6 +130,7 @@ local mymainmenu = awful.menu({
 		{ "Manual", terminal .. " -e man awesome" },
 		{ "Config", editor_cmd .. " " .. awesome.conffile },
 		{ "Terminal", terminal },
+		{ "Browser", browser },
 		{ "Restart", awful.util.restart },
 		{ "Quit", function () awesome.quit() end }
 	}
@@ -445,6 +447,8 @@ globalkeys = gears.table.join(
 	-- {{{ Launchers
 	awful.key({modkey,				}, "Return",	function () awful.spawn(terminal) end,
 		{description = "open a terminal", group = "launchers"}),
+	awful.key({modkey, "Mod1"		}, "Return",	function () awful.spawn(browser) end,
+		{description = "open a browser", group = "launchers"}),
 	awful.key({modkey, "Shift"		}, "d",			function () mycalendar:toggle() end,
 		{description = "Toggle calendar popup", group = "launchers"}),
 	-- }}}
