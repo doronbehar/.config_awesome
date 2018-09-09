@@ -1,5 +1,13 @@
 local pulseaudio_dbus = require("pulseaudio_dbus")
 
+local function init(settings)
+	local ret = {}
+	ret.address = pulseaudio_dbus.get_address()
+	ret.connection = pulseaudio_dbus.get_connection(ret.address, settings.connection.dont_assert)
+	ret.core = pulseaudio_dbus.get_core(ret.connection)
+	return ret
+end
+
 local pulseaudio = {}
 pulseaudio = function(settings)
 	if type(settings) ~= 'table' then
@@ -13,11 +21,8 @@ pulseaudio = function(settings)
 		}
 	})
 	local ret = {}
-	ret.pulse = {} 
-	ret.pulse.address = pulseaudio_dbus.get_address()
-	ret.pulse.connection = pulseaudio_dbus.get_connection(ret.pulse.address, settings.connection.dont_assert)
-	ret.pulse.core = pulseaudio_dbus.get_core(ret.pulse.connection)
 	ret.volume_up = function()
+		ret.pulse = init(settings)
 		for i = 1, #ret.pulse.core.Sinks do
 			local device = pulseaudio_dbus.get_device(ret.pulse.connection, ret.pulse.core.Sinks[i], settings.sink_device.volume_step, settings.sink_device.volume_max)
 			if device.object_path == ret.pulse.core.FallbackSink then
@@ -26,6 +31,7 @@ pulseaudio = function(settings)
 		end
 	end
 	ret.volume_down = function()
+		ret.pulse = init(settings)
 		for i = 1, #ret.pulse.core.Sinks do
 			local device = pulseaudio_dbus.get_device(ret.pulse.connection, ret.pulse.core.Sinks[i], settings.sink_device.volume_step, settings.sink_device.volume_max)
 			if device.object_path == ret.pulse.core.FallbackSink then
@@ -34,6 +40,7 @@ pulseaudio = function(settings)
 		end
 	end
 	ret.toggle_muted = function()
+		ret.pulse = init(settings)
 		for i = 1, #ret.pulse.core.Sinks do
 			local device = pulseaudio_dbus.get_device(ret.pulse.connection, ret.pulse.core.Sinks[i], settings.sink_device.volume_step, settings.sink_device.volume_max)
 			if device.object_path == ret.pulse.core.FallbackSink then
@@ -42,6 +49,7 @@ pulseaudio = function(settings)
 		end
 	end
 	ret.cycle_sinks = function()
+		ret.pulse = init(settings)
 		for i = 1, #ret.pulse.core.Sinks do
 			local device = pulseaudio_dbus.get_device(ret.pulse.connection, ret.pulse.core.Sinks[i], settings.sink_device.volume_step, settings.sink_device.volume_max)
 			if device.object_path ~= ret.pulse.core.FallbackSink then
@@ -55,6 +63,7 @@ pulseaudio = function(settings)
 	end
 
 	ret.volume_up_mic = function()
+		ret.pulse = init(settings)
 		for i = 1, #ret.pulse.core.Sources do
 			local device = pulseaudio_dbus.get_device(ret.pulse.connection, ret.pulse.core.Sources[i], settings.sink_device.volume_step, settings.sink_device.volume_max)
 			if device.object_path == ret.pulse.core.FallbackSink then
@@ -63,6 +72,7 @@ pulseaudio = function(settings)
 		end
 	end
 	ret.volume_down_mic = function()
+		ret.pulse = init(settings)
 		for i = 1, #ret.pulse.core.Sources do
 			local device = pulseaudio_dbus.get_device(ret.pulse.connection, ret.pulse.core.Sources[i], settings.sink_device.volume_step, settings.sink_device.volume_max)
 			if device.object_path == ret.pulse.core.FallbackSink then
@@ -71,6 +81,7 @@ pulseaudio = function(settings)
 		end
 	end
 	ret.toggle_muted_mic = function()
+		ret.pulse = init(settings)
 		for i = 1, #ret.pulse.core.Sources do
 			local device = pulseaudio_dbus.get_device(ret.pulse.connection, ret.pulse.core.Sources[i], settings.sink_device.volume_step, settings.sink_device.volume_max)
 			if device.object_path == ret.pulse.core.FallbackSink then
@@ -79,6 +90,7 @@ pulseaudio = function(settings)
 		end
 	end
 	ret.cycle_sources = function()
+		ret.pulse = init(settings)
 		for i = 1, #ret.pulse.core.Sources do
 			local device = pulseaudio_dbus.get_device(ret.pulse.connection, ret.pulse.core.Sources[i], settings.sink_device.volume_step, settings.sink_device.volume_max)
 			if device.object_path ~= ret.pulse.core.FallbackSource then
