@@ -18,8 +18,6 @@ require("awful.hotkeys_popup.keys")
 
 -- Added libraries
 -- - local libraries
--- * Arch linux xdg-menu
-dofile("/var/lib/xdg_menu/awesome.lua")
 -- * tags and clients manipulation.
 local util = require("util")
 -- * autostart made easy
@@ -69,7 +67,24 @@ end
 -- {{{ General variables
 -- This is used later as the default terminal and editor to run.
 local terminal = "urxvt"
-local browser = "dex " .. os.getenv('HOME') .. "/.local/share/applications/firefox-qt-pinentry.desktop"
+local xdgmenu_file = "/var/lib/xdg_menu/awesome.lua"
+if gears.filesystem.file_readable(xdgmenu_file) then
+	dofile(xdgmenu_file) -- returns xdgmenu
+else
+	-- TODO create this file in a user cache location
+	xdgmenu = {}
+end
+local browser = ""
+-- Get browser binary from xdgmenu
+for e = 1, #xdgmenu do
+	if xdgmenu[e][1] == "Internet" then
+		for p = 1,#xdgmenu[e][2] do
+			if xdgmenu[e][2][p][1] == "Firefox" then
+				browser = xdgmenu[e][2][p][2]
+			end
+		end
+	end
+end
 -- Set the terminal for applications that require it
 menubar.utils.terminal = terminal
 local editor = os.getenv("EDITOR") or "editor"
@@ -333,9 +348,10 @@ awful.screen.connect_for_each_screen(function (s)
 	}
 end)
 -- }}}
--- {{{ Only after all widgets and tags and tasklist are put, executing autostart
+-- {{{ Autostart: Executed only after all widgets and tags and tasklist are put
 local conf_dir = os.getenv('XDG_CONFIG_HOME') or os.getenv('HOME') .. '/.config'
 local autostart_conf_file = conf_dir .. '/autostart/'
+
 local autostart_config = dofile(conf_dir .. '/autostart/awesomewm.lua')
 autostart = Autostart.new(autostart_config)
 autostart.run_all()
