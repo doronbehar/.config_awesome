@@ -67,24 +67,6 @@ end
 -- {{{ General variables
 -- This is used later as the default terminal and editor to run.
 local terminal = "urxvt"
-local xdgmenu_file = "/var/lib/xdg_menu/awesome.lua"
-if gears.filesystem.file_readable(xdgmenu_file) then
-	dofile(xdgmenu_file) -- returns xdgmenu
-else
-	-- TODO create this file in a user cache location
-	xdgmenu = {}
-end
-local browser = ""
--- Get browser binary from xdgmenu
-for e = 1, #xdgmenu do
-	if xdgmenu[e][1] == "Internet" then
-		for p = 1,#xdgmenu[e][2] do
-			if xdgmenu[e][2][p][1] == "Firefox" then
-				browser = xdgmenu[e][2][p][2]
-			end
-		end
-	end
-end
 -- Set the terminal for applications that require it
 menubar.utils.terminal = terminal
 local editor = os.getenv("EDITOR") or "editor"
@@ -140,12 +122,10 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "mytheme/init.lua")
 -- {{{ Menu
 local mymainmenu = awful.menu({
 	items = {
-		{ "Apps", xdgmenu },
 		{ "hotkeys", function() return false, hotkeys_popup.show_help end},
 		{ "Manual", terminal .. " -e man awesome" },
 		{ "Config", editor_cmd .. " " .. awesome.conffile },
 		{ "Terminal", terminal },
-		{ "Browser", browser },
 		{ "Restart", awful.util.restart },
 		{ "Quit", function () awesome.quit() end }
 	}
@@ -463,8 +443,6 @@ globalkeys = gears.table.join(
 	-- {{{ Launchers
 	awful.key({modkey,				}, "Return",	function () awful.spawn(terminal) end,
 		{description = "open a terminal", group = "launchers"}),
-	awful.key({modkey, "Mod1"		}, "Return",	function () awful.spawn(browser) end,
-		{description = "open a browser", group = "launchers"}),
 	awful.key({modkey, "Shift"		}, "d",			function () mycalendar:toggle() end,
 		{description = "Toggle calendar popup", group = "launchers"}),
 	-- }}}
