@@ -134,16 +134,12 @@ local mymainmenu = awful.menu({
 
 -- {{{ Widgets
 -- Common to all screens
-local myclock = wibox.widget.textclock("%H:%M:%S",1)
 local mylauncher = awful.widget.launcher({
 	image = beautiful.awesome_icon,
 	menu = mymainmenu
 })
--- Helper
-local mydivider = wibox.widget.textbox()
-mydivider:set_text(" | ")
 -- 1st screen only
-local mydate = wibox.widget.textclock("%d/%m/%y",1)
+local mydatetime = wibox.widget.textclock(" | %A | %F | %R",1)
 local mycalendar = awful.widget.calendar_popup.month({
 	position = "tr",
 	screen = 1,
@@ -161,7 +157,7 @@ local mycalendar = awful.widget.calendar_popup.month({
 	style_normal = {fg_color = "#FFFFFF"},
 	style_focus = {},
 })
-mycalendar:attach(mydate)
+mycalendar:attach(mydatetime)
 -- 2nd screen only
 local mysystray = wibox.widget.systray()
 -- }}}
@@ -302,15 +298,12 @@ awful.screen.connect_for_each_screen(function (s)
 		{
 			layout = wibox.layout.fixed.horizontal,
 			mysystray,
-			mydivider,
-			mydate,
-			mydivider,
-			myclock,
+			mydatetime,
 			s.mylayoutbox
 		},
 		{
 			layout = wibox.layout.fixed.horizontal,
-			myclock,
+			mydatetime,
 			s.mylayoutbox
 		}
 	}
