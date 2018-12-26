@@ -442,7 +442,7 @@ globalkeys = gears.table.join(
 	-- {{{ Session
 	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart,
 		{description = "reload awesome", group = "session"}),
-	awful.key({modkey,"Mod1"		}, "l",			function () awful.spawn("xscreensaver-command -lock", false) end,
+	awful.key({modkey,"Mod1"		}, "q",			function () awful.spawn("xscreensaver-command -lock", false) end,
 		{description = "lock now the session with xscreensaver", group = "session"}),
 	awful.key({modkey,"Mod1"		}, "z",			function ()
 		awful.spawn.with_shell("xscreensaver-command -lock && systemctl suspend", false)
