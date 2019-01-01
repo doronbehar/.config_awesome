@@ -122,6 +122,7 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "mytheme/init.lua")
 -- {{{ Menu
 local mymainmenu = awful.menu({
 	items = {
+		{ "Refresh Launcher Applications", menubar.refresh },
 		{ "hotkeys", function() return false, hotkeys_popup.show_help end},
 		{ "Manual", terminal .. " -e man awesome" },
 		{ "Config", editor_cmd .. " " .. awesome.conffile },
