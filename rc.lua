@@ -133,16 +133,16 @@ local mymainmenu = awful.menu({
 -- }}}
 
 -- {{{ Widgets
--- Common to all screens
 local mylauncher = awful.widget.launcher({
 	image = beautiful.awesome_icon,
 	menu = mymainmenu
 })
--- 1st screen only
-local mydatetime = wibox.widget.textclock(" | %A | %F | %R",1)
-local mycalendar = awful.widget.calendar_popup.month({
+local datetime_widgets = {
+	wibox.widget.textclock(" | %A | %F | %R", 1),
+	wibox.widget.textclock("%A | %F | %R", 1)
+}
+local calendar_popup_base_settings = {
 	position = "tr",
-	screen = 1,
 	opacity = 1,
 	bg = string.sub(beautiful.bg_normal, 1, 7) .. "80",
 	font = beautiful.font,
@@ -156,10 +156,14 @@ local mycalendar = awful.widget.calendar_popup.month({
 	style_weeknumber = {fg_color = "#CCCCFF"},
 	style_normal = {fg_color = "#FFFFFF"},
 	style_focus = {},
-})
-mycalendar:attach(mydatetime)
--- 2nd screen only
-local mysystray = wibox.widget.systray()
+}
+local calendar_popup_widgets = {}
+for screen_index = 1,2 do
+	local settings = calendar_popup_base_settings
+	settings.screen = screen_index
+	calendar_popup_widgets[screen_index] = awful.widget.calendar_popup.month(settings)
+	calendar_popup_widgets[screen_index]:attach(datetime_widgets[screen_index])
+end
 -- }}}
 -- {{{ Tags
 local tags = {
@@ -297,13 +301,13 @@ awful.screen.connect_for_each_screen(function (s)
 	myrightwidgets = {
 		{
 			layout = wibox.layout.fixed.horizontal,
-			mysystray,
-			mydatetime,
+			wibox.widget.systray(),
+			datetime_widgets[1],
 			s.mylayoutbox
 		},
 		{
 			layout = wibox.layout.fixed.horizontal,
-			mydatetime,
+			datetime_widgets[2],
 			s.mylayoutbox
 		}
 	}
@@ -436,7 +440,10 @@ globalkeys = gears.table.join(
 	-- {{{ Launchers
 	awful.key({modkey,				}, "Return",	function () awful.spawn(terminal) end,
 		{description = "open a terminal", group = "launchers"}),
-	awful.key({modkey, "Shift"		}, "d",			function () mycalendar:toggle() end,
+	awful.key({modkey, "Shift"		}, "d",			function ()
+		local screen_index = awful.screen.focused().index
+		calendar_popup_widgets[screen_index]:toggle()
+	end,
 		{description = "Toggle calendar popup", group = "launchers"}),
 	-- }}}
 	-- {{{ Session
