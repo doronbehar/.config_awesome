@@ -447,8 +447,28 @@ globalkeys = gears.table.join(
 		{description = "Toggle calendar popup", group = "launchers"}),
 	-- }}}
 	-- {{{ Session
-	awful.key({modkey,"Mod1"		}, "r",			awful.util.restart,
-		{description = "reload awesome", group = "session"}),
+	awful.key({modkey,"Mod1"		}, "r",			function ()
+		local message
+		local autostart_start_xscreensaver = {
+			name = 'xscreensaver',
+			bin = { '/usr/bin/xscreensaver', '-no-splash' }
+		}
+		if autostart.is_running('xscreensaver') then
+			if autostart.kill_by_name('xscreensaver') then
+				message = "xscreensaver was killed"
+			else
+				message = "couldn't kill xscreensaver process, perhaps it's a bug with autostart module"
+			end
+		else
+			autostart.spawn(autostart_start_xscreensaver)
+			message = "xscreensaver was restarted"
+		end
+		naughty.notify({
+			preset = naughty.config.presets.normal,
+			text = message
+		})
+	end,
+		{description = "toggle screen saver", group = "session"}),
 	awful.key({modkey,"Mod1"		}, "q",			function () awful.spawn("xscreensaver-command -lock", false) end,
 		{description = "lock now the session with xscreensaver", group = "session"}),
 	awful.key({modkey,"Mod1"		}, "z",			function ()
