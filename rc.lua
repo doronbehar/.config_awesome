@@ -131,17 +131,13 @@ local mymainmenu = awful.menu({
 		{ "Quit", function () awesome.quit() end }
 	}
 })
--- }}}
-
--- {{{ Widgets
 local mylauncher = awful.widget.launcher({
 	image = beautiful.awesome_icon,
 	menu = mymainmenu
 })
-local datetime_widgets = {
-	wibox.widget.textclock(" | %A | %F | %R", 1),
-	wibox.widget.textclock("%A | %F | %R", 1)
-}
+-- }}}
+
+-- {{{ calendar widgets settings
 local calendar_popup_base_settings = {
 	position = "tr",
 	opacity = 1,
@@ -159,12 +155,7 @@ local calendar_popup_base_settings = {
 	style_focus = {},
 }
 local calendar_popup_widgets = {}
-for screen_index = 1,2 do
-	local settings = calendar_popup_base_settings
-	settings.screen = screen_index
-	calendar_popup_widgets[screen_index] = awful.widget.calendar_popup.month(settings)
-	calendar_popup_widgets[screen_index]:attach(datetime_widgets[screen_index])
-end
+local datetime_widgets = {}
 -- }}}
 -- {{{ Tags
 local tags = {
@@ -193,8 +184,7 @@ local tags = {
 		}
 	}
 }
--- }}}
--- {{{ repair tags.settings if screen:count is different than the hypothetical number of screens defined
+-- repair tags.settings if screen:count is different than the hypothetical number of screens defined
 -- tags.settings (#tags.settings)
 local screen_count = screen:count()
 local estimated_screen_count = #tags.settings
@@ -298,6 +288,16 @@ awful.screen.connect_for_each_screen(function (s)
 		height ="20",
 		screen = s
 	})
+	-- create callendar widgets for each screen
+	if s.index == 1 then
+		datetime_widgets[s.index] = wibox.widget.textclock(" | %A | %F | %R", 1)
+	else
+		datetime_widgets[s.index] = wibox.widget.textclock("%A | %F | %R", 1)
+	end
+	local settings = calendar_popup_base_settings
+	settings.screen = s.index
+	calendar_popup_widgets[s.index] = awful.widget.calendar_popup.month(settings)
+	calendar_popup_widgets[s.index]:attach(datetime_widgets[s.index])
 	-- Add widgets to the wibox
 	myrightwidgets = {
 		{
