@@ -1,0 +1,261 @@
+{
+  "luaVersion": "5.3",
+  "packagePath": "/usr/share/awesome/lib/?.lua;/usr/share/awesome/lib/?/init.lua;/home/doron/.luarocks/share/lua/5.3/?.lua;/home/doron/.luarocks/share/lua/5.3/?/init.lua;/usr/share/lua/5.3/?.lua;/usr/share/lua/5.3/?/init.lua;/usr/lib/lua/5.3/?.lua;/usr/lib/lua/5.3/?/init.lua;./?.lua;./?/init.lua",
+  "global": {
+    "type": "table",
+    "fields": {
+      "awesome": {
+        "type": "table",
+        "description": "awesome core API\nAdditionally to the classes described here, one can also use X properties as described in xproperties",
+        "link": "file:///usr/share/doc/awesome/doc/libraries/awesome.html",
+        "fields": {
+          "register_xproperty": {
+            "description": "Register a new xproperty.",
+            "type": "function",
+            "args": [
+              {"name": "name"},
+              {"name": "type"}
+            ],
+            "argTypes": [
+              {
+                "type": "string",
+                "description": "The name of the X11 property."
+              },
+              {
+                "type": "string",
+                "description": "One of \"string\", \"number\" or \"boolean\"."
+              }
+            ]
+          },
+          "quit": {
+            "description": "Quit awesome.",
+            "type": "function",
+            "args": [
+              {"name": "code"}
+            ],
+            "argTypes": [
+              {
+                "type": "integer",
+                "description": "The exit code to use when exiting. (default 0)"
+              }
+            ]
+          },
+          "exec": {
+            "description": "Execute another application, probably a window manager, to replace awesome.",
+            "type": "function",
+            "args": [
+              {"name": "cmd"}
+            ],
+            "argTypes": [
+              {
+                "description": "The command line to execute."
+              }
+            ]
+          },
+          "restart": {
+            "description": "Restart awesome.",
+            "type": "function"
+          },
+          "kill": {
+            "description": "Send a signal to a process identified by its process id.",
+            "type": "function",
+            "args": [
+              {"name": "pid"},
+              {"name": "sig"}
+            ],
+            "argTypes": [
+              {
+                "type": "integer",
+                "description": "Process identifier. 0 and negative values have special meaning. See `man 3 kill`."
+              },
+              {
+                "type": "integer",
+                "description": "Signal number."
+              }
+            ]
+          },
+          "sync": {
+            "description": "Synchronize with the X11 server.",
+            "type": "function"
+          },
+          "load_image": {
+            "description": "Load an image from a given path.",
+            "type": "function",
+            "args": [
+              {"name": "name"}
+            ],
+            "argTypes": [
+              {
+                "type": "string",
+                "description": "Error message."
+              }
+            ]
+          },
+          "set_preferred_icon_size": {
+            "description": "Set the preferred size for client icons.",
+            "type": "function",
+            "args": [
+              {"name": "size"}
+            ],
+            "argTypes": [
+              {
+                "type": "integer",
+                "description": " The size of the icons in pixels."
+              }
+            ]
+          },
+          "connect_signal": {
+            "description": "Add a global signal.",
+            "type": "function",
+            "args": [
+              {"name": "name"},
+              {"name": "func"}
+            ],
+            "argTypes": [
+              {
+                "type": "string",
+                "description": "A string with the event name."
+              },
+              {
+                "type": "function",
+                "description": "The function to call."
+              }
+            ]
+          },
+          "disconnect_signal": {
+            "description": "Remove a global signal.",
+            "type": "function",
+            "args": [
+              {"name": "name"},
+              {"name": "func"}
+            ],
+            "argTypes": [
+              {
+                "type": "string",
+                "description": "A string with the event name."
+              },
+              {
+                "type": "function",
+                "description": "The function to call."
+              }
+            ]
+          },
+          "emit_signal": {
+            "description": "Emit a global signal.",
+            "type": "function",
+            "args": [
+              {"name": "name"},
+              {"name": "..."}
+            ],
+            "argTypes": [
+              {
+                "type": "string",
+                "description": "A string with the event name."
+              }
+            ]
+          },
+          "spawn": {
+            "description": "Spawn a program.",
+            "type": "function",
+            "args": [
+              {"name": "cmd"},
+              {"name": "use_sn"},
+              {"name": "stdin"},
+              {"name": "stdout"},
+              {"name": "stderr"},
+              {"name": "exit_callback"}
+            ],
+            "argTypes": [
+              {
+                "type": "string",
+                "description": "The command to launch."
+              },
+              {
+                "type": "boolean",
+                "description": "Use startup-notification? (default true)"
+              },
+              {
+                "type": "boolean",
+                "description": "Return a fd for stdin? (default false)"
+              },
+              {
+                "type": "boolean",
+                "description": "Return a fd for stdout? (default false)"
+              },
+              {
+                "type": "boolean",
+                "description": "Return a fd for stderr? (default false)"
+              },
+              {
+                "type": "function",
+                "description": "Function to call on process exit. The function arguments will be type of exit (\"exit\" or \"signal\") and the exit code / the signal number causing process termination. (default nil)"
+              }
+            ],
+            "argsDisplay": "cmd[, use_sn=true[, stdin=false[, stdout=false[, stderr=false[, exit_callback=nil]]]]]"
+          },
+          "xbk_set_layout_group": {
+            "description": "Switch keyboard layout.",
+            "type": "function",
+            "args": [
+              {"name": "num"}
+            ],
+            "argTypes": [
+              {
+                "type": "integer",
+                "description": "keyboard layout number, integer from 0 to 3"
+              }
+            ]
+          },
+          "xbk_get_layout_group": {
+            "description": "Get current layout number.",
+            "type": "function"
+          },
+          "xbk_get_group_names": {
+            "description": "Get layout short names.",
+            "type": "function"
+          },
+          "version": {
+            "description": "The version of awesome.",
+            "type": "string"
+          },
+          "release": {
+            "description": "The release name of awesome.",
+            "type": "string"
+          },
+          "conffile": {
+            "description": "The configuration file which has been loaded.",
+            "type": "string"
+          },
+          "startup": {
+            "description": "True if we are still in startup, false otherwise.",
+            "type": "boolean"
+          },
+          "startup_errors": {
+            "description": "Error message for errors that occured during startup.",
+            "type": "string"
+          },
+          "composite_manager_running": {
+            "description": "True if a composite manager is running.",
+            "type": "boolean"
+          },
+          "unix_signal": {
+            "description": "Table mapping between signal numbers and signal identifiers.",
+            "type": "table"
+          },
+          "hostname": {
+            "description": "The hostname of the computer on which we are running.",
+            "type": "string"
+          },
+          "themes_path": {
+            "description": "The path where themes were installed to.",
+            "type": "string"
+          },
+          "icon_path": {
+            "description": "The path where icons were installed to.",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
