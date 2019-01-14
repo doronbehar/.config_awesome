@@ -492,9 +492,21 @@ globalkeys = gears.table.join(
 		{description = "lock now the session with xscreensaver and enter suspension", group = "session"}),
 	-- }}}
 	-- {{{ Autostart module logging level
-	awful.key({modkey, "Shift"		}, "=",			function () autostart.logger:setLevel(autostart.logger.level_order + 1) end,
+	awful.key({modkey, "Shift"		}, "=",			function ()
+		autostart.logger:setLevel(autostart.logger.level_order + 1)
+		naughty.notify({
+			preset = naughty.config.presets.normal,
+			text = "autostart logger log level set to " .. autostart.logger.level
+		})
+	end,
 		{description = "Raise autostart module logging level", group = "autostart"}),
-	awful.key({modkey,				}, "-",			function () autostart.logger:setLevel(autostart.logger.level_order - 1) end,
+	awful.key({modkey,				}, "-",			function ()
+		autostart.logger:setLevel(autostart.logger.level_order - 1)
+		naughty.notify({
+			preset = naughty.config.presets.normal,
+			text = "autostart logger log level set to " .. autostart.logger.level
+		})
+	end,
 		{description = "Lower autostart module logging level", group = "autostart"}),
 	-- }}}
 	-- {{{ PrintScrn
