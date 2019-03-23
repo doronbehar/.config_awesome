@@ -25,6 +25,8 @@ require("awful.hotkeys_popup.keys")
 local util = require("util")
 -- * autostart made easy
 local Autostart = require('autostart')
+-- * Media Player (mpc as well) generic controller
+local MediaPlayer = require('mediaplayer')
 
 -- - luarocks
 -- * pulseaudio dbus widget
@@ -33,8 +35,6 @@ local Pulseaudio = require("pulseaudio")
 local constrm = require("constrain-mouse")
 -- * getting width and hight of an image
 local image = require('image')
--- * mpd
-local mpd = require('mpd')
 -- }}}
 
 -- {{{ Error handling
@@ -78,10 +78,8 @@ local editor_cmd = terminal .. " -e " .. editor
 -- If you do not like this or do not have such a key,
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
+local mediaplayer = MediaPlayer()
 local modkey = "Mod4"
-local mpd_host = os.getenv('MPD_HOST') or 'localhost'
-local _, _, mpd_password, mpd_hostname = string.find(mpd_host, "([^@]+)@([a-zA-Z0-9.]+)")
-local mpc = mpd.new({password = mpd_password, hostname = mpd_hostname})
 local pulseaudio = Pulseaudio()
 -- }}}
 -- {{{ Table of layouts to cover with awful.layout.inc, order matters.
@@ -521,23 +519,23 @@ globalkeys = gears.table.join(
 	awful.key({"Mod1"				}, "Print",		function () awful.spawn.with_shell("recordmydesktop --no-sound", false) end,
 		{description = "video record the Desktop and save it to the home directory", group = "PrintScrn"}),
 	-- }}}
-	-- {{{ Music Player:
-	awful.key({modkey,"Control"		}, "Pause",		function () mpc:toggle_play() end,
-		{description = "toggle Play/Pause", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F9",		function () mpc:next() end,
-		{description = "next song in playlist", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F8",		function () mpc:previous() end,
-		{description = "privious song in playlist", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F12",		function () mpc:seek(5) end,
-		{description = "seek forward", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F11",		function () mpc:seek(-5) end,
-		{description = "seek backwards", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F10",		function () mpc:volume_up(5) end,
-		{description = "volume up", group = "music player"}),
-	awful.key({modkey,"Control"		}, "F7",		function () mpc:volume_down(5) end,
-		{description = "volume down", group = "music player"}),
-	awful.key({modkey,"Control"		}, "Scroll_Lock", function () mpc:send('toggleoutput 0') end,
-		{description = "toggle volume mute", group = "music player"}),
+	-- {{{ Media Players:
+	awful.key({modkey,"Control"		}, "Pause",		function () mediaplayer:toggle_play() end,
+		{description = "toggle Play/Pause", group = "media player"}),
+	awful.key({modkey,"Control"		}, "F9",		function () mediaplayer:next() end,
+		{description = "next song in playlist", group = "media player"}),
+	awful.key({modkey,"Control"		}, "F8",		function () mediaplayer:previous() end,
+		{description = "privious song in playlist", group = "media player"}),
+	awful.key({modkey,"Control"		}, "F12",		function () mediaplayer:seek(5) end,
+		{description = "seek forward", group = "media player"}),
+	awful.key({modkey,"Control"		}, "F11",		function () mediaplayer:seek(-5) end,
+		{description = "seek backwards", group = "media player"}),
+	awful.key({modkey,"Control"		}, "F10",		function () mediaplayer:volume_up(5) end,
+		{description = "volume up", group = "media player"}),
+	awful.key({modkey,"Control"		}, "F7",		function () mediaplayer:volume_down(5) end,
+		{description = "volume down", group = "media player"}),
+	awful.key({modkey,"Control"		}, "Scroll_Lock", function () mediaplayer:toggle_mute() end,
+		{description = "toggle volume mute", group = "media player"}),
 	-- }}}
 	-- {{{ General Machine Volume management:
 	awful.key({modkey,				}, "F10",		pulseaudio.volume_up,
