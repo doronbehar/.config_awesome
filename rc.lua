@@ -753,12 +753,12 @@ clientbuttons = gears.table.join(
 root.keys(globalkeys)
 -- }}}
 
--- {{{ Notifications configuration
--- The following callback function makes sure that no matter what size a notification wants to present an icon, it's size won't be above 250 pixels.
+-- {{{ Notifications configuration - rejection and modification
 naughty.config.notify_callback = function(args)
+	-- The following callback function makes sure that no matter what size a notification wants to present an icon, it's size won't be above 250 pixels.
 	if args.icon then
 		if type(args.icon) == "string" then
-			icon_fpath = string.gsub(args.icon, "^file://", "", 1)
+			local icon_fpath = string.gsub(args.icon, "^file://", "", 1)
 			if gears.filesystem.file_readable(icon_fpath) then
 				local icon_width, icon_height = image.width_and_height(icon_fpath)
 				if icon_width > 250 and icon_height > 250 then
@@ -767,6 +767,13 @@ naughty.config.notify_callback = function(args)
 			end
 		end
 	end
+	-- The following condition makes sure that instant messages of kdeconnect
+	-- notifications get an infinite timeout so I'll be able to respond to
+	-- those messages by left clicking on the 'reply' button of them
+	if args.title == "WhatsApp" or args.title == "QKSMS" then
+		args.timeout = 0
+	end
+	-- The following makes sure no notifications are sent when there is a client on fullscreen
 	local c = client.focus
 	if c then
 		if c.fullscreen then
