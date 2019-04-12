@@ -68,7 +68,7 @@ end
 
 -- {{{ General variables
 -- This is used later as the default terminal and editor to run.
-local terminal = "urxvt"
+local terminal = "alacritty"
 -- Set the terminal for applications that require it
 menubar.utils.terminal = terminal
 local editor = os.getenv("EDITOR") or "editor"
