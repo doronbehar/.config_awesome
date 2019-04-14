@@ -534,8 +534,6 @@ globalkeys = gears.table.join(
 		{description = "volume up", group = "media player"}),
 	awful.key({modkey,"Control"		}, "F7",		function () mediaplayer:volume_down(5) end,
 		{description = "volume down", group = "media player"}),
-	awful.key({modkey,"Control"		}, "Scroll_Lock", function () mediaplayer:toggle_mute() end,
-		{description = "toggle volume mute", group = "media player"}),
 	-- }}}
 	-- {{{ General Machine Volume management:
 	awful.key({modkey,				}, "F10",		pulseaudio.volume_up,

@@ -1,56 +1,108 @@
 local lgi = require('lgi')
+local naughty = require("naughty")
 
 return function()
 	local mediaplayer = {}
-	function mediaplayer:toggle_play()
-		local player = lgi.Playerctl.Player()
-		if player['can-control'] then
-			return player:play_pause()
-		end
-	end
-	function mediaplayer:next()
-		local player = lgi.Playerctl.Player()
-		if player['can-control'] then
-			return player:next()
-		end
-	end
-	function mediaplayer:previous()
-		local player = lgi.Playerctl.Player()
-		if player['can-control'] then
-			return player:previous()
-		end
-	end
-	function mediaplayer:seek(step)
-		local player = lgi.Playerctl.Player()
-		if player['can-control'] then
-			return player:seek(step * 1000000)
-		end
-	end
-	function mediaplayer:volume_up(step)
-		local player = lgi.Playerctl.Player()
-		if player['can-control'] then
-			return player:set_volume(math.min(player.volume + step/100, 1))
-		end
-	end
-	function mediaplayer:volume_down(step)
-		local player = lgi.Playerctl.Player()
-		if player['can-control'] then
-			return player:set_volume(math.max(player.volume - step/100, 0))
-		end
-	end
-	function mediaplayer:toggle_mute()
-		local player = lgi.Playerctl.Player()
-		if player['can-control'] then
-			if player.volume == 0 then
-				if not mediaplayer.last_volume then
-					mediaplayer.last_volume = 1
-				end
-				return player:set_volume(mediaplayer.last_volume)
-			else
-				mediaplayer.last_volume = player.volume
-				return player:set_volume(0)
+	function mediaplayer:_control(func)
+		local all_players = lgi.Playerctl.list_players()
+		local player
+		for i = 1, #all_players do
+			player = lgi.Playerctl.Player.new_from_name(all_players[i])
+			if func(player) then
+				return
 			end
 		end
+		naughty.notify({
+			preset = naughty.config.presets.critical,
+			title = "Playerctl: couldn't find any players",
+			text = player['player-name']
+		})
+	end
+	function mediaplayer:toggle_play()
+		return mediaplayer:_control(function(player)
+			if player['can-control'] and (
+				player['playback-status'] == "PLAYING" or
+				player['playback-status'] == "PAUSED") then
+				naughty.notify({
+					preset = naughty.config.presets.normal,
+					title = "Playerctl: " .. player['player-name'],
+					text = "Toggling Play / Pause"
+				})
+				return player:play_pause()
+			else
+				return false
+			end
+		end)
+	end
+	function mediaplayer:next()
+		return mediaplayer:_control(function(player)
+			if player['can-go-next'] then
+				naughty.notify({
+					preset = naughty.config.presets.normal,
+					title = "Playerctl: " .. player['player-name'],
+					text = "PLAYING next track"
+				})
+				return player:next()
+			else
+				return false
+			end
+		end)
+	end
+	function mediaplayer:previous()
+		return mediaplayer:_control(function(player)
+			if player['can-go-previous'] then
+				naughty.notify({
+					preset = naughty.config.presets.normal,
+					title = "Playerctl: " .. player['player-name'],
+					text = "PLAYING previous track"
+				})
+				return player:previous()
+			else
+				return false
+			end
+		end)
+	end
+	function mediaplayer:seek(step)
+		return mediaplayer:_control(function(player)
+			if player['can-seek'] then
+				naughty.notify({
+					preset = naughty.config.presets.normal,
+					title = "Playerctl: " .. player['player-name'],
+					text = "PLAYING next track"
+				})
+				return player:previous()
+			else
+				return false
+			end
+		end)
+	end
+	function mediaplayer:volume_up(step)
+		return mediaplayer:_control(function(player)
+			if player['can-control'] then
+				naughty.notify({
+					preset = naughty.config.presets.normal,
+					title = "Playerctl: " .. player['player-name'],
+					text = "Raising volume level up"
+				})
+				return player:set_volume(math.min(player.volume + step/100, 1))
+			else
+				return false
+			end
+		end)
+	end
+	function mediaplayer:volume_down(step)
+		return mediaplayer:_control(function(player)
+			if player['can-control'] then
+				naughty.notify({
+					preset = naughty.config.presets.normal,
+					title = "Playerctl: " .. player['player-name'],
+					text = "Lowering volume level up"
+				})
+				return player:set_volume(math.max(player.volume - step/100, 0.01))
+			else
+				return false
+			end
+		end)
 	end
 	return mediaplayer
 end
