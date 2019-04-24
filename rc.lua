@@ -29,8 +29,8 @@ local Autostart = require('autostart')
 local MediaPlayer = require('mediaplayer')
 
 -- - luarocks
--- * pulseaudio dbus widget
-local Pulseaudio = require("pulseaudio")
+-- * pulseaudio widget
+local Pulseaudio = require("pulseaudio_cli")
 -- * constrain-mounse for multi-monitor setup for games
 local constrm = require("constrain-mouse")
 -- * getting width and hight of an image
