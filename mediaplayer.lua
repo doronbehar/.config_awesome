@@ -20,9 +20,7 @@ return function()
 	end
 	function mediaplayer:toggle_play()
 		return mediaplayer:_control(function(player)
-			if player['can-control'] and (
-				player['playback-status'] == "PLAYING" or
-				player['playback-status'] == "PAUSED") then
+			if player['can-control'] and player['playback-status'] ~= 'STOPPED' then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
@@ -36,7 +34,7 @@ return function()
 	end
 	function mediaplayer:next()
 		return mediaplayer:_control(function(player)
-			if player['can-go-next'] then
+			if player['can-go-next'] and player['playback-status'] ~= 'STOPPED' then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
@@ -50,7 +48,7 @@ return function()
 	end
 	function mediaplayer:previous()
 		return mediaplayer:_control(function(player)
-			if player['can-go-previous'] then
+			if player['can-go-previous'] and player['playback-status'] ~= 'STOPPED' then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
@@ -64,7 +62,7 @@ return function()
 	end
 	function mediaplayer:seek(step)
 		return mediaplayer:_control(function(player)
-			if player['can-seek'] then
+			if player['can-seek'] and player['playback-status'] ~= 'STOPPED' then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
@@ -78,7 +76,7 @@ return function()
 	end
 	function mediaplayer:volume_up(step)
 		return mediaplayer:_control(function(player)
-			if player['can-control'] then
+			if player['can-control'] and player['playback-status'] ~= 'STOPPED' then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
@@ -92,7 +90,7 @@ return function()
 	end
 	function mediaplayer:volume_down(step)
 		return mediaplayer:_control(function(player)
-			if player['can-control'] then
+			if player['can-control'] and player['playback-status'] ~= 'STOPPED' then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
