@@ -20,7 +20,7 @@ return function()
 	end
 	function mediaplayer:toggle_play()
 		return mediaplayer:_control(function(player)
-			if player['can-control'] and player['playback-status'] ~= 'STOPPED' then
+			if player['can-play'] and player['can-pause'] then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
@@ -34,7 +34,7 @@ return function()
 	end
 	function mediaplayer:next()
 		return mediaplayer:_control(function(player)
-			if player['can-go-next'] and player['playback-status'] ~= 'STOPPED' then
+			if player['can-go-next'] then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
@@ -48,7 +48,7 @@ return function()
 	end
 	function mediaplayer:previous()
 		return mediaplayer:_control(function(player)
-			if player['can-go-previous'] and player['playback-status'] ~= 'STOPPED' then
+			if player['can-go-previous'] then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
@@ -62,7 +62,7 @@ return function()
 	end
 	function mediaplayer:seek(step)
 		return mediaplayer:_control(function(player)
-			if player['can-seek'] and player['playback-status'] ~= 'STOPPED' then
+			if player['can-seek'] then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
@@ -76,7 +76,7 @@ return function()
 	end
 	function mediaplayer:volume_up(step)
 		return mediaplayer:_control(function(player)
-			if player['can-control'] and player['playback-status'] ~= 'STOPPED' then
+			if player['can-control'] then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
@@ -90,7 +90,7 @@ return function()
 	end
 	function mediaplayer:volume_down(step)
 		return mediaplayer:_control(function(player)
-			if player['can-control'] and player['playback-status'] ~= 'STOPPED' then
+			if player['can-control'] then
 				naughty.notify({
 					preset = naughty.config.presets.normal,
 					title = "Playerctl: " .. player['player-name'],
