@@ -297,7 +297,7 @@ awful.screen.connect_for_each_screen(function (s)
 	local settings = calendar_popup_base_settings
 	settings.screen = s.index
 	calendar_popup_widgets[s.index] = awful.widget.calendar_popup.month(settings)
-	calendar_popup_widgets[s.index]:attach(datetime_widgets[s.index])
+	calendar_popup_widgets[s.index]:attach(datetime_widgets[s.index], "tr" , {on_hover = false})
 	-- Add widgets to the wibox
 	myrightwidgets = {
 		{
