@@ -458,7 +458,7 @@ globalkeys = gears.table.join(
 		else
 			autostart.spawn({
 				name = 'xscreensaver',
-				bin = { '/usr/bin/xscreensaver', '-no-splash' }
+				bin = { 'xscreensaver', '-no-splash' }
 			})
 			message = "xscreensaver was restarted"
 		end
@@ -472,7 +472,7 @@ globalkeys = gears.table.join(
 		if not autostart.is_running('xscreensaver') then
 			autostart.spawn({
 				name = 'xscreensaver',
-				bin = { '/usr/bin/xscreensaver', '-no-splash' }
+				bin = { 'xscreensaver', '-no-splash' }
 			})
 			naughty.notify({
 				preset = naughty.config.presets.normal,
