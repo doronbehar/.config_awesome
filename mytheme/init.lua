@@ -13,7 +13,7 @@ local system_icon_dir                           = gears.filesystem.get_awesome_i
 local theme                                     = {}
 
 -- {{{ General
-theme.font                                      = "Terminus 9"
+theme.font                                      = "RobotoMono 9"
 theme.awesome_icon                              = system_icon_dir .. "awesome16.png"
 theme.icon_theme                                = nil
 theme.useless_gap                               = 0
