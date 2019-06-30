@@ -3,4 +3,4 @@
 	url = https://github.com/varingst/awesome-constrain-mouse
 [submodule "autostart"]
 	path = autostart
-	url = ssh://git@github.com/doronbehar/awesome-autostart
+	url = https://gitlab.com/doronbehar/awesome-autostart
