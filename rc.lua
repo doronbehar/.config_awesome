@@ -178,7 +178,7 @@ local tags = {
 				"man"
 			},
 			layout = {
-				awful.layout.suit.floating,
+				awful.layout.suit.tile,
 				awful.layout.suit.max
 			}
 		}
