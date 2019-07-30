@@ -841,14 +841,12 @@ awful.rules.rules = {
 		}
 	},
 	{
-		rule_any = {
-			class = {
-				"keybase",
-				"Keybase"
-			}
+		rule = {
+			class = "Keybase",
+			width = 360
 		},
 		properties = {
-			placement = awful.placement.top_right
+			placement = awful.placement.closest_corner
 		},
 	},
 	-- Add titlebars to normal clients and dialogs
