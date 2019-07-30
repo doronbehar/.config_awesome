@@ -840,6 +840,17 @@ awful.rules.rules = {
 			floating = true
 		}
 	},
+	{
+		rule_any = {
+			class = {
+				"keybase",
+				"Keybase"
+			}
+		},
+		properties = {
+			placement = awful.placement.top_right
+		},
+	},
 	-- Add titlebars to normal clients and dialogs
 	{
 		rule_any = {
