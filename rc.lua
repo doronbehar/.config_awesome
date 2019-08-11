@@ -23,8 +23,6 @@ require("awful.hotkeys_popup.keys")
 -- - local libraries
 -- * tags and clients manipulation.
 local util = require("util")
--- * autostart made easy
-local Autostart = require('autostart')
 -- * Media Player (mpc as well) generic controller
 local MediaPlayer = require('mediaplayer')
 
@@ -35,6 +33,8 @@ local Pulseaudio = require("pulseaudio_cli")
 local constrm = require("constrain-mouse")
 -- * getting width and hight of an image
 local image = require('image')
+-- * autostart made easy
+local Autostart = require('autostart')
 -- }}}
 
 -- {{{ Error handling
@@ -331,8 +331,8 @@ local conf_dir = os.getenv('XDG_CONFIG_HOME') or os.getenv('HOME') .. '/.config'
 local autostart_conf_file = conf_dir .. '/autostart/'
 
 local autostart_config = dofile(conf_dir .. '/autostart/awesomewm.lua')
-autostart = Autostart.new(autostart_config)
-autostart.run_all()
+autostart = Autostart:new(autostart_config)
+autostart:run_all()
 -- }}}
 
 -- {{{ Mouse bindings
@@ -406,15 +406,10 @@ globalkeys = gears.table.join(
 					if not input or #input == 0 then
 						return
 					end
-					local words ={}
-					for w in input:gmatch('%w+') do
-						table.insert(words, w)
-					end
 					local program = {
-						name = words[1],
 						bin = input
 					}
-					local pid = autostart.spawn(program)
+					local pid = autostart:spawn(program)
 					if type(pid) == "string" then
 						naughty.notify({
 							preset = naughty.config.presets.critical,
@@ -449,15 +444,14 @@ globalkeys = gears.table.join(
 	-- {{{ Session
 	awful.key({modkey,"Mod1"		}, "r",			function ()
 		local message
-		if autostart.is_running('xscreensaver') then
-			if autostart.kill_by_name('xscreensaver') then
+		if autostart:is_running('xscreensaver') then
+			if autostart:kill_by_name('xscreensaver') then
 				message = "xscreensaver was killed"
 			else
 				message = "couldn't kill xscreensaver process, perhaps it's a bug with autostart module"
 			end
 		else
-			autostart.spawn({
-				name = 'xscreensaver',
+			autostart:spawn({
 				bin = { 'xscreensaver', '-no-splash' }
 			})
 			message = "xscreensaver was restarted"
@@ -469,8 +463,8 @@ globalkeys = gears.table.join(
 	end,
 		{description = "toggle screen saver", group = "session"}),
 	awful.key({modkey,"Mod1"		}, "q",			function ()
-		if not autostart.is_running('xscreensaver') then
-			autostart.spawn({
+		if not autostart:is_running('xscreensaver') then
+			autostart:spawn({
 				name = 'xscreensaver',
 				bin = { 'xscreensaver', '-no-splash' }
 			})
