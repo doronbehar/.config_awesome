@@ -514,6 +514,8 @@ globalkeys = gears.table.join(
 		{description = "video record the Desktop and save it to the home directory", group = "PrintScrn"}),
 	-- }}}
 	-- {{{ Media Players:
+	awful.key({modkey,"Control"		}, "Scroll_Lock",function () mediaplayer:cycle_players() end,
+		{description = "toggle Play/Pause", group = "media player"}),
 	awful.key({modkey,"Control"		}, "Pause",		function () mediaplayer:toggle_play() end,
 		{description = "toggle Play/Pause", group = "media player"}),
 	awful.key({modkey,"Control"		}, "F9",		function () mediaplayer:next() end,

@@ -3,104 +3,117 @@ local naughty = require("naughty")
 
 return function()
 	local mediaplayer = {}
-	function mediaplayer:_control(func)
+	-- Init sort of
+	local all_players = lgi.Playerctl.list_players()
+	local player
+	for i = 1, #all_players do
+		player = lgi.Playerctl.Player.new_from_name(all_players[i])
+		mediaplayer.current_name = player['player-name']
+	end
+	function mediaplayer:cycle_players()
 		local all_players = lgi.Playerctl.list_players()
 		local player
 		for i = 1, #all_players do
 			player = lgi.Playerctl.Player.new_from_name(all_players[i])
-			if func(player) then
+			if mediaplayer.current_name ~= player['player-name'] then
+				mediaplayer.current_name = player['player-name']
+				naughty.notify({
+					preset = naughty.config.presets.normal,
+					title = "Playerctl: player changed to:",
+					text = player['player-name']
+				})
 				return
 			end
 		end
-		naughty.notify({
-			preset = naughty.config.presets.critical,
-			title = "Playerctl: couldn't find any players",
-			text = player['player-name']
-		})
+	end
+	function mediaplayer:_control(condition_func, action_func, notification_message_text)
+		local all_players = lgi.Playerctl.list_players()
+		local player
+		for i = 1, #all_players do
+			player = lgi.Playerctl.Player.new_from_name(all_players[i])
+			if mediaplayer.current_name == player['player-name'] then
+				if condition_func(player) then
+					action_func(player)
+					naughty.notify({
+						preset = naughty.config.presets.normal,
+						title = "Playerctl: " .. player['player-name'],
+						text = notification_message_text
+					})
+				else
+					naughty.notify({
+						preset = naughty.config.presets.critical,
+						title = "Playerctl: " .. player['player-name'],
+						text = "couldn't " .. notification_message_text
+					})
+				end
+				return
+			end
+		end
 	end
 	function mediaplayer:toggle_play()
-		return mediaplayer:_control(function(player)
-			if player['can-play'] and player['can-pause'] then
-				naughty.notify({
-					preset = naughty.config.presets.normal,
-					title = "Playerctl: " .. player['player-name'],
-					text = "Toggling Play / Pause"
-				})
-				return player:play_pause()
-			else
-				return false
-			end
-		end)
+		local condition_func = function(player)
+			return player['can-play'] and player['can-pause']
+		end
+		local action_func = function(player)
+			return player:play_pause()
+		end
+		return mediaplayer:_control(
+			condition_func,
+			action_func,
+			"Toggling Play / Pause"
+		)
 	end
 	function mediaplayer:next()
-		return mediaplayer:_control(function(player)
-			if player['can-go-next'] then
-				naughty.notify({
-					preset = naughty.config.presets.normal,
-					title = "Playerctl: " .. player['player-name'],
-					text = "PLAYING next track"
-				})
-				return player:next()
-			else
-				return false
-			end
-		end)
+		local condition_func = function(player)
+			return player['can-go-next']
+		end
+		local action_func = function(player)
+			return player:next()
+		end
+		return mediaplayer:_control(
+			condition_func,
+			action_func,
+			"PLAYING next track"
+		)
 	end
 	function mediaplayer:previous()
-		return mediaplayer:_control(function(player)
-			if player['can-go-previous'] then
-				naughty.notify({
-					preset = naughty.config.presets.normal,
-					title = "Playerctl: " .. player['player-name'],
-					text = "PLAYING previous track"
-				})
-				return player:previous()
-			else
-				return false
-			end
-		end)
-	end
-	function mediaplayer:seek(step)
-		return mediaplayer:_control(function(player)
-			if player['can-seek'] then
-				naughty.notify({
-					preset = naughty.config.presets.normal,
-					title = "Playerctl: " .. player['player-name'],
-					text = "PLAYING next track"
-				})
-				return player:previous()
-			else
-				return false
-			end
-		end)
+		local condition_func = function(player)
+			return player['can-go-previous']
+		end
+		local action_func = function(player)
+			return player:previous()
+		end
+		return mediaplayer:_control(
+			condition_func,
+			action_func,
+			"PLAYING previous track"
+		)
 	end
 	function mediaplayer:volume_up(step)
-		return mediaplayer:_control(function(player)
-			if player['can-control'] then
-				naughty.notify({
-					preset = naughty.config.presets.normal,
-					title = "Playerctl: " .. player['player-name'],
-					text = "Raising volume level up"
-				})
-				return player:set_volume(math.min(player.volume + step/100, 1))
-			else
-				return false
-			end
-		end)
+		local condition_func = function(player)
+			return player['can-control']
+		end
+		local action_func = function(player)
+			return player:set_volume(math.min(player.volume + step/100, 1))
+		end
+		return mediaplayer:_control(
+			condition_func,
+			action_func,
+			"Raising volume level up"
+		)
 	end
 	function mediaplayer:volume_down(step)
-		return mediaplayer:_control(function(player)
-			if player['can-control'] then
-				naughty.notify({
-					preset = naughty.config.presets.normal,
-					title = "Playerctl: " .. player['player-name'],
-					text = "Lowering volume level up"
-				})
-				return player:set_volume(math.max(player.volume - step/100, 0.01))
-			else
-				return false
-			end
-		end)
+		local condition_func = function(player)
+			return player['can-control']
+		end
+		local action_func = function(player)
+			return player:set_volume(math.max(player.volume - step/100, 0.01))
+		end
+		return mediaplayer:_control(
+			condition_func,
+			action_func,
+			"Lowering volume level down"
+		)
 	end
 	return mediaplayer
 end
