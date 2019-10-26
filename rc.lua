@@ -433,6 +433,10 @@ globalkeys = gears.table.join(
 		{description = "show main menu", group = "menus"}),
 	-- }}}
 	-- {{{ Launchers
+	awful.key({modkey,				}, "t",			function ()
+		awful.spawn("nautilus " .. os.getenv('HOME') .. '/desktop/university')
+	end,
+		{description = "open file manager in ~/desktop/university", group = "launchers"}),
 	awful.key({modkey,				}, "Return",	function () awful.spawn(terminal) end,
 		{description = "open a terminal", group = "launchers"}),
 	awful.key({modkey, "Shift"		}, "d",			function ()
