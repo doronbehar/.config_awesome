@@ -1,15 +1,26 @@
 local lgi = require('lgi')
 local naughty = require("naughty")
+local gears = require("gears")
 
 return function()
 	local mediaplayer = {}
 	-- Init sort of
-	local all_players = lgi.Playerctl.list_players()
 	local player
-	for i = 1, #all_players do
-		player = lgi.Playerctl.Player.new_from_name(all_players[i])
-		mediaplayer.current_name = player['player-name']
-	end
+	gears.timer({
+		timeout = 3,
+		single_shot = true,
+		callback = function()
+			local all_players = lgi.Playerctl.list_players()
+			for i = 1, #all_players do
+				player = lgi.Playerctl.Player.new_from_name(all_players[i])
+				mediaplayer.current_name = player['player-name']
+				if player['can-play'] and player['can-pause'] then
+					-- Stop iterating players once we have found a player we can at least play/pause
+					return
+				end
+			end
+		end,
+	}):start()
 	function mediaplayer:cycle_players()
 		local all_players = lgi.Playerctl.list_players()
 		local player
