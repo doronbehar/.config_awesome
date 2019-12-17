@@ -518,6 +518,11 @@ globalkeys = gears.table.join(
 		false
 	) end,
 		{description = "screenshot a selection and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
+	awful.key({"Control", "Shift"	}, "Print",		function () awful.spawn.with_shell(
+		"maim --format=png -s -c 1,0,0.6 \"$(zenity --file-selection --save --filename=\"" .. os.getenv("HOME") .. "/pictures/screenshots/" .. os.getenv("HOST") .. "-selection:" .. os.date("%Y.%m.%d-%X") .. ".png\" --confirm-overwrite --file-filter='PNG files | *.png')\"",
+		false
+	) end,
+		{description = "screenshot a selection and save it to in a path of your choice", group = "PrintScrn"}),
 	awful.key({modkey				}, "Print",		function () awful.spawn.with_shell(
 		"maim --format=png -i $(xdotool getactivewindow) " .. os.getenv("HOME") .. "/pictures/screenshots/" .. os.getenv("HOST") .. " - \"$(xdotool getwindowname $(xdotool getactivewindow))\":" .. os.date("%Y.%m.%d-%X") .. ".png",
 		true
