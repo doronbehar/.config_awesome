@@ -13,8 +13,9 @@ return function()
 			local all_players = lgi.Playerctl.list_players()
 			for i = 1, #all_players do
 				player = lgi.Playerctl.Player.new_from_name(all_players[i])
-				mediaplayer.current_name = player['player-name']
 				if player['can-play'] and player['can-pause'] then
+					mediaplayer.current_idx = i
+					mediaplayer.current_name = player['player-name']
 					-- Stop iterating players once we have found a player we can at least play/pause
 					return
 				end
@@ -26,7 +27,8 @@ return function()
 		local player
 		for i = 1, #all_players do
 			player = lgi.Playerctl.Player.new_from_name(all_players[i])
-			if mediaplayer.current_name ~= player['player-name'] then
+			if i == math.fmod(mediaplayer.current_idx + 1, #all_players) + 1 then
+				mediaplayer.current_idx = i
 				mediaplayer.current_name = player['player-name']
 				naughty.notify({
 					preset = naughty.config.presets.normal,
