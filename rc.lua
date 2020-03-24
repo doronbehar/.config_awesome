@@ -25,6 +25,8 @@ require("awful.hotkeys_popup.keys")
 local util = require("util")
 -- * Media Player (mpc as well) generic controller
 local MediaPlayer = require('mediaplayer')
+-- * More then awesome udprompt - https://gitlab.com/matsievskiysv/udprompt
+require("udprompt")(9999)
 
 -- - luarocks
 -- * pulseaudio widget
@@ -528,11 +530,6 @@ globalkeys = gears.table.join(
 		true
 	) end,
 		{description = "screenshot the current window focused and save it to ~/pictures/screenshots/", group = "PrintScrn"}),
-	awful.key({"Mod1"				}, "Print",		function () awful.spawn.with_shell(
-		"recordmydesktop --no-sound",
-		false
-	) end,
-		{description = "video record the Desktop and save it to the home directory", group = "PrintScrn"}),
 	-- }}}
 	-- {{{ Media Players:
 	awful.key({modkey,"Control"		}, "Scroll_Lock",function () mediaplayer:cycle_players() end,

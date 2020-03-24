@@ -4,3 +4,6 @@
 [submodule "autostart"]
 	path = autostart
 	url = https://gitlab.com/doronbehar/awesome-autostart
+[submodule "udprompt"]
+	path = udprompt
+	url = https://gitlab.com/matsievskiysv/udprompt
