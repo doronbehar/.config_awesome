@@ -820,6 +820,8 @@ awful.rules.rules = {
 
 	-- Floating clients.
 	{
+		-- Get the names of these instances via xprop, see
+		-- https://awesomewm.org/doc/api/classes/client.html
 		rule_any = {
 			instance = {
 				-- Firefox addon DownThemAll
@@ -889,6 +891,13 @@ client.connect_signal("manage", function (c)
 		and not c.size_hints.program_position then
 		-- Prevent clients from being unreachable after screen count changes.
 		awful.placement.no_offscreen(c)
+	end
+end)
+
+client.connect_signal("property::fullscreen", function(c)
+	-- Disable full screen for zoom meetings
+	if c.name:match("^Zoom Meeting ID: ") then
+		c.fullscreen = false;
 	end
 end)
 
