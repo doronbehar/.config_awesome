@@ -27,6 +27,8 @@ local util = require("util")
 local MediaPlayer = require('mediaplayer')
 -- * More then awesome udprompt - https://gitlab.com/matsievskiysv/udprompt
 require("udprompt")(9999)
+-- * More then awesome tcprompt - https://gitlab.com/matsievskiysv/tcprompt
+require("tcprompt"){address="0.0.0.0", port=9998}
 
 -- - luarocks
 -- * pulseaudio widget

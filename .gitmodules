@@ -7,3 +7,6 @@
 [submodule "udprompt"]
 	path = udprompt
 	url = https://gitlab.com/matsievskiysv/udprompt
+[submodule "tcprompt"]
+	path = tcprompt
+	url = https://gitlab.com/matsievskiysv/tcprompt
