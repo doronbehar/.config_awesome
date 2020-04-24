@@ -171,9 +171,9 @@ local tags = {
 				"config"
 			},
 			layout = {
-				awful.layout.suit.tile,
+				awful.layout.suit.tile.left,
 				awful.layout.suit.fair,
-				awful.layout.suit.fair
+				awful.layout.suit.tile.left,
 			}
 		},
 		{
@@ -906,6 +906,10 @@ client.connect_signal("manage", function (c)
 		and not c.size_hints.program_position then
 		-- Prevent clients from being unreachable after screen count changes.
 		awful.placement.no_offscreen(c)
+	end
+	-- For MathNet Java applets
+	if c.name:match("^MathNet") then
+		awful.client.swap.byidx(2)
 	end
 end)
 
