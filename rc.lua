@@ -867,6 +867,19 @@ awful.rules.rules = {
 			placement = awful.placement.closest_corner
 		},
 	},
+	{
+		rule = {
+			name = "MathNet Java client - JNLP webstart version - Applet"
+		},
+		properties = {
+			immobilized = false;
+			is_fixed = false;
+			floating = false;
+			ontop = false;
+			above = false;
+			sticky = false;
+		}
+	},
 	-- Add titlebars to normal clients and dialogs
 	{
 		rule_any = {
