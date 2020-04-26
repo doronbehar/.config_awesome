@@ -908,8 +908,10 @@ client.connect_signal("manage", function (c)
 		awful.placement.no_offscreen(c)
 	end
 	-- For MathNet Java applets
-	if c.name:match("^MathNet") then
-		awful.client.swap.byidx(2)
+	if c.name then
+		if c.name:match("^MathNet") then
+			awful.client.swap.byidx(2)
+		end
 	end
 end)
 
