@@ -917,7 +917,7 @@ end)
 
 client.connect_signal("property::fullscreen", function(c)
 	-- Disable full screen for zoom meetings
-	if c.name:match("^Zoom Meeting ID: ") then
+	if c.name:match("^Zoom") then
 		c.fullscreen = false;
 	end
 end)
