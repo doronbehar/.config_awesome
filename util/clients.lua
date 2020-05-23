@@ -6,10 +6,15 @@ local clients = {}
 
 -- {{{ clients.move_all_to_tag(incr)
 -- move all clients in a tag to a different tag.
-function clients.move_all_to_tag(incr)
+function clients.move_all_to_tag(incr_or_tag)
 	local s = awful.screen.focused()
 	local t = s.selected_tag
-	local new_tag = s.tags[gears.math.cycle(#s.tags, t.index + incr)]
+	local new_tag
+	if type(incr_or_tag) == "number" then
+		new_tag = s.tags[gears.math.cycle(#s.tags, t.index + incr_or_tag)]
+	else
+		new_tag = incr_or_tag
+	end
 	local dumb = function()
 		return true
 	end

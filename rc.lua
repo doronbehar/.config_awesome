@@ -663,6 +663,28 @@ for i = 1, 9 do
 				end
 			end,
 			{description = "move focused client to tag #"..i, group = "tags movement"}
+		),
+		awful.key({modkey,"Mod1"			}, "#" .. i + 9,
+			function ()
+				if client.focus then
+					local tag = client.focus.screen.tags[i]
+					if tag then
+						util.clients.move_all_to_tag(tag)
+					end
+				end
+			end,
+			{description = "move all of the current tag's clients to tag #"..i, group = "tags movement"}
+		),
+		awful.key({modkey,"Mod1"			}, "#" .. numericpad[i],
+			function ()
+				if client.focus then
+					local tag = client.focus.screen.tags[i]
+					if tag then
+						util.clients.move_all_to_tag(tag)
+					end
+				end
+			end,
+			{description = "move all of the current tag's clients to tag #"..i, group = "tags movement"}
 		)
 		-- }}}
 	)
