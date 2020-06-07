@@ -12,7 +12,7 @@ supported_platforms = {
 	"linux"
 }
 dependencies = {
-	"lua >= 5.2",
+	"lua >= 5.1",
 	"awesomewm-autostart",
 	"pulseaudio_cli"
 }
