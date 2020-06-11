@@ -863,6 +863,8 @@ awful.rules.rules = {
 				"Wpa_gui",
 				"pinentry",
 				"veromix",
+				-- Mostly for plots
+				"Octave",
 				"xtightvncviewer"
 			},
 			name = {
